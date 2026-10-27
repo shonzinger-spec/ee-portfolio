@@ -1,0 +1,31 @@
+./build/test_buck
+02 sync buck controller - host test (model in the loop)
+Kp 0.02 V/V, Ki 800 V/(V s), Ts 20 us, DPWM 400 ticks, dead band 20 mV, DPWM hysteresis 0.75 LSB, OCP 4.5 A x 3
+# closed loop: soft start at 1 A, Vin 12 V
+PASS startup overshoot <= 2 %         max 5.0271 V (limit 5.10 V)
+PASS startup settle +/-1 % <= 8 ms    5.26 ms (limit 8 ms)
+# steady state 1 A, 12-20 ms
+PASS dc error <= 0.5 %                mean 5.0081 V (target 5.0 V)
+PASS no limit cycle (duty steady)     0 duty-code changes (limit 0)
+PASS low-frequency p-p <= 5 mV        0.00 mV (limit 5 mV)
+# load step 0.5 -> 3 A at 30 ms, release 3 -> 0.5 A at 45 ms
+PASS step dip >= 4.50 V (-10 %)       min 4.5864 V (limit 4.50 V)
+PASS step recovery +/-1 % <= 5 ms     1.30 ms (limit 5 ms)
+PASS release peak <= 5.50 V (+10 %)   max 5.4419 V (limit 5.50 V)
+PASS release recovery +/-1 % <= 5 ms  2.10 ms (limit 5 ms)
+# line ramps at 1 A: 12 -> 10.8 V at 65 ms, 10.8 -> 13.2 V at 80 ms (1 ms each)
+PASS line deviation <= 2 %            80.8 mV (limit 100 mV)
+PASS line recovery +/-1 % <= 5 ms     0.86 ms (limit 5 ms)
+# overload 0.8 ohm (6.25 A) at 100 ms
+PASS OCP latches within 3 samples     3 samples (limit 3)
+PASS inductor peak < Isat 6 A         2.19 A (limit 6.0 A)
+PASS stays off after the trip         duty 0, state 3
+# unit: integrator windup (output held at 0 V for 20 ms, then 5.5 V)
+PASS Vref + integrator <= Dmax x Vin  10.800 V (limit 10.80 V)
+PASS unwinds to 50 % within 1.1 x bound 11.96 ms (limit 13.17 ms)
+# unit: OCP needs consecutive samples, then latches
+PASS 2 + 2 split samples: no trip     state 2 (fault = 3)
+PASS 3rd sample trips, start ignored  state 3, fault code 1
+# unit: pre-biased start
+PASS soft start begins at 3 V pre-bias vref 3.000 V (expected 3.0 V)
+RESULT: 19/19 PASS

@@ -5,6 +5,7 @@ Electrical engineering projects by Shon Zinger, a York University EE graduate. E
 | # | Project | What it shows | Verification |
 |---|---|---|---|
 | 01 | [Smart power-monitoring IoT node](01-smart-power-node/) | ESP32 + INA219 power monitor on a 5 V / 2 A rail with an SSD1306 display: 50 mOhm Kelvin shunt, register-level driver, two-task FreeRTOS firmware | main.py self-check, LTspice and ngspice 6/6, host test 33/33, KiCad ERC 0 errors, Wokwi live run |
+| 02 | [Digital synchronous buck converter](02-sync-buck/) | 12 V to 5 V / 3 A, 200 kHz synchronous buck with discrete FETs, RC snubber and a digital PI loop in C (input and reference feed-forward, DPWM hysteresis, anti-windup, over-current latch) | main.py 59/59, LTspice vs ngspice cross-check, host test 19/19 + negative gate 4/4, KiCad ERC 0 errors |
 
 Highlights of project 01:
 

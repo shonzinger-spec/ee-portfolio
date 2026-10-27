@@ -1,0 +1,22 @@
+== mutant m1 ==
+FAIL no limit cycle (duty steady)     5 duty-code changes (limit 0)
+FAIL low-frequency p-p <= 5 mV        76.42 mV (limit 5 mV)
+RESULT: 17/19 PASS
+mutant m1: test FAILED as required
+== mutant m2 ==
+FAIL Vref + integrator <= Dmax x Vin  74.980 V (limit 10.80 V)
+FAIL unwinds to 50 % within 1.1 x bound 40.00 ms (limit 13.17 ms)
+RESULT: 17/19 PASS
+mutant m2: test FAILED as required
+== mutant m3 ==
+FAIL OCP latches within 3 samples     -1 samples (limit 3)
+FAIL inductor peak < Isat 6 A         9.65 A (limit 6.0 A)
+FAIL stays off after the trip         duty 157, state 2
+FAIL 3rd sample trips, start ignored  state 1, fault code 0
+RESULT: 15/19 PASS
+mutant m3: test FAILED as required
+== mutant m4 ==
+FAIL release recovery +/-1 % <= 5 ms  9.72 ms (limit 5 ms)
+RESULT: 18/19 PASS
+mutant m4: test FAILED as required
+NEGATIVE GATE: 4/4 mutants caught

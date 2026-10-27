@@ -1,0 +1,64 @@
+* 02 - Synchronous buck power stage, 12 V -> 5 V / 3 A, 200 kHz (LTspice, open loop)
+* Fixed duty D (the closed loop is tested in test/host). Gate drivers are ideal floating
+* pulse sources with the UCC27211 output resistance + 2.2 ohm gate resistor in series.
+* Three cases, stepped:  1 = 3 A full load, snubber on
+*                        2 = 1 A light load, snubber on
+*                        3 = 3 A full load, snubber off (overshoot reference)
+* Run: /Applications/LTspice.app/Contents/MacOS/LTspice -b sim/buck_sync.cir
+
+.param VIN=12 FSW=200k T={1/FSW} D=0.4195 TD=50n TE=10n
+.param VDH=11.3 VDL=12 RDRV=3.1
+.step param CASE list 1 2 3
+.param RLOAD=table(CASE,1,1.6667,2,5,3,1.6667)
+.param SNUB=table(CASE,1,1,2,1,3,0)
+* initial conditions at the settled operating point (inductor at its valley current, ripple
+* about 1 A p-p), so 1 ms is enough to reach steady state
+.param VNOM=table(CASE,1,4.972,2,5.056,3,4.971)
+
+* Input: lab supply, 2 x 10 uF X7R + 100 uF electrolytic, 1 nH commutation-loop inductance
+V1 vsrc 0 {VIN}
+Rsrc vsrc vin 10m
+C1 vin c1x 20u ic=12
+Rc1 c1x 0 3m
+C3 vin c3x 100u ic=12
+Rc3 c3x 0 150m
+Lloop vin dhs 1n
+
+* Half bridge (generic 40 V N-MOSFET, about 7 mohm at Vgs = 11 V)
+M1 dhs gh sw NMOS30
+M2 sw gl 0 NMOS30
+Vgh ghd sw PULSE(0 {VDH} {TD} {TE} {TE} {D*T-TE} {T})
+Rgh ghd gh {RDRV}
+Vgl gld 0 PULSE(0 {VDL} {2*TD+D*T+TE} {TE} {TE} {T-D*T-2*TD-3*TE} {T})
+Rgl gld gl {RDRV}
+
+* RC snubber across the low-side switch: 1.8 ohm + 1 nF (case 3: 1 fF = open)
+Rsn sw snb 1.8
+Csn snb 0 {SNUB*1n+1f}
+
+* Output filter: 15 uH (DCR 20 mohm), 470 uF polymer (ESR 10 mohm) || 10 uF X7R
+L1 sw lx 15u ic={VNOM/RLOAD-0.5}
+RL1 lx out 20m
+C7 out c7x 470u ic={VNOM}
+Rc7 c7x 0 10m
+C8 out c8x 10u ic={VNOM}
+Rc8 c8x 0 3m
+* 5 mohm current shunt, then the load (regulation point is vload)
+Rsh out vload 5m
+Rload vload 0 {RLOAD}
+
+.model NMOS30 VDMOS(Vto=1.8 Kp=60 Rd=3m Rs=2m Rg=1.2 Rb=4m Cgdmax=0.8n Cgdmin=40p A=0.4 Cgs=1.5n Cjo=0.7n Is=5p N=1.05 Tt=5n)
+
+.tran 0 1.06m 0 20n uic
+.options plotwinsize=0
+.meas TRAN vout_avg AVG V(vload) FROM=1e-3 TO=1.05e-3
+.meas TRAN vout_pp PP V(vload) FROM=1e-3 TO=1.05e-3
+.meas TRAN il_avg AVG I(L1) FROM=1e-3 TO=1.05e-3
+.meas TRAN il_pp PP I(L1) FROM=1e-3 TO=1.05e-3
+.meas TRAN pin AVG -V(vsrc)*I(V1) FROM=1e-3 TO=1.05e-3
+.meas TRAN pout AVG V(vload)*V(vload)/RLOAD FROM=1e-3 TO=1.05e-3
+.meas TRAN pgate AVG -(V(ghd,sw)*I(Vgh)+V(gld)*I(Vgl)) FROM=1e-3 TO=1.05e-3
+.meas TRAN psnub AVG V(sw,snb)*I(Rsn) FROM=1e-3 TO=1.05e-3
+.meas TRAN vsw_max MAX V(sw) FROM=1e-3 TO=1.05e-3
+.meas TRAN eff PARAM pout/pin
+.end

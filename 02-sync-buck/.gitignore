@@ -1,0 +1,3 @@
+sim/*.log
+sim/*.raw
+hw/kicad/erc.rpt

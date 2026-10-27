@@ -1,0 +1,86 @@
+Circuit: * 02 - Synchronous buck power stage, 12 V -> 5 V / 3 A, 200 kHz (LTspice, open loop)
+
+Per .tran options, skipping operating point for transient analysis.
+.step case=1
+.step case=2
+.step case=3
+
+
+Measurement: vout_avg
+  step	AVG(v(vload))	FROM	TO
+     1	4.96132	0.001	0.00105
+     2	5.04566	0.001	0.00105
+     3	4.95987	0.001	0.00105
+
+Measurement: vout_pp
+  step	PP(v(vload))	FROM	TO
+     1	0.00915241	0.001	0.00105
+     2	0.0089283	0.001	0.00105
+     3	0.00914478	0.001	0.00105
+
+Measurement: il_avg
+  step	AVG(i(l1))	FROM	TO
+     1	2.97249	0.001	0.00105
+     2	1.00848	0.001	0.00105
+     3	2.97174	0.001	0.00105
+
+Measurement: il_pp
+  step	PP(i(l1))	FROM	TO
+     1	0.976345	0.001	0.00105
+     2	0.978718	0.001	0.00105
+     3	0.976289	0.001	0.00105
+
+Measurement: pin
+  step	AVG(-v(vsrc)*i(v1))	FROM	TO
+     1	15.1862	0.001	0.00105
+     2	5.18135	0.001	0.00105
+     3	15.1747	0.001	0.00105
+
+Measurement: pout
+  step	AVG(v(vload)*v(vload)/rload)	FROM	TO
+     1	14.7685	0.001	0.00105
+     2	5.09174	0.001	0.00105
+     3	14.7599	0.001	0.00105
+
+Measurement: pgate
+  step	AVG(-(v(ghd,sw)*i(vgh)+v(gld)*i(vgl)))	FROM	TO
+     1	0.0954512	0.001	0.00105
+     2	0.0952321	0.001	0.00105
+     3	0.0945081	0.001	0.00105
+
+Measurement: psnub
+  step	AVG(v(sw,snb)*i(rsn))	FROM	TO
+     1	0.0411916	0.001	0.00105
+     2	0.0244952	0.001	0.00105
+     3	6.20517e-10	0.001	0.00105
+
+Measurement: vsw_max
+  step	MAX(v(sw))	FROM	TO
+     1	22.2205	0.001	0.00105
+     2	17.8984	0.001	0.00105
+     3	27.9306	0.001	0.00105
+
+Measurement: eff
+  step	pout/pin
+     1	0.972498
+     2	0.982705
+     3	0.972665
+
+
+Date: Tue Oct 27 16:18:54 2026
+Total elapsed time: 43.303 seconds.
+
+tnom = 27
+temp = 27
+method = modified trap
+totiter = 12057084
+traniter = 12057084
+tranpoints = 3794760
+accept = 2640900
+rejected = 1153860
+matrix size = 27
+fillins = 14
+solver = Normal
+Matrix Compiler1:     118 opcodes  0.1/0.2/[0.1]
+Matrix Compiler2:     179 opcodes  0.3/[0.3]/0.4
+

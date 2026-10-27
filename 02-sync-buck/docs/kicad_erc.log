@@ -1,0 +1,30 @@
+# cmd: cd hw/kicad && python3 gen_schematic.py --export
+# cmd: kicad-cli sch erc --severity-all -o erc.rpt sync_buck.kicad_sch
+# cmd: python3 check_netlist.py
+ ** ERC messages: 0  Errors 0  Warnings 0
+    - Global label only appears once in the schematic
+    - Four connection points are joined together
+    - SPICE model issue
+    - Assigned footprint doesn't match footprint filters
+PASS VIN      C1.1 C2.1 C3.1 C4.1 J1.1 Q1.2 R12.1 U1.1
+PASS GND      C1.2 C10.2 C11.2 C12.2 C2.2 C3.2 C4.2 C6.2 C7.2 C8.2 C9.2 J1.2 J2.2 J3.2 Q2.3 R10.2 R11.2 R13.2 R4.2 R8.2 U1.7 U2.2 U2.5
+PASS SW       C5.2 L1.1 Q1.3 Q2.2 R3.2 R5.1 U1.4
+PASS GH       Q1.1 R1.2 R3.1
+PASS GL       Q2.1 R2.2 R4.1
+PASS HO       R1.1 U1.3
+PASS LO       R2.1 U1.8
+PASS HB       C5.1 U1.2
+PASS SNB      C6.1 R5.2
+PASS VOUT     C7.1 C8.1 L1.2 R6.1
+PASS SH_P     R6.2 U2.3
+PASS SH_N     R6.3 U2.4
+PASS VLOAD    J2.1 R6.4 R7.1
+PASS VSENSE   C10.1 J3.5 R7.2 R8.1
+PASS VINSENSE C12.1 J3.7 R12.2 R13.1
+PASS IAMP     R9.1 U2.1
+PASS ISENSE   C11.1 J3.6 R9.2
+PASS PWM_H    J3.3 R10.1 U1.5
+PASS PWM_L    J3.4 R11.1 U1.6
+PASS +3V3     C9.1 J3.1 U2.6
+info: 0 single-pin nets (expected 0)
+RESULT: PASS

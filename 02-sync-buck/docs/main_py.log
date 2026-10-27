@@ -1,0 +1,78 @@
+Sync buck 02 - main.py (simulated design; no hardware built)
+Constants from src/buck_ctrl/buck_config.h: Kp 0.02 V/V, Ki 800 V/(V s), Ts 20 us, DPWM 400 ticks, dead band 20 mV, hysteresis 0.75 LSB
+
+[1] Netlist and firmware constants
+  C01 model values = sim/buck_sync.cir           D, L, C7, ESR, DCR, Rsh, dead time           PASS
+  C02 firmware fsw / ticks / dead time           200 kHz, 400 ticks, 4 x 12.5 ns = 50 ns      PASS
+
+[2] Design equations (3 A, 12 V)
+    D = 0.4167, dIL = 0.972 A p-p (32 % of 3 A), Ipk = 3.49 A, f0 = 1876 Hz, Z0 = 0.177 ohm
+  C03 inductor ripple 20-40 % of Iout            32 %                                         PASS
+  C04 Ipk <= Isat / 1.2                          3.49 A vs 5.00 A                             PASS
+  C05 2.5 A step: Z0 * dI <= 10 % Vout           442 mV (limit 500 mV)                        PASS
+  C06 LC resonance > 10 x loop crossover         f0 1876 Hz, fc 127 Hz                        PASS
+
+[3] LTspice vs ngspice (cases: 1 = 3 A, 2 = 1 A, 3 = 3 A no snubber)
+  C07 vout_avg case 1                            LT 4.9613  ng 4.965  rel 0.0752 %            PASS
+  C07 vout_avg case 2                            LT 5.0457  ng 5.047  rel 0.0272 %            PASS
+  C07 il_pp case 1                               LT 0.97635  ng 0.97772  rel 0.14 %           PASS
+  C07 il_pp case 2                               LT 0.97872  ng 0.97857  rel 0.0155 %         PASS
+  C07 vout_pp case 1                             LT 0.0091524  ng 0.0092951  rel 1.56 %       PASS
+  C07 vout_pp case 2                             LT 0.0089283  ng 0.0089842  rel 0.626 %      PASS
+  C07 pin case 1                                 LT 15.186  ng 15.207  rel 0.135 %            PASS
+  C07 pin case 2                                 LT 5.1814  ng 5.1807  rel 0.0118 %           PASS
+  C07 pout case 1                                LT 14.768  ng 14.791  rel 0.15 %             PASS
+  C07 pout case 2                                LT 5.0917  ng 5.0945  rel 0.0544 %           PASS
+  C07 eff case 1                                 LT 0.9725  ng 0.97264  abs 0.000146          PASS
+  C07 eff case 2                                 LT 0.98271  ng 0.98336  abs 0.000651         PASS
+  C07 pgate case 1                               LT 0.095451  ng 0.095092  rel 0.376 %        PASS
+  C07 pgate case 2                               LT 0.095232  ng 0.095293  rel 0.0637 %       PASS
+  C08 LTspice Vsw peak < 0.75 BVdss              max 27.9 V (limit 30 V)                      PASS
+  C09 LTspice snubber lowers the Vsw peak        22.2 V with, 27.9 V without                  PASS
+  C08 ngspice Vsw peak < 0.75 BVdss              max 22.8 V (limit 30 V)                      PASS
+  C09 ngspice snubber lowers the Vsw peak        20.1 V with, 22.8 V without                  PASS
+
+[4] Model vs SPICE
+  C10 Vout full 3 A vs LT                        model 4.9619 V, SPICE 4.9613 V               PASS
+  C11 dIL p-p full 3 A vs LT                     model 0.981 A, SPICE 0.976 A                 PASS
+  C12 Vout ripple full 3 A vs LT                 model 8.91 mV, SPICE 9.15 mV                 PASS
+  C13 efficiency full 3 A vs LT                  model 97.34 %, SPICE 97.25 %                 PASS
+  C14 gate drive full 3 A vs LT                  model 87 mW, SPICE 95 mW                     PASS
+  C15 snubber loss full 3 A vs LT                C Vin^2 fsw 28.8 mW (+/-50 %), SPICE 41.2 mW PASS
+  C10 Vout full 3 A vs ng                        model 4.9619 V, SPICE 4.9650 V               PASS
+  C11 dIL p-p full 3 A vs ng                     model 0.981 A, SPICE 0.978 A                 PASS
+  C12 Vout ripple full 3 A vs ng                 model 8.91 mV, SPICE 9.30 mV                 PASS
+  C13 efficiency full 3 A vs ng                  model 97.34 %, SPICE 97.26 %                 PASS
+  C14 gate drive full 3 A vs ng                  model 87 mW, SPICE 95 mW                     PASS
+  C15 snubber loss full 3 A vs ng                C Vin^2 fsw 28.8 mW (+/-50 %), SPICE 36.7 mW PASS
+    loss budget at 3 A (mW): HS conduction 26, LS conduction 34, inductor DCR 179, shunt 44, Cin ESR 6, Cout ESR 1, HS switching 11, dead-time diode 45, reverse recovery 30, snubber 29
+  C16 FET Tj at 50 degC ambient < 100 degC       HS 66 mW, LS 79 mW -> Tj 54 degC             PASS
+  C17 inductor temperature < 100 degC            179 mW -> 57 degC                            PASS
+  C10 Vout light 1 A vs LT                       model 5.0272 V, SPICE 5.0457 V               PASS
+  C11 dIL p-p light 1 A vs LT                    model 0.979 A, SPICE 0.979 A                 PASS
+  C12 Vout ripple light 1 A vs LT                model 8.94 mV, SPICE 8.93 mV                 PASS
+  C13 efficiency light 1 A vs LT                 model 98.27 %, SPICE 98.27 %                 PASS
+  C14 gate drive light 1 A vs LT                 model 87 mW, SPICE 95 mW                     PASS
+  C15 snubber loss light 1 A vs LT               C Vin^2 fsw 28.8 mW (+/-50 %), SPICE 24.5 mW PASS
+  C10 Vout light 1 A vs ng                       model 5.0272 V, SPICE 5.0470 V               PASS
+  C11 dIL p-p light 1 A vs ng                    model 0.979 A, SPICE 0.979 A                 PASS
+  C12 Vout ripple light 1 A vs ng                model 8.94 mV, SPICE 8.98 mV                 PASS
+  C13 efficiency light 1 A vs ng                 model 98.27 %, SPICE 98.34 %                 PASS
+  C14 gate drive light 1 A vs ng                 model 87 mW, SPICE 95 mW                     PASS
+  C15 snubber loss light 1 A vs ng               C Vin^2 fsw 28.8 mW (+/-50 %), SPICE 24.7 mW PASS
+
+[5] Digital loop (PI + feed-forward, 50 kHz, 1-sample delay)
+  C18 margins 0.01 A                             fc 128 Hz, PM 89 deg, GM 9.1 dB              PASS
+  C18 margins 1 A                                fc 127 Hz, PM 89 deg, GM 10.5 dB             PASS
+  C18 margins 3 A                                fc 126 Hz, PM 89 deg, GM 12.9 dB             PASS
+  C18 margins 0.01 A, L +20 %                    fc 128 Hz, PM 89 deg, GM 7.6 dB              PASS
+  C18 margins 0.01 A, C -20 %                    fc 128 Hz, PM 90 deg, GM 8.9 dB              PASS
+  C18 margins 0.01 A, L -20 % C +20 %            fc 128 Hz, PM 89 deg, GM 11.0 dB             PASS
+
+[6] Python port of the controller vs the C host test
+  C19 host test log RESULT all PASS              19/19                                        PASS
+  C20 0.5 -> 3 A dip: Python vs C                Python 4.5864 V, C 4.5864 V                  PASS
+  C21 3 -> 0.5 A peak: Python vs C               Python 5.4419 V, C 5.4419 V                  PASS
+
+RESULT: 59/59 PASS
+figure: docs/img/main_py_buck.png

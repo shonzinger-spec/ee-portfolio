@@ -1,0 +1,73 @@
+
+Note: No compatibility mode selected!
+
+
+Circuit: * 02 - synchronous buck power stage, 12 v -> 5 v / 3 a, 200 khz (ngspice 47 port, open loop)
+
+Reset re-loads circuit * 02 - synchronous buck power stage, 12 v -> 5 v / 3 a, 200 khz (ngspice 47 port, open loop)
+
+Circuit: * 02 - synchronous buck power stage, 12 v -> 5 v / 3 a, 200 khz (ngspice 47 port, open loop)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+Operating point simulation skipped by 'uic',
+  now using transient initial conditions.
+ Reference value :  4.24710e-05 Reference value :  8.82736e-05 Reference value :  1.37215e-04 Reference value :  1.83965e-04 Reference value :  2.32940e-04 Reference value :  2.82802e-04 Reference value :  3.32587e-04 Reference value :  3.78732e-04 Reference value :  4.27487e-04 Reference value :  4.73486e-04 Reference value :  5.22733e-04 Reference value :  5.70018e-04 Reference value :  6.18452e-04 Reference value :  6.67752e-04 Reference value :  7.14208e-04 Reference value :  7.63502e-04 Reference value :  8.13228e-04 Reference value :  8.62396e-04 Reference value :  9.09003e-04 Reference value :  9.58432e-04 Reference value :  1.00829e-03 Reference value :  1.05751e-03
+No. of Data Rows : 1066523
+step 1 RLOAD=1.6667 SNUB=1
+vout_avg            =  4.96505e+00 from=  1.00000e-03 to=  1.05000e-03
+vout_pp             =  9.29507e-03 from=  1.00000e-03 to=  1.05000e-03
+il_avg              =  2.97308e+00 from=  1.00000e-03 to=  1.05000e-03
+il_pp               =  9.77716e-01 from=  1.00000e-03 to=  1.05000e-03
+pin                 =  1.52067e+01 from=  1.00000e-03 to=  1.05000e-03
+pout                =  1.47907e+01 from=  1.00000e-03 to=  1.05000e-03
+pgate               =  9.50925e-02 from=  1.00000e-03 to=  1.05000e-03
+psnub               =  3.66659e-02 from=  1.00000e-03 to=  1.05000e-03
+vsw_max             =  2.01266e+01 at=  1.04506e-03
+eff = 0.972644
+Reset re-loads circuit * 02 - synchronous buck power stage, 12 v -> 5 v / 3 a, 200 khz (ngspice 47 port, open loop)
+
+Circuit: * 02 - synchronous buck power stage, 12 v -> 5 v / 3 a, 200 khz (ngspice 47 port, open loop)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+Operating point simulation skipped by 'uic',
+  now using transient initial conditions.
+ Reference value :  2.85666e-05 Reference value :  7.81640e-05 Reference value :  1.27820e-04 Reference value :  1.77531e-04 Reference value :  2.27213e-04 Reference value :  2.77474e-04 Reference value :  3.27775e-04 Reference value :  3.77416e-04 Reference value :  4.27503e-04 Reference value :  4.68675e-04 Reference value :  5.13321e-04 Reference value :  5.58330e-04 Reference value :  6.07765e-04 Reference value :  6.57261e-04 Reference value :  7.03979e-04 Reference value :  7.52776e-04 Reference value :  8.02266e-04 Reference value :  8.52248e-04 Reference value :  9.02319e-04 Reference value :  9.52276e-04 Reference value :  1.00220e-03 Reference value :  1.04889e-03
+No. of Data Rows : 1040380
+step 2 RLOAD=5 SNUB=1
+vout_avg            =  5.04703e+00 from=  1.00000e-03 to=  1.05000e-03
+vout_pp             =  8.98421e-03 from=  1.00000e-03 to=  1.05000e-03
+il_avg              =  1.00808e+00 from=  1.00000e-03 to=  1.05000e-03
+il_pp               =  9.78566e-01 from=  1.00000e-03 to=  1.05000e-03
+pin                 =  5.18074e+00 from=  1.00000e-03 to=  1.05000e-03
+pout                =  5.09451e+00 from=  1.00000e-03 to=  1.05000e-03
+pgate               =  9.52928e-02 from=  1.00000e-03 to=  1.05000e-03
+psnub               =  2.47471e-02 from=  1.00000e-03 to=  1.05000e-03
+vsw_max             =  1.76416e+01 at=  1.02006e-03
+eff = 0.983356
+Reset re-loads circuit * 02 - synchronous buck power stage, 12 v -> 5 v / 3 a, 200 khz (ngspice 47 port, open loop)
+
+Circuit: * 02 - synchronous buck power stage, 12 v -> 5 v / 3 a, 200 khz (ngspice 47 port, open loop)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+Operating point simulation skipped by 'uic',
+  now using transient initial conditions.
+ Reference value :  1.13483e-05 Reference value :  3.52605e-05 Reference value :  5.90394e-05 Reference value :  8.28568e-05 Reference value :  1.07343e-04 Reference value :  1.31540e-04 Reference value :  1.55977e-04 Reference value :  1.80532e-04 Reference value :  2.04257e-04 Reference value :  2.27936e-04 Reference value :  2.49536e-04 Reference value :  2.73230e-04 Reference value :  2.97877e-04 Reference value :  3.22411e-04 Reference value :  3.47136e-04 Reference value :  3.71995e-04 Reference value :  3.96811e-04 Reference value :  4.21466e-04 Reference value :  4.46371e-04 Reference value :  4.71161e-04 Reference value :  4.96001e-04 Reference value :  5.20780e-04 Reference value :  5.45121e-04 Reference value :  5.68710e-04 Reference value :  5.93119e-04 Reference value :  6.17822e-04 Reference value :  6.41801e-04 Reference value :  6.66538e-04 Reference value :  6.90902e-04 Reference value :  7.14694e-04 Reference value :  7.38926e-04 Reference value :  7.60892e-04 Reference value :  7.85308e-04 Reference value :  8.09090e-04 Reference value :  8.33762e-04 Reference value :  8.57981e-04 Reference value :  8.82699e-04 Reference value :  9.07552e-04 Reference value :  9.32309e-04 Reference value :  9.56955e-04 Reference value :  9.81658e-04 Reference value :  1.00572e-03 Reference value :  1.03065e-03 Reference value :  1.05560e-03
+No. of Data Rows : 1972646
+step 3 RLOAD=1.6667 SNUB=0
+vout_avg            =  4.96347e+00 from=  1.00000e-03 to=  1.05000e-03
+vout_pp             =  9.22277e-03 from=  1.00000e-03 to=  1.05000e-03
+il_avg              =  2.97294e+00 from=  1.00000e-03 to=  1.05000e-03
+il_pp               =  9.77638e-01 from=  1.00000e-03 to=  1.05000e-03
+pin                 =  1.52103e+01 from=  1.00000e-03 to=  1.05000e-03
+pout                =  1.47813e+01 from=  1.00000e-03 to=  1.05000e-03
+pgate               =  9.47475e-02 from=  1.00000e-03 to=  1.05000e-03
+psnub               =  4.67871e-12 from=  1.00000e-03 to=  1.05000e-03
+vsw_max             =  2.27861e+01 at=  1.01506e-03
+eff = 0.971796
+ngspice-47 done
