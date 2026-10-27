@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "author": "Smart Power Node project",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": 0, "left": 0, "attrs": {} },
+    {
+      "type": "board-ssd1306",
+      "id": "oled",
+      "top": -60,
+      "left": 220,
+      "attrs": { "i2cAddress": "0x3c" }
+    },
+    {
+      "type": "chip-ina219",
+      "id": "ina",
+      "top": 140,
+      "left": 240,
+      "attrs": { "currentMa": "1000", "shuntMohm": "50", "supplyMv": "5000" }
+    }
+  ],
+  "connections": [
+    [ "esp:TX", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX", "$serialMonitor:TX", "", [] ],
+    [ "esp:21", "oled:SDA", "blue", [] ],
+    [ "esp:21", "ina:SDA", "blue", [] ],
+    [ "esp:22", "oled:SCL", "gold", [] ],
+    [ "esp:22", "ina:SCL", "gold", [] ],
+    [ "esp:3V3", "oled:VCC", "red", [] ],
+    [ "esp:3V3", "ina:VS", "red", [] ],
+    [ "esp:GND.2", "oled:GND", "black", [] ],
+    [ "esp:GND.2", "ina:GND", "black", [] ]
+  ],
+  "serialMonitor": { "display": "always" }
+}

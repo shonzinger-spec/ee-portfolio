@@ -1,0 +1,38 @@
+* INA219 high-side shunt front-end : 5 V rail, 0..2 A load, 50 mohm shunt
+* Open this file in LTspice and press Run.
+
+.param Rshunt=0.05
+
+* ---- 5 V source -> shunt -> load node --------------------------------------
+V1    sup   0     5
+Rsh   sup   load  {Rshunt}
+
+* ---- Fluctuating load (current source SINKING from 'load' to ground) -------
+* Steps: 0 A -> 0.5 A -> 1.5 A -> 2 A -> 0.2 A -> 0 A
+I1    load  0     PWL(0 0  2m 0  2.1m 0.5  6m 0.5  6.1m 1.5  10m 1.5  10.1m 2  14m 2  14.1m 0.2  18m 0.2  18.1m 0  30m 0)
+* Alternative A - square pulse 0..2 A, 10 ms period:
+*I1   load  0     PULSE(0 2 1m 100u 100u 4m 10m)
+* Alternative B - sine-fluctuating load, 0..2 A at 100 Hz (replace the I1 line):
+*B1   load  0     I = 1 + sin(2*pi*100*time)
+
+* ---- Optional INA219 input filter (matched <=10 ohm + 100 nF differential) --
+Rf1   sup   inp   10
+Rf2   load  inn   10
+Cf    inp   inn   100n
+
+* ---- Transient analysis -------------------------------------------------------
+.tran 0 30m 0 10u
+.options plotwinsize=0
+
+* ---- Automatic checks (read them in View > SPICE Error Log, Ctrl+L) ----------
+.meas TRAN Vsh_max    MAX  V(sup,load)            ; expect 100 mV
+.meas TRAN Vina_max   MAX  V(inp,inn)             ; expect ~100 mV (filter adds ~no error)
+.meas TRAN Vload_min  MIN  V(load)                ; expect 4.90 V
+.meas TRAN Psh_pk     MAX  V(sup,load)*I(Rsh)     ; expect 0.2 W
+.meas TRAN Isense_pk  MAX  V(sup,load)/Rshunt     ; expect 2 A
+.meas TRAN Vsh_at_1p5 FIND V(sup,load) AT=9m      ; expect 75 mV (1.5 A step)
+
+* Optional: compare shunt values - uncomment, and use {Rshunt} (already used above)
+*.step param Rshunt list 0.05 0.1
+
+.end

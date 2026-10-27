@@ -1,0 +1,28 @@
+# Wokwi automation scenario: step the INA219 chip's load-current slider and capture the OLED.
+# Run from sim/wokwi:  wokwi-cli . --scenario load_steps.test.yaml --serial-log-file ../../docs/wokwi_serial_steps.log
+name: 'INA219 load steps: 1 A, 2 A, over-range'
+version: 1
+author: 'Shon Zinger'
+
+steps:
+  - wait-serial: 'ms,bus_V'
+  - delay: 1500ms
+  - take-screenshot:
+      part-id: oled
+      save-to: ../../docs/img/wokwi_oled_1A.png
+  - set-control:
+      part-id: ina
+      name: currentMa
+      value: 2000
+  - delay: 1500ms
+  - take-screenshot:
+      part-id: oled
+      save-to: ../../docs/img/wokwi_oled_2A.png
+  - set-control:
+      part-id: ina
+      name: currentMa
+      value: 3200
+  - delay: 1500ms
+  - take-screenshot:
+      part-id: oled
+      save-to: ../../docs/img/wokwi_oled_overrange.png

@@ -1,0 +1,18 @@
+# Personal planning lists, not part of the portfolio
+USER_PROJECT_LIST_*.md
+FREE_TOOLS.md
+
+# Build products (arduino-cli output, host-test objects, compiled chip)
+**/build/
+*.chip.wasm
+# Logs under build dirs are covered by **/build/ above; docs/*.log are kept and tracked.
+
+# Local KiCad state
+*.kicad_prl
+
+# Python and macOS
+__pycache__/
+.DS_Store
+
+# Downloaded by wokwi-cli at run time
+**/sim/wokwi/wokwi-api.h

@@ -1,0 +1,25 @@
+{
+  "board": {
+    "design_settings": {}
+  },
+  "boards": [],
+  "libraries": {
+    "pinned_footprint_libs": [],
+    "pinned_symbol_libs": []
+  },
+  "meta": {
+    "filename": "power_node.kicad_pro",
+    "version": 1
+  },
+  "schematic": {
+    "legacy_lib_dir": "",
+    "legacy_lib_list": []
+  },
+  "sheets": [
+    [
+      "7d23c55a-caec-5b63-a1d7-f0bb9b5882cb",
+      "Root"
+    ]
+  ],
+  "text_variables": {}
+}

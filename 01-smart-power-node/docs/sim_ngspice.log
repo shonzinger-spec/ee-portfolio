@@ -1,0 +1,48 @@
+# ngspice batch run: cd sim/ngspice && ngspice -b shunt_frontend_ngspice.cir  (Tue Oct 27 12:46:08 2026)
+
+Note: No compatibility mode selected!
+
+
+Circuit: * ngspice port of ../shunt_frontend.cir (ltspice dialect -> ngspice 47).
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+Initial Transient Solution
+--------------------------
+
+Node                                   Voltage
+----                                   -------
+sup                                          5
+load                                         5
+inp                                          5
+inn                                          5
+v1#branch                         -1.77358e-14
+
+
+No. of Data Rows : 3054
+vsh_max             =  1.00000e-01 at=  1.01150e-02
+vina_max            =  1.00000e-01 at=  1.01150e-02
+vload_min           =  4.90000e+00 at=  1.01150e-02
+psh_pk              =  2.00000e-01 at=  1.01150e-02
+isense_pk           =  2.00000e+00 at=  1.01150e-02
+vsh_at_1p5          =  7.50000e-02
+vsh_max = 1.00000000e-01
+vina_max = 1.00000000e-01
+vload_min = 4.90000000e+00
+psh_pk = 2.00000000e-01
+isense_pk = 2.00000000e+00
+vsh_at_1p5 = 7.50000000e-02
+Note: Simulation executed from .control section 
+
+# Comparison ngspice vs LTspice (PASS: rel <= 0.1 % or abs <= 1e-6)
+measurement        LTspice       ngspice         diff     rel %  result
+Vsh_max          0.0999999           0.1    1.000e-07    0.0001  PASS
+Vina_max         0.0999999           0.1    1.000e-07    0.0001  PASS
+Vload_min              4.9           4.9    0.000e+00    0.0000  PASS
+Psh_pk                 0.2           0.2    0.000e+00    0.0000  PASS
+Isense_pk                2             2    0.000e+00    0.0000  PASS
+Vsh_at_1p5       0.0749998         0.075    2.000e-07    0.0003  PASS
+RESULT: 6/6 PASS
+max |residual| V(sup,load) LTspice-ngspice on 1 us grid: 0.023 uV at t = 18.1010 ms

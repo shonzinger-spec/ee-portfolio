@@ -1,0 +1,42 @@
+* ngspice port of ../shunt_frontend.cir (LTspice dialect -> ngspice 47).
+* Same elements, values, PWL and .tran as the LTspice netlist.
+* Dialect changes: .options plotwinsize=0 dropped (LTspice-only); .tran needs
+* TSTEP>0 so '0 30m 0 10u' became '10u 30m 0 10u' (same max step 10 us);
+* .meas V(a,b)/products are not supported, so all six measurements are done with
+* control-block 'meas' on let-vectors (Psh_pk uses V(sup,load)*@rsh[i], the resistor current;
+* no extra sense source, so the circuit is identical). Waveforms go out via wrdata.
+
+.param Rshunt=0.05
+
+V1    sup   0     5
+Rsh   sup   load  {Rshunt}
+
+I1    load  0     PWL(0 0  2m 0  2.1m 0.5  6m 0.5  6.1m 1.5  10m 1.5  10.1m 2  14m 2  14.1m 0.2  18m 0.2  18.1m 0  30m 0)
+
+Rf1   sup   inp   10
+Rf2   load  inn   10
+Cf    inp   inn   100n
+
+.tran 10u 30m 0 10u
+
+
+.control
+set numdgt=8
+save v(sup) v(load) v(inp) v(inn) @rsh[i]
+run
+let vsh = v(sup)-v(load)
+let vina = v(inp)-v(inn)
+let ish = @rsh[i]
+let psh = vsh*ish
+let isns = vsh/0.05
+meas tran Vsh_max    max vsh
+meas tran Vina_max   max vina
+meas tran Vload_min  min v(load)
+meas tran Psh_pk     max psh
+meas tran Isense_pk  max isns
+meas tran Vsh_at_1p5 find vsh at=9m
+print vsh_max vina_max vload_min psh_pk isense_pk vsh_at_1p5
+wrdata ngspice_wave.txt vsh vina ish
+.endc
+
+.end

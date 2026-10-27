@@ -1,0 +1,26 @@
+# Wokwi for VS Code / wokwi-cli configuration (https://docs.wokwi.com/vscode/project-config)
+#
+# 1. Build the firmware (from the project root) into ./build:
+#      arduino-cli compile -b esp32:esp32:esp32 --output-dir sim/wokwi/build src/power_node
+#    arduino-cli 1.2.0 + esp32 core 3.2.0 writes power_node.ino.{bin,elf,merged.bin,...}.
+#    .ino.bin is the application image (Wokwi adds its own bootloader + default
+#    partition table); power_node.ino.merged.bin is the full 4 MB image if needed.
+#
+# 2. Build the INA219 custom chip (wokwi-cli README, "Custom Chip Compilation";
+#    it downloads WASI-SDK and https://wokwi.com/api/chips/wokwi-api.h itself):
+#      cd sim/wokwi && wokwi-cli chip compile ina219.chip.c -o ina219.chip.wasm
+#    or with clang + wasi-libc, as in https://github.com/wokwi/inverter-chip (Makefile):
+#      clang --target=wasm32-unknown-wasi --sysroot /opt/wasi-libc -nostartfiles \
+#        -Wl,--import-memory -Wl,--export-table -Wl,--no-entry -Werror \
+#        -I ../../test/host -o ina219.chip.wasm ina219.chip.c
+#    Wokwi reads the pinout from ina219.chip.json (same name as the .wasm), and the
+#    [[chip]] name "ina219" makes the part type "chip-ina219" used in diagram.json.
+
+[wokwi]
+version = 1
+firmware = 'build/power_node.ino.bin'
+elf = 'build/power_node.ino.elf'
+
+[[chip]]
+name = 'ina219'
+binary = 'ina219.chip.wasm'

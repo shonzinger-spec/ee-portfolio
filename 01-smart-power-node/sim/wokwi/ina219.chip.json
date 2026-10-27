@@ -1,0 +1,15 @@
+{
+  "name": "INA219",
+  "author": "Smart Power Node project",
+  "pins": ["VS", "GND", "SCL", "SDA"],
+  "controls": [
+    {
+      "id": "currentMa",
+      "label": "Load current (mA)",
+      "type": "range",
+      "min": 0,
+      "max": 3200,
+      "step": 10
+    }
+  ]
+}

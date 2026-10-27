@@ -1,0 +1,29 @@
+# arduino-cli compile, Tue Oct 27 06:36:34 EDT 2026
+arduino-cli  Version: 1.2.0 Commit: 9c495211 Date: 2025-02-24T15:57:28Z
+ID          Installed Latest Name
+arduino:avr 1.8.6     1.8.7  Arduino AVR Boards
+arduino:sam 1.6.12    1.6.12 Arduino SAM Boards (32-bits ARM Cortex-M3)
+esp32:esp32 3.2.0     3.3.8  esp32
+
+Adafruit BusIO            1.17.0    1.17.4    user     This is a library for abstracting awa...
+Adafruit GFX Library      1.12.0    1.12.6    user     Adafruit GFX graphics core library, t...
+Adafruit SSD1306          2.5.13    2.5.16    user     SSD1306 oled driver library for monoc...
+# cmd: arduino-cli compile --fqbn esp32:esp32:esp32 --warnings all src/power_node
+/Users/shonzinger/Career/ee-portfolio-projects/01-smart-power-node/src/power_node/power_node.ino:44:26: error: function 'void fatal(const char*)' declared '[[noreturn]]' but its first declaration was not
+   44 | [[noreturn]] static void fatal(const char *msg) {
+      |                          ^~~~~
+/Users/shonzinger/Career/ee-portfolio-projects/01-smart-power-node/src/power_node/power_node.ino:44:13: note: previous declaration of 'void fatal(const char*)'
+   44 | [[noreturn]] static void fatal(const char *msg) {
+      |             ^~~~~
+
+[92mUsed library[0m         [92mVersion[0m [90mPath[0m
+[93mWire[0m                 3.2.0   [90m/Users/shonzinger/Library/Arduino15/packages/esp32/hardware/esp32/3.2.0/libraries/Wire[0m
+[93mAdafruit GFX Library[0m 1.12.0  [90m/Users/shonzinger/Documents/Arduino/libraries/Adafruit_GFX_Library[0m
+[93mAdafruit BusIO[0m       1.17.0  [90m/Users/shonzinger/Documents/Arduino/libraries/Adafruit_BusIO[0m
+[93mSPI[0m                  3.2.0   [90m/Users/shonzinger/Library/Arduino15/packages/esp32/hardware/esp32/3.2.0/libraries/SPI[0m
+[93mAdafruit SSD1306[0m     2.5.13  [90m/Users/shonzinger/Documents/Arduino/libraries/Adafruit_SSD1306[0m
+
+[92mUsed platform[0m [92mVersion[0m [90mPath[0m
+[93mesp32:esp32[0m   3.2.0   [90m/Users/shonzinger/Library/Arduino15/packages/esp32/hardware/esp32/3.2.0[0m
+Error during build: exit status 1
+EXIT=1
