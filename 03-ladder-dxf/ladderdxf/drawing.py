@@ -14,7 +14,8 @@ from .symbols import CELL_W, TB_H, TB_W
 
 SHEET_W, SHEET_H, MARGIN = 17.0, 11.0, 0.5
 RAIL_X = (2.0, 12.0)  # L1, L2
-TOP_Y, SPACING = 9.5, 0.75  # y of the first line, distance between line references
+TOP_Y, SPACING = 9.5, 0.9  # y of the first line, distance between line references (0.9 leaves 0.2 in
+# between a line's description text and the next line's tag text, so the two do not read as one label)
 PITCH = 1.25  # distance between symbol slots on a line
 FIRST_SLOT_X = RAIL_X[0] + 0.5  # inputs fill slots from the left rail ...
 LAST_SLOT_X = RAIL_X[1] - 0.5 - CELL_W  # ... the load and its overload contacts from the right rail

@@ -13,6 +13,7 @@ from openpyxl import Workbook, load_workbook
 from ladderdxf import cli
 from ladderdxf.drawing import TitleInfo, build_document
 from ladderdxf.model import InputError, load_ladder
+from ladderdxf.reports import bom_rows
 
 ROOT = Path(__file__).resolve().parents[1]
 SAMPLE = ROOT / "sample" / "motor_starter.csv"
@@ -120,6 +121,23 @@ def test_xlsx_input_gives_the_same_ladder(tmp_path):
     a, b = load_ladder(SAMPLE), load_ladder(tmp_path / "motor_starter.xlsx")
     assert [(d.key, d.tag) for d in a.devices] == [(d.key, d.tag) for d in b.devices]
     assert [(w.number, w.ends) for w in a.wires] == [(w.number, w.ends) for w in b.wires]
+    assert bom_rows(a) == bom_rows(b)
+
+
+def test_terminals_of_every_symbol_insert(sample_out):
+    doc = ezdxf.readfile(sample_out / "motor_starter.dxf")
+    terminals = list(zip(attribs(doc, "TERM01"), attribs(doc, "TERM02")))
+    assert terminals == [
+        ("1", "2"),    # PB1 STOP, NC pushbutton
+        ("3", "4"),    # PB2 START, NO pushbutton
+        ("A1", "A2"),  # M1 starter coil
+        ("95", "96"),  # OL1 overload contact
+        ("13", "14"),  # M1 seal-in NO contact around START, line 101
+        ("23", "24"),  # M1 NO contact, line 102
+        ("X1", "X2"),  # LT1, line 102 (inserts are drawn per rung: contact then light)
+        ("31", "32"),  # M1 NC contact, line 103
+        ("X1", "X2"),  # LT2, line 103
+    ]
 
 
 @pytest.mark.parametrize("rows, message", [
@@ -132,6 +150,34 @@ def test_xlsx_input_gives_the_same_ladder(tmp_path):
     (["1,OLX,OL_NC", "1,LAMP,PILOT_LIGHT"], "right of the load"),
     (["x,S,PB_NO", "x,LAMP,PILOT_LIGHT"], "whole number"),
     (["1,S,PB_NO", "1,LAMP,PILOT_LIGHT", "2,S,PB_NO", "2,LAMP2,PILOT_LIGHT"], "draws each pushbutton"),
+    pytest.param(
+        ["1,START,PB_NO", "1,CRX,STARTER_COIL", "1,CRX,CONTACT_NO,,CRX"],
+        "go around a contact or pushbutton, not STARTER_COIL CRX",
+        id="branch-around-a-coil",
+    ),
+    pytest.param(
+        ["1,S,PB_NO", "1,CRX,STARTER_COIL", "1,LAMP,PILOT_LIGHT,,S"],
+        "can be a branch, not PILOT_LIGHT LAMP",
+        id="load-as-branch",
+    ),
+    pytest.param(
+        ["1,S,PB_NO", "1,CRX,STARTER_COIL", "1,OLX,OL_NC,,S"],
+        "can be a branch, not OL_NC OLX",
+        id="overload-as-branch",
+    ),
+    pytest.param(
+        ["1,S,PB_NO", "1,CRX,STARTER_COIL", "1,OLX,OL_NC", "1,CRX,CONTACT_NO,,OLX"],
+        "go around a contact or pushbutton, not OL_NC OLX",
+        id="branch-around-an-overload",
+    ),
+    pytest.param(["²,S,PB_NO", "²,LAMP,PILOT_LIGHT"], "whole number", id="superscript-rung-number"),
+    pytest.param(
+        ["1,START,PB_NO", "1,CRX,STARTER_COIL"]
+        + [f"{n},CRX,CONTACT_NO" for n in range(2, 12)]
+        + [f"{n},LT{n},PILOT_LIGHT" for n in range(2, 12)],
+        "at most 9",
+        id="ten-contacts-of-one-coil",
+    ),
 ])
 def test_bad_device_lists_are_rejected(tmp_path, rows, message):
     with pytest.raises(InputError, match=message):
@@ -142,6 +188,20 @@ def test_missing_column_is_reported(tmp_path):
     path = tmp_path / "nokind.csv"
     path.write_text("rung,device\n1,STOP\n", encoding="utf-8")
     with pytest.raises(InputError, match="missing column"):
+        load_ladder(path)
+
+
+def test_non_utf8_csv_is_reported(tmp_path):
+    path = tmp_path / "heater.csv"
+    path.write_text(HEADER + "\n1,HEAT_LT,PILOT_LIGHT,SETPOINT 80°C\n", encoding="cp1252")
+    with pytest.raises(InputError, match="UTF-8"):
+        load_ladder(path)
+
+
+def test_corrupt_xlsx_is_reported(tmp_path):
+    path = tmp_path / "broken.xlsx"
+    path.write_bytes(b"PK\x03\x04 this is not a workbook")
+    with pytest.raises(InputError, match="Excel workbook"):
         load_ladder(path)
 
 

@@ -11,8 +11,8 @@ A small Python tool that turns a device list (CSV or Excel) into an AutoCAD-comp
 - Tags devices per family in drawing order (`PB1`, `PB2`, `M1`, `OL1`, `LT1`, ...); a contact carries its coil's tag.
 - Numbers line references from 100 and wires in rung order: wire 1 = L1, wire 2 = L2, then 3, 4, 5, ...
 - Cross-references: each coil lists the lines of its NO and NC contacts to the right of L2; each contact shows its coil's line.
-- Terminal numbers: pushbuttons 1-2 (NC) and 3-4 (NO), coils A1-A2, overload 95-96, lights X1-X2, auxiliary contacts 13-14, 21-22, ... in drawing order.
-- Refuses rungs that make no sense, naming the row: no load (a short from L1 to L2), two loads in series, an overload contact left of its load, a contact whose device has no coil.
+- Terminal numbers: pushbuttons 1-2 (NC) and 3-4 (NO), coils A1-A2, overload 95-96, lights X1-X2. A coil's auxiliary contacts get a sequence digit in drawing order plus a function digit (3-4 NO, 1-2 NC), so the sample's M1 contacts are 13-14, 23-24 and 31-32; a coil can have up to 9.
+- Refuses rungs that make no sense, naming the row: no load (a short from L1 to L2), two loads in series, an overload contact left of its load, a contact whose device has no coil, a branch (`around`) that holds or bridges a coil, pilot light or overload, and more than 9 contacts on one coil. A CSV that is not UTF-8 or a damaged `.xlsx` gets a one-line error instead of a traceback.
 - Writes `bom.xlsx` (one row per device), `wirelist.xlsx` (from-to rows per wire) and a PNG or PDF picture of the sheet.
 
 ## Quick start (macOS)
@@ -43,11 +43,11 @@ One row per symbol. Rows with the same `rung` form one rung; rows without `aroun
 | `device` | yes | Your name for the physical device. Rows with the same name are one device (a coil and its contacts) |
 | `kind` | yes | `PB_NO`, `PB_NC`, `STARTER_COIL`, `RELAY_COIL`, `CONTACT_NO`, `CONTACT_NC`, `OL_NC`, `PILOT_LIGHT` |
 | `description` | no | Text under the symbol (keep it to about 16 characters); not drawn for contacts |
-| `around` | no | Puts the row on a branch line under the rung, in parallel with the named device, e.g. the seal-in contact around `START` |
+| `around` | no | Puts the row on a branch line under the rung, in parallel with the named device, e.g. the seal-in contact around `START`; only a contact or pushbutton can be branched or bridged |
 | `color` | no | Pilot light color; its first letter is drawn in the lamp |
 | `manufacturer`, `catalog` | no | Copied to the BOM and to hidden `MFG` / `CAT` attributes |
 
-Each rung needs exactly one load (coil or pilot light), only overload contacts may sit to the right of the load, and a contact needs a coil row with the same `device`.
+Each rung needs exactly one load (coil or pilot light), only overload contacts may sit to the right of the load, and a contact needs a coil row with the same `device`. Save CSV files as UTF-8 (in Excel: CSV UTF-8).
 
 ## Output
 
@@ -62,7 +62,7 @@ Symbol blocks carry attributes named the way AutoCAD Electrical names them (`TAG
 
 ## Open the DXF on a Mac (free)
 
-- **QCAD**: `brew install --cask qcad`, or download it from qcad.org. File > Open > `out/motor_starter.dxf`, then View > Auto Zoom. The Layer List can hide `TERMS` or `XREF`.
+- **QCAD**: `brew install --cask qcad`, or download it from qcad.org. File > Open > `out/motor_starter.dxf`, then View > Auto Zoom. The Layer List can hide `TERMS` or `XREF`. Checked on 2026-10-27 with QCAD 3.33.1: its own DXF importer reads the sheet with no import errors and the same block, attribute, text and line counts as ezdxf, and reads the junction dots as solid hatches. The Homebrew cask is the QCAD Professional trial, whose command-line converters (`dwg2bmp`, `dwg2pdf`) output only a trial banner, so use the GUI or this tool's `--render` for pictures.
 - **LibreCAD**: Homebrew disabled its cask on 2026-09-01 because the app does not pass the macOS Gatekeeper check, so download the macOS build from librecad.org and open it the first time with right-click > Open (or System Settings > Privacy & Security > Open Anyway). Then File > Open > `out/motor_starter.dxf` and View > Auto Zoom.
 - The same file opens in AutoCAD, AutoCAD LT and AutoCAD Electrical (Windows) as plain blocks with attributes.
 
@@ -89,30 +89,39 @@ ALL CHECKS PASSED
 `pytest -v`:
 
 ```text
-tests/test_ladderdxf.py::test_dxf_reopens_with_unique_device_tags PASSED [  4%]
-tests/test_ladderdxf.py::test_wire_numbers_are_unique_and_match_the_wire_list PASSED [  9%]
-tests/test_ladderdxf.py::test_bom_has_one_row_per_input_device PASSED    [ 13%]
-tests/test_ladderdxf.py::test_cross_references PASSED                    [ 18%]
-tests/test_ladderdxf.py::test_lines_and_wire_numbers_follow_rung_order PASSED [ 22%]
-tests/test_ladderdxf.py::test_tags_count_per_family_in_drawing_order PASSED [ 27%]
-tests/test_ladderdxf.py::test_xlsx_input_gives_the_same_ladder PASSED    [ 31%]
-tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[rows0-no load] PASSED [ 36%]
-tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[rows1-one load per rung] PASSED [ 40%]
-tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[rows2-has no coil] PASSED [ 45%]
-tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[rows3-unknown kind] PASSED [ 50%]
-tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[rows4-around='NOPE'] PASSED [ 54%]
-tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[rows5-only overload contacts may follow the load] PASSED [ 59%]
-tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[rows6-right of the load] PASSED [ 63%]
-tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[rows7-whole number] PASSED [ 68%]
-tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[rows8-draws each pushbutton] PASSED [ 72%]
+tests/test_ladderdxf.py::test_dxf_reopens_with_unique_device_tags PASSED [  3%]
+tests/test_ladderdxf.py::test_wire_numbers_are_unique_and_match_the_wire_list PASSED [  6%]
+tests/test_ladderdxf.py::test_bom_has_one_row_per_input_device PASSED    [  9%]
+tests/test_ladderdxf.py::test_cross_references PASSED                    [ 12%]
+tests/test_ladderdxf.py::test_lines_and_wire_numbers_follow_rung_order PASSED [ 16%]
+tests/test_ladderdxf.py::test_tags_count_per_family_in_drawing_order PASSED [ 19%]
+tests/test_ladderdxf.py::test_xlsx_input_gives_the_same_ladder PASSED    [ 22%]
+tests/test_ladderdxf.py::test_terminals_of_every_symbol_insert PASSED    [ 25%]
+tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[rows0-no load] PASSED [ 29%]
+tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[rows1-one load per rung] PASSED [ 32%]
+tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[rows2-has no coil] PASSED [ 35%]
+tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[rows3-unknown kind] PASSED [ 38%]
+tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[rows4-around='NOPE'] PASSED [ 41%]
+tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[rows5-only overload contacts may follow the load] PASSED [ 45%]
+tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[rows6-right of the load] PASSED [ 48%]
+tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[rows7-whole number] PASSED [ 51%]
+tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[rows8-draws each pushbutton] PASSED [ 54%]
+tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[branch-around-a-coil] PASSED [ 58%]
+tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[load-as-branch] PASSED [ 61%]
+tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[overload-as-branch] PASSED [ 64%]
+tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[branch-around-an-overload] PASSED [ 67%]
+tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[superscript-rung-number] PASSED [ 70%]
+tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[ten-contacts-of-one-coil] PASSED [ 74%]
 tests/test_ladderdxf.py::test_missing_column_is_reported PASSED          [ 77%]
-tests/test_ladderdxf.py::test_more_lines_than_one_sheet_is_rejected PASSED [ 81%]
-tests/test_ladderdxf.py::test_too_many_symbols_on_one_line_is_rejected PASSED [ 86%]
-tests/test_ladderdxf.py::test_cli_reports_input_errors_without_a_traceback PASSED [ 90%]
-tests/test_ladderdxf.py::test_layout_is_the_same_in_a_fresh_process PASSED [ 95%]
+tests/test_ladderdxf.py::test_non_utf8_csv_is_reported PASSED            [ 80%]
+tests/test_ladderdxf.py::test_corrupt_xlsx_is_reported PASSED            [ 83%]
+tests/test_ladderdxf.py::test_more_lines_than_one_sheet_is_rejected PASSED [ 87%]
+tests/test_ladderdxf.py::test_too_many_symbols_on_one_line_is_rejected PASSED [ 90%]
+tests/test_ladderdxf.py::test_cli_reports_input_errors_without_a_traceback PASSED [ 93%]
+tests/test_ladderdxf.py::test_layout_is_the_same_in_a_fresh_process PASSED [ 96%]
 tests/test_ladderdxf.py::test_render_writes_a_png PASSED                 [100%]
 
-============================== 22 passed in 2.10s ==============================
+============================== 31 passed in 1.49s ==============================
 ```
 
 ## Engineering why
@@ -122,7 +131,7 @@ The drawing is written as DXF with ezdxf instead of driving AutoCAD Electrical, 
 ## What v0 does not do
 
 - One drawing type (control ladder) and one standard (NEMA/JIC); no IEC symbols.
-- One sheet: 10 lines with up to 7 symbols each; no multi-sheet projects or sheet-to-sheet references.
+- One sheet: 8 lines (100-107) with up to 7 symbols each; no multi-sheet projects or sheet-to-sheet references.
 - No power circuit (three-phase lines, disconnect, fuses, motor), terminal strips or PLC I/O.
 - A branch holds one symbol and bridges one main-path symbol.
 - Sequential tags and wire numbers only.

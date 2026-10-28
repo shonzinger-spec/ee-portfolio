@@ -6,6 +6,7 @@ Geometry lives in drawing.py; this module only decides what goes on the sheet.
 from __future__ import annotations
 
 import csv
+import zipfile
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -134,12 +135,19 @@ def read_rows(path) -> list[tuple[int, dict[str, str]]]:
         raise InputError(f"{path}: file not found")
     suffix = path.suffix.lower()
     if suffix == ".csv":
-        with path.open(newline="", encoding="utf-8-sig") as fh:
-            table = [list(row) for row in csv.reader(fh)]
+        try:
+            with path.open(newline="", encoding="utf-8-sig") as fh:
+                table = [list(row) for row in csv.reader(fh)]
+        except UnicodeDecodeError as exc:
+            raise InputError(f"{path.name}: not UTF-8 ({exc}); save the file as UTF-8") from exc
     elif suffix in (".xlsx", ".xlsm"):
         from openpyxl import load_workbook
+        from openpyxl.utils.exceptions import InvalidFileException
 
-        book = load_workbook(path, read_only=True, data_only=True)
+        try:
+            book = load_workbook(path, read_only=True, data_only=True)
+        except (zipfile.BadZipFile, InvalidFileException) as exc:
+            raise InputError(f"{path.name}: not a readable Excel workbook ({exc})") from exc
         try:
             table = [list(row) for row in book.worksheets[0].iter_rows(values_only=True)]
         finally:
@@ -193,7 +201,7 @@ def _fail(errors: list[str], source: str) -> None:
 
 def _element(number: int, row: dict[str, str], errors: list[str]) -> Element | None:
     rung, device, kind = row.get("rung", ""), row.get("device", ""), row.get("kind", "").upper()
-    if not rung.isdigit() or int(rung) < 1:
+    if not (rung.isascii() and rung.isdigit()) or int(rung) < 1:
         errors.append(f"row {number}: rung must be a whole number from 1 up, got {rung!r}")
     elif not device:
         errors.append(f"row {number}: device is empty")
@@ -225,9 +233,16 @@ def _rung(number: int, elements: list[Element], errors: list[str]) -> Rung:
             if e.spec.role != "overload":
                 errors.append(f"row {e.row}: only overload contacts may follow the load, not {e.kind} {e.device}")
     for b in rung.branches:
+        if b.spec.role != "contact":
+            errors.append(f"row {b.row}: only a contact or pushbutton can be a branch, not {b.kind} {b.device} on {where}")
+            continue
         hits = [i for i, e in enumerate(rung.main) if e.device == b.around]
         if len(hits) == 1:
-            rung.targets.append(hits[0])
+            target = rung.main[hits[0]]
+            if target.spec.role != "contact":
+                errors.append(f"row {b.row}: around={b.around!r} can only go around a contact or pushbutton, not {target.kind} {target.device} on {where}")
+            else:
+                rung.targets.append(hits[0])
         else:
             errors.append(f"row {b.row}: around={b.around!r} must name one main-path device on {where}, found {len(hits)}")
     return rung
@@ -289,6 +304,10 @@ def _link_contacts(devices: list[Device]) -> None:
             e.pins = e.spec.pins
         if d.parent.kind in COILS:
             contacts = sorted((e for e in d.elements if e.kind in CONTACTS), key=lambda e: (e.line, e.pos))
+            if len(contacts) > 9:
+                raise InputError(
+                    f"device {d.key}: {len(contacts)} auxiliary contacts of one coil; terminal numbering runs 13-14 ... 93-94, so a coil may have at most 9"
+                )
             for n, c in enumerate(contacts, start=1):  # IEC/EN 50011 style: 13-14 first NO, 21-22 second (NC)...
                 c.pins = (f"{n}3", f"{n}4") if c.kind == "CONTACT_NO" else (f"{n}1", f"{n}2")
                 c.xref = str(d.parent.line)
