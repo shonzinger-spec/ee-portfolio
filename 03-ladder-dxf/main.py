@@ -4,7 +4,7 @@
     pip install -r requirements.txt
     python main.py
 
-Writes out/motor_starter.dxf, out/motor_starter.png, out/bom.xlsx and out/wirelist.xlsx, then
+Writes out/motor_starter.dxf, out/motor_starter.png, out/motor_starter_bom.xlsx and out/motor_starter_wirelist.xlsx, then
 re-opens them and prints the checks quoted in the README's Verification section.
 """
 
@@ -37,14 +37,14 @@ def checks() -> list[tuple[bool, str]]:
     tags, contacts, wires = found["TAG1"], found["TAG2"], found["WIRENO"]
     with SAMPLE.open(newline="", encoding="utf-8-sig") as fh:
         devices = {row["device"].strip() for row in csv.DictReader(fh)}
-    bom = list(load_workbook(OUT / "bom.xlsx").active.iter_rows(min_row=2, values_only=True))
-    wire_list = {str(row[0]) for row in load_workbook(OUT / "wirelist.xlsx").active.iter_rows(min_row=2, values_only=True)}
+    bom = list(load_workbook(OUT / "motor_starter_bom.xlsx").active.iter_rows(min_row=2, values_only=True))
+    wire_list = {str(row[0]) for row in load_workbook(OUT / "motor_starter_wirelist.xlsx").active.iter_rows(min_row=2, values_only=True)}
     audit = doc.audit()
     return [
         (len(set(tags)) == len(tags) == len(devices), f"device tags unique: {len(set(tags))} of {len(tags)} -> {' '.join(sorted(tags))}"),
         (bool(contacts) and set(contacts) <= set(tags), f"all {len(contacts)} contact tags belong to a drawn device -> {' '.join(sorted(set(contacts)))}"),
         (len(set(wires)) == len(wires), f"wire numbers unique: {len(set(wires))} of {len(wires)} -> {' '.join(sorted(wires, key=int))}"),
-        (len(bom) == len(devices), f"BOM rows {len(bom)} = devices in the input list {len(devices)}"),
+        (sum(row[6] for row in bom) == len(devices), f"BOM quantities {sum(row[6] for row in bom)} = devices in the input list {len(devices)}"),
         (wire_list == set(wires), f"wire list covers the same {len(wire_list)} wire numbers as the drawing"),
         (not audit.has_errors, f"ezdxf audit of the DXF: {len(audit.errors)} errors"),
     ]

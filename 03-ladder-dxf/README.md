@@ -13,7 +13,7 @@ A small Python tool that turns a device list (CSV or Excel) into an AutoCAD-comp
 - Cross-references: each coil lists the lines of its NO and NC contacts to the right of L2; each contact shows its coil's line.
 - Terminal numbers: pushbuttons 1-2 (NC) and 3-4 (NO), coils A1-A2, overload 95-96, lights X1-X2. A coil's auxiliary contacts get a sequence digit in drawing order plus a function digit (3-4 NO, 1-2 NC), so the sample's M1 contacts are 13-14, 23-24 and 31-32; a coil can have up to 9.
 - Refuses rungs that make no sense, naming the row: no load (a short from L1 to L2), two loads in series, an overload contact left of its load, a contact whose device has no coil, a branch (`around`) that holds or bridges a coil, pilot light or overload, and more than 9 contacts on one coil. A CSV that is not UTF-8 or a damaged `.xlsx` gets a one-line error instead of a traceback.
-- Writes `bom.xlsx` (one row per device), `wirelist.xlsx` (from-to rows per wire) and a PNG or PDF picture of the sheet.
+- Writes `<input>_bom.xlsx` (one row per part: devices with the same manufacturer and catalog number share a row with every tag and the quantity), `<input>_wirelist.xlsx` (from-to rows per wire) and a PNG or PDF picture of the sheet.
 
 ## Quick start (macOS)
 
@@ -54,8 +54,8 @@ Each rung needs exactly one load (coil or pilot light), only overload contacts m
 | File | Contents |
 |---|---|
 | `out/motor_starter.dxf` | The sheet. Layers: `LADDER`, `LINENO`, `WIRES`, `WIRENO`, `SYMS`, `TAGS`, `DESC`, `XREF`, `TERMS`, `MFGCAT`, `TITLE`, `BORDER`, `NOTES` |
-| `out/bom.xlsx` | Item, Tag, Device, Description, Manufacturer, Catalog, Qty, Lines |
-| `out/wirelist.xlsx` | Wire, From, From pin, To, To pin (each wire daisy-chained in drawing order) |
+| `out/motor_starter_bom.xlsx` | Item, Tag, Device, Description, Manufacturer, Catalog, Qty, Lines |
+| `out/motor_starter_wirelist.xlsx` | Wire, From, From pin, To, To pin (each wire daisy-chained in drawing order) |
 | `out/motor_starter.png` | Picture of the sheet (ezdxf drawing add-on with matplotlib) |
 
 Symbol blocks carry attributes named the way AutoCAD Electrical names them (`TAG1`, `TAG2`, `DESC1`, `XREF`, `XREFNO`, `XREFNC`, `MFG`, `CAT`, `TERM01`, `TERM02`); each wire number is a `WIRENO` block with a `WIRENO` attribute. AutoCAD Electrical opens them as ordinary blocks, not as its smart components.
@@ -73,14 +73,14 @@ Symbol blocks carry attributes named the way AutoCAD Electrical names them (`TAG
 ```text
 6 devices, 7 wires, lines 100-103
   wrote out/motor_starter.dxf
-  wrote out/bom.xlsx
-  wrote out/wirelist.xlsx
+  wrote out/motor_starter_bom.xlsx
+  wrote out/motor_starter_wirelist.xlsx
   wrote out/motor_starter.png
 checks:
   [PASS] device tags unique: 6 of 6 -> LT1 LT2 M1 OL1 PB1 PB2
   [PASS] all 3 contact tags belong to a drawn device -> M1
   [PASS] wire numbers unique: 7 of 7 -> 1 2 3 4 5 6 7
-  [PASS] BOM rows 6 = devices in the input list 6
+  [PASS] BOM quantities 6 = devices in the input list 6
   [PASS] wire list covers the same 7 wire numbers as the drawing
   [PASS] ezdxf audit of the DXF: 0 errors
 ALL CHECKS PASSED
@@ -92,36 +92,38 @@ ALL CHECKS PASSED
 tests/test_ladderdxf.py::test_dxf_reopens_with_unique_device_tags PASSED [  3%]
 tests/test_ladderdxf.py::test_wire_numbers_are_unique_and_match_the_wire_list PASSED [  6%]
 tests/test_ladderdxf.py::test_bom_has_one_row_per_input_device PASSED    [  9%]
-tests/test_ladderdxf.py::test_cross_references PASSED                    [ 12%]
-tests/test_ladderdxf.py::test_lines_and_wire_numbers_follow_rung_order PASSED [ 16%]
-tests/test_ladderdxf.py::test_tags_count_per_family_in_drawing_order PASSED [ 19%]
-tests/test_ladderdxf.py::test_xlsx_input_gives_the_same_ladder PASSED    [ 22%]
-tests/test_ladderdxf.py::test_terminals_of_every_symbol_insert PASSED    [ 25%]
-tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[rows0-no load] PASSED [ 29%]
-tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[rows1-one load per rung] PASSED [ 32%]
-tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[rows2-has no coil] PASSED [ 35%]
-tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[rows3-unknown kind] PASSED [ 38%]
-tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[rows4-around='NOPE'] PASSED [ 41%]
-tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[rows5-only overload contacts may follow the load] PASSED [ 45%]
-tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[rows6-right of the load] PASSED [ 48%]
-tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[rows7-whole number] PASSED [ 51%]
-tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[rows8-draws each pushbutton] PASSED [ 54%]
-tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[branch-around-a-coil] PASSED [ 58%]
-tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[load-as-branch] PASSED [ 61%]
-tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[overload-as-branch] PASSED [ 64%]
-tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[branch-around-an-overload] PASSED [ 67%]
-tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[superscript-rung-number] PASSED [ 70%]
-tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[ten-contacts-of-one-coil] PASSED [ 74%]
-tests/test_ladderdxf.py::test_missing_column_is_reported PASSED          [ 77%]
-tests/test_ladderdxf.py::test_non_utf8_csv_is_reported PASSED            [ 80%]
-tests/test_ladderdxf.py::test_corrupt_xlsx_is_reported PASSED            [ 83%]
+tests/test_ladderdxf.py::test_bom_merges_devices_with_the_same_part PASSED [ 12%]
+tests/test_ladderdxf.py::test_reports_are_named_after_the_input PASSED   [ 15%]
+tests/test_ladderdxf.py::test_cross_references PASSED                    [ 18%]
+tests/test_ladderdxf.py::test_lines_and_wire_numbers_follow_rung_order PASSED [ 21%]
+tests/test_ladderdxf.py::test_tags_count_per_family_in_drawing_order PASSED [ 24%]
+tests/test_ladderdxf.py::test_xlsx_input_gives_the_same_ladder PASSED    [ 27%]
+tests/test_ladderdxf.py::test_terminals_of_every_symbol_insert PASSED    [ 30%]
+tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[rows0-no load] PASSED [ 33%]
+tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[rows1-one load per rung] PASSED [ 36%]
+tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[rows2-has no coil] PASSED [ 39%]
+tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[rows3-unknown kind] PASSED [ 42%]
+tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[rows4-around='NOPE'] PASSED [ 45%]
+tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[rows5-only overload contacts may follow the load] PASSED [ 48%]
+tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[rows6-right of the load] PASSED [ 51%]
+tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[rows7-whole number] PASSED [ 54%]
+tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[rows8-draws each pushbutton] PASSED [ 57%]
+tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[branch-around-a-coil] PASSED [ 60%]
+tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[load-as-branch] PASSED [ 63%]
+tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[overload-as-branch] PASSED [ 66%]
+tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[branch-around-an-overload] PASSED [ 69%]
+tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[superscript-rung-number] PASSED [ 72%]
+tests/test_ladderdxf.py::test_bad_device_lists_are_rejected[ten-contacts-of-one-coil] PASSED [ 75%]
+tests/test_ladderdxf.py::test_missing_column_is_reported PASSED          [ 78%]
+tests/test_ladderdxf.py::test_non_utf8_csv_is_reported PASSED            [ 81%]
+tests/test_ladderdxf.py::test_corrupt_xlsx_is_reported PASSED            [ 84%]
 tests/test_ladderdxf.py::test_more_lines_than_one_sheet_is_rejected PASSED [ 87%]
 tests/test_ladderdxf.py::test_too_many_symbols_on_one_line_is_rejected PASSED [ 90%]
 tests/test_ladderdxf.py::test_cli_reports_input_errors_without_a_traceback PASSED [ 93%]
 tests/test_ladderdxf.py::test_layout_is_the_same_in_a_fresh_process PASSED [ 96%]
 tests/test_ladderdxf.py::test_render_writes_a_png PASSED                 [100%]
 
-============================== 31 passed in 1.49s ==============================
+============================== 33 passed in 1.63s ==============================
 ```
 
 ## Engineering why

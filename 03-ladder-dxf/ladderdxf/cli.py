@@ -45,7 +45,8 @@ def main(argv=None) -> int:
     except InputError as exc:
         print(f"ladderdxf: {exc}", file=sys.stderr)
         return 2
-    written += [write_bom(ladder, args.out / "bom.xlsx"), write_wire_list(ladder, args.out / "wirelist.xlsx")]
+    written += [write_bom(ladder, args.out / f"{args.input.stem}_bom.xlsx"),
+                write_wire_list(ladder, args.out / f"{args.input.stem}_wirelist.xlsx")]
     if args.render != "none":
         try:
             from .render import render

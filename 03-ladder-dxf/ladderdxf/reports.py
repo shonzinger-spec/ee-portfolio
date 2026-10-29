@@ -15,13 +15,24 @@ WIRE_HEADER = ("Wire", "From", "From pin", "To", "To pin")
 
 
 def bom_rows(ladder: Ladder) -> list[tuple]:
-    """One row per device (tag), sorted by tag family, then number."""
-    devices = sorted(ladder.devices, key=lambda d: (d.family, d.number))
-    return [
-        (item, d.tag, d.label, d.parent.description, d.parent.manufacturer, d.parent.catalog, 1,
-         ",".join(str(n) for n in sorted({e.line for e in d.elements})))
-        for item, d in enumerate(devices, start=1)
-    ]
+    """One row per part, sorted by tag family, then number.
+
+    Devices with the same manufacturer, catalog number and device type share a row: Tag lists every
+    tag, Qty counts them, Lines merges their lines. A device with no catalog number keeps its own row.
+    """
+    groups: dict[tuple, list] = {}
+    for d in sorted(ladder.devices, key=lambda d: (d.family, d.number)):
+        p = d.parent
+        key = (p.manufacturer, p.catalog, d.label) if p.catalog else ("", "", d.tag)
+        groups.setdefault(key, []).append(d)
+    rows = []
+    for item, members in enumerate(groups.values(), start=1):
+        first = members[0].parent
+        descriptions = list(dict.fromkeys(m.parent.description for m in members if m.parent.description))
+        lines = sorted({e.line for m in members for e in m.elements})
+        rows.append((item, ", ".join(m.tag for m in members), members[0].label, " / ".join(descriptions),
+                     first.manufacturer, first.catalog, len(members), ",".join(str(n) for n in lines)))
+    return rows
 
 
 def wire_rows(ladder: Ladder) -> list[tuple]:

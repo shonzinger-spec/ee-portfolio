@@ -73,7 +73,7 @@ def test_dxf_reopens_with_unique_device_tags(sample_out):
 def test_wire_numbers_are_unique_and_match_the_wire_list(sample_out):
     numbers = attribs(ezdxf.readfile(sample_out / "motor_starter.dxf"), "WIRENO")
     assert sorted(numbers, key=int) == [str(n) for n in range(1, 8)]
-    rows = sheet_rows(sample_out / "wirelist.xlsx")
+    rows = sheet_rows(sample_out / "motor_starter_wirelist.xlsx")
     assert {row[0] for row in rows} == set(numbers)
     assert [row[1:] for row in rows if row[0] == "4"] == [("PB2", "4", "M1", "A1"), ("M1", "A1", "M1", "14")]
 
@@ -81,10 +81,34 @@ def test_wire_numbers_are_unique_and_match_the_wire_list(sample_out):
 def test_bom_has_one_row_per_input_device(sample_out):
     with SAMPLE.open(newline="", encoding="utf-8") as fh:
         devices = {row["device"] for row in csv.DictReader(fh)}
-    rows = sheet_rows(sample_out / "bom.xlsx")
+    rows = sheet_rows(sample_out / "motor_starter_bom.xlsx")
     assert len(rows) == len(devices) == 6
     assert [row[1] for row in rows] == ["LT1", "LT2", "M1", "OL1", "PB1", "PB2"]
     assert rows[2][2] == "Motor starter, coil + 2 NO / 1 NC aux"
+
+
+def test_bom_merges_devices_with_the_same_part(tmp_path):
+    ladder = load_ladder(write_csv(tmp_path / "lights.csv", [
+        "1,START,PB_NO,START", "1,CR_A,RELAY_COIL,RELAY A",
+        "2,CR_A,CONTACT_NO", "2,LAMP_A,PILOT_LIGHT,PUMP ON",
+        "3,LAMP_B,PILOT_LIGHT,FAN ON",
+        "4,LAMP_C,PILOT_LIGHT,HEAT ON",
+    ]))
+    for d, catalog in zip(ladder.devices, ["", "", "PL-22", "PL-22", ""]):
+        d.parent.catalog, d.parent.manufacturer = catalog, "GENERIC" if catalog else ""
+    rows = {row[1]: row for row in bom_rows(ladder)}
+    assert set(rows) == {"CR1", "LT1, LT2", "LT3", "PB1"}  # LT3 has no catalog number, so it is not merged
+    assert rows["LT1, LT2"][3:] == ("PUMP ON / FAN ON", "GENERIC", "PL-22", 2, "101,102")
+    assert [row[0] for row in bom_rows(ladder)] == [1, 2, 3, 4]
+
+
+def test_reports_are_named_after_the_input(tmp_path):
+    other = write_csv(tmp_path / "pump.csv", ["1,START,PB_NO", "1,LAMP,PILOT_LIGHT"])
+    assert cli.main([str(SAMPLE), "--out", str(tmp_path), *FIXED]) == 0
+    assert cli.main([str(other), "--out", str(tmp_path), *FIXED]) == 0
+    assert len(sheet_rows(tmp_path / "motor_starter_bom.xlsx")) == 6
+    assert len(sheet_rows(tmp_path / "pump_bom.xlsx")) == 2
+    assert (tmp_path / "pump_wirelist.xlsx").exists()
 
 
 def test_cross_references(sample_out):
