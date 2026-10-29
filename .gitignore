@@ -16,3 +16,8 @@ __pycache__/
 
 # Downloaded by wokwi-cli at run time
 **/sim/wokwi/wokwi-api.h
+
+# Claude handoff/agent files, local only
+CLAUDE.md
+AGENTS.md
+.handoff/
