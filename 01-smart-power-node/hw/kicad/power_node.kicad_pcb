@@ -2757,7 +2757,7 @@
 			(uuid "4734d148-738d-4ed1-b458-355dfa9d3a03")
 		)
 		(embedded_fonts no)
-		(model "${KICAD10_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_Shunt_Vishay_WSK2512_6332Metric_T1.19mm.step"
+		(model "${KICAD10_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_2512_6332Metric.step"
 			(offset
 				(xyz 0 0 0)
 			)

@@ -279,6 +279,8 @@ From docs/pcb_gen.log: Freerouting finished with `final score: 1000.00 (0 unrout
 4eab712c1964655d48e78169821613bf5e02df53c8f4b459fc4438d211aaf0cb  power_node.kicad_pcb
 ```
 
+Those hashes predate one later change: R1's 3D model path now points at KiCad's generic `R_2512_6332Metric.step` (gen_pcb.py makes the same substitution). Only that model line changed; the board is now `d93e7986ecd380ee087abbe454cfddbd18c5f23f715ce0ab8522ed1626e092b4`, check_pcb.py still passes 13/13, and the generator has not been rerun since.
+
 check_pcb.py repeats ERC, the netlist check and DRC with this KiCad version (DRC also with `--refill-zones`, which shows that the committed zone fills are current), runs trace_width.py, then makes sabotaged copies of the board in temporary directories and requires the checks to reject each one. From docs/pcb_checks.log:
 
 ```
@@ -329,7 +331,7 @@ RESULT: PASS
 
 ![PCB bottom](hw/pcb_bottom.png)
 
-*kicad-cli pcb render, top and bottom (the bottom view is mirrored). The 3D models come from KiCad's kicad-packages3D repository at tag 10.0.5 (docs/pcb_3d_models.log lists each one with its HTTP status). R1 shows as bare pads because that repository has no model file for its WSK2512 footprint: HTTP 404 at 10.0.5 and on master, while R_2512_6332Metric.step in the same folder returns 200.*
+*kicad-cli pcb render, top and bottom (the bottom view is mirrored). The 3D models come from KiCad's kicad-packages3D repository at tag 10.0.5 (docs/pcb_3d_models.log lists each one with its HTTP status). That repository has no model file for R1's WSK2512 footprint (HTTP 404 at 10.0.5 and on master), so R1 uses the generic R_2512_6332Metric.step body, which has the same 6.3 x 3.2 mm outline.*
 
 ### Wokwi live run
 
