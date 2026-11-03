@@ -472,8 +472,8 @@ def export():
     run([KICAD_CLI, "pcb", "drc", "--schematic-parity", "--severity-all", "--exit-code-violations",
          "-o", os.path.join(docs, "pcb_drc.rpt"), PCB])
     for side in ("top", "bottom"):
-        run([KICAD_CLI, "pcb", "render", "--side", side, "--width", "1600", "--height", "1100",
-             "--quality", "high", "--background", "opaque", "-o", os.path.join(hw, "pcb_%s.png" % side), PCB])
+        run([KICAD_CLI, "pcb", "render", "--side", side, "--width", "1600", "--height", "1100", "--zoom", "1.15",
+             "--quality", "basic", "--background", "opaque", "-o", os.path.join(hw, "pcb_%s.png" % side), PCB])
 
 
 def main():

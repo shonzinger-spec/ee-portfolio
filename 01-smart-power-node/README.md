@@ -2,6 +2,8 @@
 
 Monitors a 5 V rail at up to 2 A. A high-side 50 mOhm shunt feeds an INA219 set to PGA /4 (+/-160 mV full scale, 3.2 A range, 100 mV at 2 A), with Current_LSB 100 uA/bit, CAL = 8192 and Power_LSB 2 mW. Firmware runs FreeRTOS on the ESP32 Arduino core: sensorTask (priority 3) every 100 ms using vTaskDelayUntil, displayTask (priority 2) every 500 ms, both pinned to core 1. A length-1 queue with xQueueOverwrite/xQueuePeek acts as a latest-value mailbox. A mutex (priority inheritance) serialises the shared 400 kHz I2C bus. The INA219 driver is register-level; no INA219 library is used.
 
+The carrier PCB is a 75 x 50 mm, 2-layer board (KiCad 10): the DevKitC plugs into sockets with its antenna past the board edge, and the 2 A path runs in 2.0 mm traces through the Kelvin-sensed shunt (see [PCB layout](#pcb-layout)).
+
 ## Quick start
 
 Python 3.9+. The model needs only numpy and matplotlib: no SPICE, simulator or hardware.
@@ -19,7 +21,7 @@ A 50 mOhm shunt trades resolution for burden: at 2 A it drops 100 mV (2 % of the
 
 ## Verification
 
-Each block below is copied from a log or from the command shown above it (run 2026-10-27 on macOS). Everything is simulation and host tests; no hardware was built.
+Each block below is copied from a log or from the command shown above it (run 2026-10-27 on macOS; the PCB checks 2026-11-03 on Linux). Everything is simulation, host tests and design checks; no hardware was built.
 
 ### Standalone model (main.py)
 
@@ -242,6 +244,67 @@ RESULT: PASS
 
 *Schematic: KiCad 10, ERC 0 errors / 0 warnings, netlist check PASS on 10 nets.*
 
+### KiCad PCB: DRC, schematic parity, trace widths
+
+Run 2026-11-03 on Linux with KiCad 10.0.6 (Ubuntu 26.10 packages) and Freerouting 2.5.0 on OpenJDK 25. ERC and check_netlist.py above give the same result with this KiCad version and the new U1 footprint.
+
+```
+FREEROUTING_JAR=/path/to/freerouting-2.5.0-executable.jar <KiCad python3> hw/kicad/gen_pcb.py --export
+```
+
+`--export` runs `kicad-cli pcb drc --schematic-parity --severity-all --exit-code-violations`, which writes docs/pcb_drc.rpt and stops the script on any violation, unconnected pad or parity error (checked on copies of the board with one SDA track deleted and with R4's value changed: exit 5 for each, exit 0 for the real board):
+
+```
+** Found 0 DRC violations **
+
+** Found 0 unconnected pads **
+
+** Found 0 Footprint errors **
+
+** Ignored checks **
+    - Footprint has no courtyard defined
+    - Track endpoint not centered on via
+    - Tuning profile track geometries
+    - Footprint doesn't match symbol's footprint filters
+    - Footprint component type doesn't match footprint pads
+```
+
+The ignored checks are KiCad 10's defaults and no violation is excluded; `--severity-all` includes warnings. "Footprint errors" is the schematic parity check: every symbol has its footprint, with matching reference, value and fields, and every pad has its schematic net. The same command with `--refill-zones` gives the same result, so the committed zone fills are current.
+
+From docs/pcb_gen.log: Freerouting finished with `final score: 1000.00 (0 unrouted and 0 violations)` (its tracks are all on +3V3, SDA and SCL; the script draws everything else), the script then reports `unrouted connections: 0`, and two runs write the same board file:
+
+```
+56811c00fb1f1dca78ba308eae090f36366875387941c788e81762658a496ff5  hw/kicad/power_node.kicad_pcb
+56811c00fb1f1dca78ba308eae090f36366875387941c788e81762658a496ff5  hw/kicad/power_node.kicad_pcb
+```
+
+Power trace check (IPC-2221, the traces as drawn in the board file):
+
+```
+python3 hw/kicad/trace_width.py
+```
+
+```
+IPC-2221 outer layer, k = 0.048, 1 oz copper (35 um), allowed rise 10 degC
+  design load        2.0 A -> minimum width 0.78 mm
+  INA219 full scale  3.2 A -> minimum width 1.49 mm
+Drawn width 2.0 mm: 0.246 mOhm/mm
+  rise at 2.0 A: 2.1 degC
+  rise at 3.2 A: 6.2 degC
+net           length         R   drop @ 2.0 A   drop @ 3.2 A
+/VLOAD       10.0 mm  2.46 mOhm         4.9 mV         7.9 mV
+/VSUPPLY     10.0 mm  2.46 mOhm         4.9 mV         7.9 mV
+GND          26.5 mm  6.52 mOhm        13.0 mV        20.9 mV
+GND is the trace alone; both GND pours run in parallel with it.
+Shunt for comparison: 50 mOhm -> 100 mV at 2 A. The Kelvin taps sit on R1's sense pads, so these drops are outside the shunt measurement.
+```
+
+![PCB top](hw/pcb_top.png)
+
+![PCB bottom](hw/pcb_bottom.png)
+
+*kicad-cli pcb render, top and bottom (the bottom view is mirrored). R1 shows as bare pads: KiCad's 3D model library (10.0.5) has no model for its WSK2512 footprint.*
+
 ### Wokwi live run
 
 Serial CSV from the unmodified firmware (wokwi-cli 0.29.1, every 500 ms), copied from docs/wokwi_serial_steps.log. The scenario steps the load slider through 1 A, 2 A and 3.2 A; the 1 A and 2 A steps give the rows below, and the 3.2 A step prints no row because the sample is invalid:
@@ -299,11 +362,14 @@ P = I^2 R = 2^2 x 0.05 = 0.2 W at 2 A. Specify >= 0.5 W (prefer 1 W, 1 %, 2512 o
     wokwi/                             ina219.chip.c/.json, diagram.json, wokwi.toml, libraries.txt,
                                        load_steps.test.yaml, make_web_bundle.sh, README_WOKWI.md,
                                        web/ (7-file web bundle)
-  hw/kicad/                            gen_schematic.py, check_netlist.py, power_node.kicad_sch/_pro/_sym,
+  hw/kicad/                            gen_schematic.py, check_netlist.py, gen_pcb.py, trace_width.py,
+                                       power_node.kicad_sch/_pcb/_pro/_sym/_dru, power_node.pretty/,
                                        sym-lib-table, fp-lib-table
+  hw/fab/                              Gerber X2 layers, Excellon drill files, drill maps, Gerber job file
+  hw/pcb_top.png, hw/pcb_bottom.png    board renders
   test/host/                           Makefile, test_ina219.cpp, mock_wokwi.c/.h, wokwi-api.h, mock/{Arduino,Wire}.h
   docs/                                compile.log, compile_before_fix.log, sim_ltspice.log, sim_ngspice.log,
-                                       wokwi_serial.log, wokwi_serial_steps.log
+                                       wokwi_serial.log, wokwi_serial_steps.log, pcb_gen.log, pcb_drc.rpt
   docs/img/                            schematic.{png,svg,pdf}, waveform_shunt.png, waveform_ltspice_vs_ngspice.png,
                                        main_py_frontend.png, wokwi_oled*.png
 ```
@@ -327,20 +393,35 @@ Run the LTspice netlist and the ngspice port with the commands in the Verificati
 
 ## Hardware (KiCad)
 
-Files are in hw/kicad/ and are generated by gen_schematic.py (stdlib only, deterministic: fixed uuid5 UUIDs, no timestamps).
+Files are in hw/kicad/. gen_schematic.py writes the schematic and the project libraries (stdlib only, deterministic: fixed uuid5 UUIDs, no timestamps). gen_pcb.py builds the board from that schematic with the Python that ships with KiCad 10 (it provides the pcbnew module) and Freerouting; it seeds KiCad's UUID generator, so a re-run writes the same file. trace_width.py checks the power traces (stdlib only).
 
 ```
 python3 hw/kicad/gen_schematic.py --export     # regenerate; --export also writes docs/img/schematic.{svg,pdf,png}
 kicad-cli sch erc hw/kicad/power_node.kicad_sch
 python3 hw/kicad/check_netlist.py
+FREEROUTING_JAR=/path/to/freerouting-2.5.0-executable.jar <KiCad python3> hw/kicad/gen_pcb.py --export
+python3 hw/kicad/trace_width.py
 ```
 
+Freerouting 2.5.0 is on Maven Central (app.freerouting:freerouting:2.5.0, file freerouting-2.5.0-executable.jar) and needs Java 25. `--export` writes hw/fab/, the renders and docs/pcb_drc.rpt.
+
 - R1 is a 4-terminal Kelvin shunt: force pins 1/4, sense pins 2/3; Vishay WSK2512 footprint.
-- U1 is an embedded ESP32-DevKitC-V4 symbol (pins 1-19 = header J2, 20-38 = J3; IO21 = U1.25, IO22 = U1.22). It has no footprint because it is a plug-in module.
+- U1 is an embedded ESP32-DevKitC-V4 symbol (pins 1-19 = header J2, 20-38 = J3; IO21 = U1.25, IO22 = U1.22). Its footprint, power_node:ESP32-DevKitC-V4_Socket, is the pair of 1x19 2.54 mm sockets the DevKitC plugs into: rows 25.4 mm apart (Espressif's V4 dimension drawing gives 27.9 mm across the headers; 27.9 - 2.54 = 25.36 mm), pin 1 at the module end.
 - INA219 A0/A1 tied to GND = address 0x40.
 - 2.2 k pull-ups on SDA/SCL.
 - One PWR_FLAG on GND.
-- Result: ERC 0 errors / 0 warnings; check_netlist.py PASS on 10 nets. Schematic only; no PCB layout and no hardware built.
+- Result: ERC 0 errors / 0 warnings; check_netlist.py PASS on 10 nets; PCB DRC 0 violations, 0 unconnected pads, 0 parity errors. No hardware built.
+
+### PCB layout
+
+- Board: 75 x 50 mm, 2 layers, 1.6 mm FR4, 1 oz copper, four M3 (3.2 mm, non-plated) corner holes. Rules: 0.2 mm track and clearance, 0.6 mm vias with 0.3 mm drill, 0.5 mm copper to edge.
+- ESP32 antenna: on the DevKitC V4 the module overhangs the pin-1 end of the board (Espressif's drawing: 54.4 mm overall against a 48.2 mm header). U1's pin 1 sits 1.6 mm from the carrier's top edge, so most of the module's antenna end (the last 6.19 mm of the 18 x 25.5 mm ESP32-WROOM-32E, per Espressif's keep-out figure and KiCad's WROOM-32E footprint) lies beyond the carrier, and the remaining millimetre or so is over the keep-out. That follows Espressif's ESP32 hardware design guidelines: "It is suggested to place the module's on-board PCB antenna outside the base board, and the feed point of the antenna close to the edge of the base board." Between the socket rows at that edge a 21.2 x 8 mm rule area allows no tracks, vias or copper pour on either layer, and a row of GND vias runs along its inner edge (same guide: "sufficient ground copper and dense ground vias should be placed on the base board near the antenna"). The top mounting holes are 18.2 mm (H1) and 31.8 mm (H2) from the module's sides, beyond the 15 mm clearance the guide recommends around the antenna inside a housing.
+- Power path: J1 (5V IN) -> R1 -> J2 (LOAD) runs straight up the right edge. R1 is turned so its force pads line up with pin 1 of J1 and J2, which makes each 2.0 mm trace a straight 10 mm run. The load current returns from J2 pin 2 to J1 pin 2 through a 2.0 mm GND trace beside the power path (small loop) and both pours in parallel; those two pins join the pours without thermal spokes because they carry the load current.
+- Trace width: the IPC-2221 outer-layer formula (I = 0.048 dT^0.44 A^0.725, A in mil^2, 1 oz copper) asks for 0.78 mm at the 2 A design load and 1.49 mm at the INA219's 3.2 A full scale for a 10 degC rise. The drawn 2.0 mm gives 2.1 degC at 2 A and 6.2 degC at 3.2 A, and 4.9 mV per 10 mm run at 2 A (trace_width.py, Verification above). A custom DRC rule (power_node.kicad_dru) fails the board if a Power-class track is ever narrower than 1.9 mm. The drops stay out of the current reading because the Kelvin taps sit on R1's sense pads. The bus voltage is read at the shunt, so at 2 A it reads the VLOAD trace's 4.9 mV (just over one 4 mV LSB) higher than J2, plus whatever the ground return drops.
+- Kelvin sense: SENSE_N runs straight from R1's sense pad 3 to R3. The WSK2512's sense pads sit at opposite corners, so pad 2 (SENSE_P) is on the far side of the current path; SENSE_P drops to the bottom layer at the pad, passes under the shunt and comes up beside R2. R2, R3 and C1 (10 + 10 Ohm and 100 nF) sit between the shunt and U2, with C1 at IN+/IN- (pins 8/7).
+- U2 and the bus: C2 across VS/GND (pins 5/6) with a GND via, A0/A1 strapped to GND beside the chip, SDA/SCL facing U1's IO21/IO22 socket pins with R4/R5 just below. +3V3 leaves U1 pin 1 (left socket row) for the OLED header J3, which has C3 at its VCC pin, and crosses under the DevKitC to U2.
+- Routing: gen_pcb.py draws and locks the power path, ground return, Kelvin lines, filter, decoupling and address straps; Freerouting 2.5.0 routed +3V3 (0.4 mm), SDA and SCL (0.25 mm) around them, single-threaded and with neck-down off. GND is a pour on each layer (0.3 mm clearance) tied by 50 vias: a row along the keep-out, a grid across the board, two at U2, and 16 that the script adds where routing cut a patch off one pour.
+- Fabrication files (hw/fab/): Gerber X2 for both copper, mask, paste and silkscreen layers plus the outline, a Gerber job file, and Excellon drill files with drill maps (plated: 46 x 1.0 mm socket and header pins, 53 x 0.3 mm vias; non-plated: 4 x 3.2 mm), origin at the bottom-left board corner. Not sent to a fab.
 
 ## Wokwi simulation + INA219 model
 
@@ -377,7 +458,8 @@ Both runs exit 0 (TEST PASSED / scenario completed). The scenario (sim/wokwi/loa
 ## Known limitations
 
 - Fixed: with PGA /4 and CAL 8192 the INA219 OVF bit cannot fire, so the driver treats |shunt| >= 159.9 mV as invalid (read() false -> SENSOR ERR). Negative over-range is covered by helper tests only.
-- Real I2C timing, noise and PCB layout are not simulated.
+- Real I2C timing and noise are not simulated. The PCB is checked by DRC only: it has not been fabricated, and there is no signal-integrity or thermal simulation beyond the IPC-2221 estimate.
+- U1's fab-layer outline (module overhang, USB end) is read off Espressif's dimension drawing. Only the 25.4 mm row spacing and the 2.54 mm pitch matter for fit, and both follow from the drawing's stated dimensions.
 - main.py and the Wokwi chip model return instantaneous readings. The real INA219 averages 64 conversions in this configuration (about 68 ms per shunt + bus pair), so a real reading lags a fast load step.
 
 ## Changes vs original source
@@ -397,20 +479,22 @@ Done:
 - INA219 Wokwi chip model + host test 33/33.
 - Firmware saturation fix (|shunt| >= 159.9 mV -> SENSOR ERR).
 - Live Wokwi run: firmware + INA219 chip in the simulator, 1 A / 2 A / over-range checked (exit 0, screenshots above).
+- PCB layout: 2 layers, 75 x 50 mm, KiCad DRC with schematic parity 0 violations / 0 unconnected pads / 0 parity errors (warnings included). Power traces 2.0 mm: IPC-2221 needs 1.49 mm at the 3.2 A full scale for a 10 degC rise, and 2.0 mm rises 2.1 degC at 2 A. Gerbers, drill files and renders exported.
 
 Not done:
-- Optional PCB layout.
+- Fabrication and assembly: the board is designed and DRC-checked, not built.
 
 ## Tools used
 
 - arduino-cli 1.2.0 + esp32 core 3.2.0
 - LTspice
 - ngspice 47 (built from source)
-- KiCad 10.0.7
+- KiCad 10.0.7 (schematic, macOS) and 10.0.6 (PCB, DRC, ERC re-run; Linux, Ubuntu 26.10 packages)
+- Freerouting 2.5.0 on OpenJDK 25
 - wokwi-cli 0.29.1 (Wokwi CI, free token)
 - Python 3 + numpy + matplotlib
 - clang
 
 ## Credits
 
-Designed, specified and verified by Shon Zinger. Claude (Anthropic) assisted with: reviewing the firmware and the Arduino prototype fix, the INA219 Wokwi custom-chip model and host test harness, the KiCad schematic generator, the ngspice port and plotting scripts, main.py, and documentation.
+Designed, specified and verified by Shon Zinger. Claude (Anthropic) assisted with: reviewing the firmware and the Arduino prototype fix, the INA219 Wokwi custom-chip model and host test harness, the KiCad schematic generator, the PCB generator and layout (gen_pcb.py, the DevKitC socket footprint, trace_width.py), the ngspice port and plotting scripts, main.py, and documentation.
