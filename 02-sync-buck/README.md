@@ -1,6 +1,6 @@
 # 02 - Digital Synchronous Buck Converter (12 V to 5 V / 3 A)
 
-A simulated design of a digitally controlled synchronous buck: 12 V in, 5 V out at up to 3 A, 200 kHz, two discrete 40 V N-MOSFETs driven by a UCC27211 half-bridge driver, 15 uH / 470 uF output filter, RC snubber on the switch node, and an ESP32-class controller closing the loop in C. The controller samples the output (10k / 6.8k divider), the load current (5 mOhm shunt + INA181A3) and the input voltage (47k / 10k divider) at 50 kHz and runs a PI loop on volts with input-voltage and reference feed-forward, an integrator dead band, DPWM hysteresis, anti-windup, a pre-bias-safe soft start and a latching over-current trip. Everything is simulation and host tests; no hardware was built.
+A simulated design of a digitally controlled synchronous buck: 12 V in, 5 V out at up to 3 A, 200 kHz, two discrete 40 V N-MOSFETs driven by a UCC27211 half-bridge driver, 15 uH / 470 uF output filter, RC snubber on the switch node, and an ESP32-class controller closing the loop in C. The controller samples the output (10k / 6.8k divider), the load current (5 mOhm shunt + INA181A3) and the input voltage (47k / 10k divider) at 50 kHz and runs a PI loop on volts with input-voltage and reference feed-forward, an integrator dead band, DPWM hysteresis, anti-windup, a pre-bias-safe soft start and a latching over-current trip. The ESP32 firmware around that controller compiles. A simulator build of it ran on a simulated ESP32 in Wokwi against the host test's power-stage model: soft start, load steps and an over-current trip. The board is laid out in KiCad: 2 layers, DRC clean, Gerbers and drill files exported. Everything is simulation, host tests and design files; no hardware was built.
 
 | Item | Value |
 |---|---|
@@ -9,6 +9,9 @@ A simulated design of a digitally controlled synchronous buck: 12 V in, 5 V out 
 | Power stage | 2 x 40 V N-MOSFET (about 7 mOhm), 15 uH (DCR 20 mOhm, Isat 6 A), 470 uF polymer + 10 uF X7R, 1.8 ohm + 1 nF snubber |
 | Control | PI on volts, Kp 0.02 V/V, Ki 800 V/(V s), 50 kHz, crossover 128 Hz, PM 89 deg, GM 9.1 dB at no load |
 | Simulated results | ripple 9 mV p-p, efficiency 97.3 % at 3 A and 98.3 % at 1 A (power stage, gate drive excluded), 2.5 A load step -8.3 % / +8.8 %, recovery 1.3 ms / 2.1 ms |
+| Firmware | ESP32, Arduino-ESP32 core 3.2.0. Product build: MCPWM outputs with 50 ns hardware dead time, ADC1 sampling, 50 kHz control task on core 1, over-current and overrun latches (compile-only; never executed, not even in simulation). LEDC build for Wokwi |
+| On-target run (Wokwi) | LEDC sim build at 20x time dilation (times are control time): soft start within +/-1 % in 5.4 ms; 0.5 -> 3 -> 0.5 A steps inside +/-10 %; 6.25 A overload: OCP latched 40 us after the first over-limit sample (3 samples) with both gates low; 0 shoot-through in 375,364 dead times |
+| PCB | 54 x 40 mm, 2 layers, 1 oz. DRC: 0 violations, 0 unconnected, 0 parity errors. Layout checks: 39/39 (23 of them on sabotaged copies). Gerbers and Excellon drill files |
 
 ## Quick start
 
@@ -30,13 +33,37 @@ make -C test/host negative          # the same test against four broken controll
 cd hw/kicad && python3 gen_schematic.py --export && python3 check_netlist.py
 ```
 
+Firmware (arduino-cli 1.2.0 with the esp32:esp32 core 3.2.0), from this folder. The first command builds the product (MCPWM). The second builds the Wokwi variant (LEDC) into sim/wokwi/build:
+
+```
+arduino-cli compile -b esp32:esp32:esp32 --warnings all --clean --library src/buck_ctrl src/buck_esp32
+arduino-cli compile -b esp32:esp32:esp32 --warnings all --clean --library src/buck_ctrl \
+  --build-property "compiler.cpp.extra_flags=-DBUCK_PWM_LEDC" \
+  --build-property "compiler.c.extra_flags=-DBUCK_PWM_LEDC" \
+  --output-dir sim/wokwi/build src/buck_esp32
+```
+
+On-target run in Wokwi. It needs a WASI-SDK clang for the power-stage chip and your own free Wokwi CI token. See [sim/wokwi/README_WOKWI.md](sim/wokwi/README_WOKWI.md):
+
+```
+sim/wokwi/build_chip.sh --web
+cd sim/wokwi && WOKWI_CLI_TOKEN=... wokwi-cli . --scenario buck_steps.test.yaml --timeout 4000 --serial-log-file ../../docs/wokwi_serial.log
+```
+
+PCB. Run these with KiCad 10's bundled Python, which provides `pcbnew`; on macOS it is /Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/3.9/bin/python3:
+
+```
+cd hw/kicad && python3 gen_pcb.py --export   # board, DRC, Gerbers, drill files, renders
+python3 check_pcb.py                          # layout checks and sabotaged copies
+```
+
 ## Engineering why
 
 The 15 uH inductor keeps ripple at 32 % of the 3 A load and the peak at 3.5 A against a 6 A saturation rating, but the 470 uF output capacitor is sized for load steps rather than the 9 mV ripple, because a PI loop sampled at 50 kHz has to cross over near 130 Hz, far below the 1.9 kHz LC resonance, so the first millisecond of a 2.5 A step is carried by the filter's 0.18 ohm characteristic impedance (an 8 % dip) and not by the controller. Running the PI on volts with input-voltage and reference feed-forward keeps the loop gain constant from 10.8 to 13.2 V and lets soft start follow its ramp, while a 20 mV integrator dead band and 0.75 LSB of duty hysteresis stop the 30 mV DPWM step from pumping that resonance into a limit cycle, at the cost of up to about 20 mV of static error. On the switch node, 40 V FETs and a 1.8 ohm + 1 nF snubber spend about 40 mW (0.3 points of efficiency) to cut the simulated ringing peak from 27.9 V to 22.2 V in LTspice (22.8 V to 20.1 V in ngspice), leaving more than 40 % margin to the 40 V rating.
 
 ## Verification
 
-Each block below is copied from the log named above it, produced by the command shown (run 2026-10-27 on macOS). Everything is simulation and host tests; no hardware was built.
+Each block below is copied from the log named above it and was produced by the command shown. All runs were on macOS. The model, SPICE and host-test runs are from 2026-10-27. The schematic ERC, firmware, Wokwi and PCB runs are from 2026-11-03. Everything is simulation, host tests and design checks; no hardware was built.
 
 ### Standalone model (main.py)
 
@@ -343,6 +370,228 @@ RESULT: PASS
 
 *Schematic: KiCad 10, generated by hw/kicad/gen_schematic.py, ERC 0 errors / 0 warnings, netlist check PASS on every net.*
 
+### ESP32 firmware build
+
+The controller is compiled from src/buck_ctrl as a library: one copy, unmodified. With `--warnings all` the compiler prints no warnings for either build. The product build (MCPWM) is in docs/fw_compile_mcpwm.log:
+
+```
+# arduino-cli 1.2.0 (esp32:esp32 core 3.2.0), Tue Nov  3 14:16:39 EST 2026
+arduino-cli  Version: 1.2.0 Commit: 9c495211 Date: 2025-02-24T15:57:28Z
+# cmd: arduino-cli compile -b esp32:esp32:esp32 --warnings all --clean --library src/buck_ctrl src/buck_esp32
+Sketch uses 324302 bytes (24%) of program storage space. Maximum is 1310720 bytes.
+Global variables use 49348 bytes (15%) of dynamic memory, leaving 278332 bytes for local variables. Maximum is 327680 bytes.
+EXIT=0
+```
+
+The Wokwi build (LEDC) is in docs/fw_compile_ledc.log. The log ends with a check that the binary rebuilt after the negative runs below matches the one the passing run used:
+
+```
+# arduino-cli 1.2.0 (esp32:esp32 core 3.2.0), Tue Nov  3 14:16:14 EST 2026
+arduino-cli  Version: 1.2.0 Commit: 9c495211 Date: 2025-02-24T15:57:28Z
+# cmd: arduino-cli compile -b esp32:esp32:esp32 --warnings all --clean --library src/buck_ctrl --build-property "compiler.cpp.extra_flags=-DBUCK_PWM_LEDC" --build-property "compiler.c.extra_flags=-DBUCK_PWM_LEDC" --output-dir sim/wokwi/build src/buck_esp32
+Sketch uses 313682 bytes (23%) of program storage space. Maximum is 1310720 bytes.
+Global variables use 49532 bytes (15%) of dynamic memory, leaving 278148 bytes for local variables. Maximum is 327680 bytes.
+EXIT=0
+# restore check (Tue Nov  3 14:16:39 EST 2026): cmp of the rebuilt sim/wokwi/build/buck_esp32.ino.bin against the binary that was in place before these runs (the one docs/wokwi_run.log ran):
+#   sizes 313824 / 313824 bytes, differing bytes: 70
+#   the 70 bytes are at offsets 177-208 (app ELF SHA-256 field), 2671-2677 (build time string) and 313792-313824 (image checksum and SHA-256 trailer); the code and data are identical
+```
+
+### On-target run in Wokwi (simulated ESP32)
+
+The LEDC build runs on Wokwi's simulated ESP32 (wokwi-cli 0.29.1).
+
+**The power stage.** It is a Wokwi custom chip, sim/wokwi/buck_plant.chip.c. The chip includes the host test's plant.c, so the run uses the same averaged model and component values as `make -C test/host test`. It works as follows:
+- It reads the PWM_H and PWM_L edges.
+- It averages each 6.4 us LEDC period into a switch-node voltage. A both-off gap longer than 100 ns lets the body diodes conduct.
+- It drives VSENSE, ISENSE and VINSENSE into the ADC pins.
+- It measures every dead time and latches its FLT pin on any H/L overlap.
+
+**The scenario.** sim/wokwi/buck_steps.test.yaml repeats the host test:
+1. Soft start at 1 A.
+2. Load 0.5 -> 3 -> 0.5 A.
+3. An overload of 6.25 A, which must latch the OCP with both gates low.
+
+**Time scaling.** Wokwi runs this firmware much slower than real time. One control update costs about 91 us of simulated time. With the 50 kHz interrupt it costs about 500 us (docs/wokwi_timing_diag.log). So the Wokwi build changes the timing:
+- The firmware paces the loop on the CPU cycle counter, once every 20 us x 20 of simulated time.
+- The chip steps its plant by dt / 20.
+
+Controller and plant therefore still see one update per 20 us. Every firmware time below is control time.
+
+**The ADC.** The Wokwi build reads the ADC through Wokwi's 5 V transfer, one pipelined conversion per update. sim/wokwi/README_WOKWI.md gives the measurements behind each change. None of these changes is in the product build.
+
+The run command was `cd sim/wokwi && wokwi-cli . --scenario buck_steps.test.yaml --timeout 4000 --serial-log-file ../../docs/wokwi_serial.log`, and its output is in docs/wokwi_run.log.
+
+The firmware's own lines come from the command below. The sed removes the trace row that the CLI's serial log appends to a line after a `wait-serial` match.
+
+```
+$ grep -E "^(BOOT|WARNING|SIM|START|READY|SS|STEP|FAULT|STAT) " docs/wokwi_serial.log | sed "s/STEP_OK[0-9].*/STEP_OK/"
+BOOT fw=buck_esp32 pwm=LEDC fsw_hz=156250 ctrl_hz=50000 adc_cal=WOKWI_5V_LINEAR baud=921600 cpu_mhz=240 overrun_limit=3
+WARNING SIM_BUILD_NOT_FOR_HARDWARE mac=wokwi: not for hardware (5 V ADC transfer, time dilation)
+SIM wokwi time_scale=20 tick_sim_us=400 (all t_us below are control time, 20 us per tick)
+START t_us=20 vout_V=0.000
+READY t_us=6960
+SS t_us=7000 t_1pct_us=5380 t_run_us=6940
+STAT t_us=20000 state=RUN exec_max_us=220.15 exec_mean_us=71.86 updates=1000 overruns=0 drop_samples=0 drop_events=0
+STEP t_us=32500 i_from_A=0.501 i_to_A=3.008 vmin_V=4.646 vmax_V=5.168 settle_us=1500 STEP_OK
+STAT t_us=40000 state=RUN exec_max_us=113.06 exec_mean_us=67.64 updates=1000 overruns=0 drop_samples=0 drop_events=0
+STEP t_us=41100 i_from_A=3.008 i_to_A=0.501 vmin_V=4.729 vmax_V=5.379 settle_us=2000 STEP_OK
+STAT t_us=60000 state=RUN exec_max_us=125.44 exec_mean_us=67.40 updates=1000 overruns=0 drop_samples=0 drop_events=0
+FAULT OCP t_us=60240 trip_us=40 vout_V=4.299 il_A=5.234 vin_V=12.00 raw_v=1425 raw_i=2143 raw_vin=1724 duty_ticks=168 overruns=0
+STEP t_us=60100 i_from_A=0.501 i_to_A=5.181 vmin_V=4.848 vmax_V=4.848 settle_us=-2 STEP_FAIL
+```
+
+The chip prints the plant's own view to the CLI: one PSEG row per load segment, and the gate statistics at each change. These lines and the scenario's checks come from the command below:
+
+```
+$ grep -E "PSEG|PGATE.*why=control|expect-pin|Scenario|^EXIT" docs/wokwi_run.log | tail -12
+[chip-buck_plant] PGATE t_sim_us=997286 tp_us=49864 why=control deadtimes=140526 dt_min_ns=39 dt_max_ns=86 overlaps=0 overlap_ns=0 diode_us=547553.3 flt=0 dt_lt40=23 int_dt_min_ns=50 int_dt_max_ns=50 per_h_ns=13..6401 per_l_ns=6390..6436 dt_hist10ns=0,0,0,23,6041,134108,212,115,27,0,0
+[chip-buck_plant] PSEG t0_us=49864 t1_us=59864 load_mA=500 vin_mV=12000 next_load_mA=3000 next_vin_mV=12000 vmin_V=4.9728 vmax_V=5.0973 settle_us=735 v_end_V=4.9997 il_end_A=0.5000
+[chip-buck_plant] PGATE t_sim_us=1197286 tp_us=59864 why=control deadtimes=203026 dt_min_ns=39 dt_max_ns=86 overlaps=0 overlap_ns=0 diode_us=547553.3 flt=0 dt_lt40=23 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6436 dt_hist10ns=0,0,0,23,17966,184621,274,115,27,0,0
+[chip-buck_plant] PSEG t0_us=59864 t1_us=68451 load_mA=3000 vin_mV=12000 next_load_mA=500 next_vin_mV=12000 vmin_V=4.5867 vmax_V=5.1969 settle_us=2014 v_end_V=5.0137 il_end_A=3.0082
+[chip-buck_plant] PGATE t_sim_us=1369043 tp_us=68452 why=control deadtimes=256700 dt_min_ns=39 dt_max_ns=86 overlaps=0 overlap_ns=0 diode_us=547553.3 flt=0 dt_lt40=24 int_dt_min_ns=50 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6436 dt_hist10ns=0,0,0,24,20511,235744,278,115,28,0,0
+[chip-buck_plant] PSEG t0_us=68451 t1_us=87438 load_mA=500 vin_mV=12000 next_load_mA=6250 next_vin_mV=12000 vmin_V=4.7018 vmax_V=5.4515 settle_us=1801 v_end_V=5.0007 il_end_A=0.5001
+[chip-buck_plant] PGATE t_sim_us=1748768 tp_us=87438 why=control deadtimes=375364 dt_min_ns=39 dt_max_ns=86 overlaps=0 overlap_ns=0 diode_us=547553.3 flt=0 dt_lt40=25 int_dt_min_ns=50 int_dt_max_ns=50 per_h_ns=13..6401 per_l_ns=6376..6436 dt_hist10ns=0,0,0,25,20794,353870,470,177,28,0,0
+[02 sync buck: soft start, load step, OCP latch] expect-pin esp:18 == 0
+[02 sync buck: soft start, load step, OCP latch] expect-pin esp:19 == 0
+[02 sync buck: soft start, load step, OCP latch] expect-pin plant:FLT == 0
+[02 sync buck: soft start, load step, OCP latch] Scenario completed successfully
+EXIT=0 wall_s=17
+```
+
+What the run shows:
+
+- **Soft start.** The output is within 5 V +/-1 % 5.38 ms after START. The state reaches RUN at 6.94 ms. The host test settles in 5.26 ms.
+- **Load step, 0.5 -> 3 A.** The firmware's 100 us means stay between 4.646 V and 5.168 V and are back in band after 1.5 ms. The plant's minimum is 4.5867 V; the host test gives 4.5864 V.
+- **Load release, 3 -> 0.5 A.** The plant's maximum is 5.4515 V; the host test gives 5.4419 V. The firmware logs the output back in band after 2.0 ms.
+- **Step limits.** Both steps print `STEP_OK`, the token the scenario waits for. It means the dip stayed at or above 4.50 V, the peak at or below 5.50 V, and the output settled within 5 ms. These are the host test's limits.
+- **Overload, 6.25 A.** The firmware prints `FAULT OCP` on the third over-current sample (`trip_us=40`). Then `expect-pin` reads GPIO18 = 0 and GPIO19 = 0. The overload also logs a third STEP line with `settle_us=-2`, which means "interrupted by the fault".
+- **Gates.** The chip measured 375,364 dead times with 0 overlaps; FLT stayed 0. The measured dead times range from 39 to 86 ns against the 50 ns setting. 25 of them measured 39 ns: 23 during soft start and 2 after READY. Their cause is not established; see item 4 of README_WOKWI.md.
+- **Execution time.** One update took at most 220 us of simulated time against its 400 us budget, with 0 overruns. This is Wokwi's timing, not silicon's.
+
+Each negative run rebuilds the firmware with one define and runs a scenario:
+- OCP out of reach: the scenario must fail.
+- Integral gain cut from 800 to 100: the scenario must fail on the load-step check. On the host model, that define passes soft start and fails both recovery checks.
+- One update stalled for 4 ticks: `FAULT OVERRUN` must latch with both gates low.
+
+The excerpts below come from docs/wokwi_negative.log, docs/wokwi_negative_step.log and docs/wokwi_stall.log:
+
+```
+$ grep -E "^# NEGATIVE|^Timeout|^EXIT=[0-9]+ wall" docs/wokwi_negative.log
+# NEGATIVE run 1: firmware rebuilt with -DBUCK_OCP_TRIP_A=1e9f (OCP can never trip); buck_steps.test.yaml must fail (non-zero exit) at 'FAULT OCP'
+Timeout: simulation did not finish in 4000ms
+EXIT=42 wall_s=45
+$ grep -E "^# NEGATIVE|^(PASS|FAIL) (startup settle|step recovery|release recovery)|STEP_FAIL|^Timeout|^EXIT=[0-9]+ wall" docs/wokwi_negative_step.log
+# NEGATIVE run 2: firmware rebuilt with -DBUCK_KI=100.0f (integral gain 800 -> 100); buck_steps.test.yaml must fail (non-zero exit) at the first 'STEP_OK'
+PASS startup settle +/-1 % <= 8 ms    5.70 ms (limit 8 ms)
+FAIL step recovery +/-1 % <= 5 ms     6.86 ms (limit 5 ms)
+FAIL release recovery +/-1 % <= 5 ms  5.62 ms (limit 5 ms)
+STEP t_us=32500 i_from_A=0.501 i_to_A=2.981 vmin_V=4.626 vmax_V=5.092 settle_us=7000 STEP_FAIL
+Timeout: simulation did not finish in 4000ms
+EXIT=42 wall_s=65
+$ grep -E "^# STALL|^FAULT OVERRUN|expect-pin|Scenario completed|^EXIT=[0-9]+ wall" docs/wokwi_stall.log
+# STALL run: firmware rebuilt with -DFW_TEST_STALL_TICKS=4 (one control update busy-waits 4 ticks after 20 ms of control time); buck_stall.test.yaml passes only if FAULT OVERRUN latches with both gates low
+FAULT OVERRUN
+[02 sync buck: one stalled update must latch FAULT OVERRUN] expect-pin esp:18 == 0
+[02 sync buck: one stalled update must latch FAULT OVERRUN] expect-pin esp:19 == 0
+[02 sync buck: one stalled update must latch FAULT OVERRUN] Scenario completed successfully
+EXIT=0 wall_s=8
+```
+
+![Wokwi run](docs/img/wokwi_buck.png)
+
+*Wokwi run, plotted by sim/wokwi/plot_wokwi.py from docs/wokwi_serial.log and docs/wokwi_run.log, against control time. Blue: the firmware's 100 us means. They are printed only inside capture windows, hence the gap between 4 and 6 ms. Orange: the plant chip's own output voltage and inductor current. The third STEP label, at the fault, is the overload interrupted by the trip.*
+
+### KiCad PCB: DRC, schematic parity, layout checks
+
+The board is generated by `python3 gen_pcb.py --export`, run in hw/kicad with KiCad's Python; its log is docs/pcb_gen.log. The script places the parts and draws every track; there is no autorouter. It then does the following:
+- pours GND on both layers;
+- adds stitching vias until none are left to add;
+- runs DRC with schematic parity (docs/pcb_drc.rpt);
+- exports the fab files and both renders.
+
+A second run of the script wrote a byte-identical board file. The DRC lines from the log:
+
+```
+$ /Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli pcb drc --schematic-parity --severity-all --exit-code-violations -o ../../docs/pcb_drc.rpt sync_buck.kicad_pcb
+Found 0 violations
+Found 0 unconnected items
+Found 0 schematic parity issues
+Saved DRC Report to ../../docs/pcb_drc.rpt
+```
+
+The report includes warnings. It lists the same five checks set to ignore as project 01.
+
+`python3 check_pcb.py` writes docs/pcb_checks.log and ends with `RESULT: PASS (39/39)`. It runs five whole-design checks:
+- ERC;
+- check_netlist.py;
+- DRC on the board as committed;
+- DRC again with the pours refilled;
+- trace_width.py.
+
+It also measures the layout. Each limit, with its basis, is in `LIMITS` in check_pcb.py:
+
+| Check | Measured | Limit |
+|---|---|---|
+| hot loop (C1/C2 -> Q1 -> Q2 -> ground), plan-view area | 61.5 mm^2 through C1, 71.5 mm^2 through C2 | 63 mm^2 through C1 = 1.5 x the 42.1 mm^2 enclosed by the four FET pad centres |
+| B.Cu GND pour under the hot loop | 100 % | 95 % |
+| GND vias next to the hot-loop ground pads | C1.2: 3, C2.2: 3, Q2 source: 1 | at least one within 1.5 mm of each |
+| driver beside the FETs | U1 LO pin -> Q2 gate 5.3 mm; HO pin -> Q1 gate 16.6 mm | 6 mm; 18 mm |
+| low-side gate path, U1 pin 8 -> R2 -> Q2 gate | 7.0 mm | 10 mm |
+| high-side gate loop, HO -> R1 -> GH -> Q1 and back on HS | 25.0 mm^2 (one crossing: lobes 1.6 + 23.4) | 30 mm^2 |
+| GH and its HS return on B.Cu | side by side, largest gap 1.00 mm | 1.5 mm |
+| bootstrap C5 at U1 pins 2 and 4 | 2.3 mm to each pin, loop 5.5 mm^2 | 3.0 mm, 10 mm^2 |
+| Kelvin sense | SH_P only on R6 pad 2 and SH_N only on pad 3; loop with the shunt element 16.8 mm^2 | sense pads only, no force copper |
+| analog tracks to SW copper and L1 | 11.2 mm at the closest point | 5 mm |
+| power copper | none narrower than 1.4 mm | 1.4 mm |
+
+Then 23 sabotaged copies of the board or the schematic. Each one must be rejected by the check it targets:
+- the hot-loop ground detoured 1.5 mm;
+- the hot-loop GND vias removed;
+- U1 moved 1.5 mm east and 1.0 mm south;
+- SH_N moved onto a force pad;
+- a VSENSE track run next to L1;
+- the SW, VIN and VOUT power tracks narrowed to 1.0 mm, and the hot-loop ground redrawn at 0.5 mm, each caught by DRC and by trace_width.py;
+- the HB tracks removed;
+- R5's value changed on the board only (a parity error);
+- a B.Cu track cut across the pour under the hot loop;
+- the GH lane moved, caught by the loop area, by the lane gap, and by DRC against the stale pour;
+- C5 moved 2 mm;
+- a net label renamed in the schematic, caught by ERC and by check_netlist.py.
+
+The trace widths are checked by trace_width.py. This block is docs/pcb_trace_width.log without its header lines:
+
+```
+IPC-2221 outer layer, k = 0.048, 1 oz copper (35 um), allowed rise 10 degC
+  rated output       3.0 A -> minimum width 1.37 mm
+  OCP trip (60 us)   4.5 A -> minimum width 2.39 mm
+F.Cu tracks of at least 1.37 mm joining the pads, in sync_buck.kicad_pcb:
+net     pads           length   width   rise 3 A rise 4.5 A         R  drop @ 3 A
+/VIN    J1.1-C3.1       6.2 mm  2.00 mm    5.3 degC   13.4 degC  1.52 mOhm     4.6 mV
+/VIN    C3.1-Q1.2T      6.6 mm  2.00 mm    5.3 degC   13.4 degC  1.62 mOhm     4.9 mV
+/VIN    Q1.2T-C1.1      2.5 mm  2.00 mm    5.3 degC   13.4 degC  0.61 mOhm     1.8 mV
+/VIN    C1.1-C2.1       3.4 mm  2.00 mm    5.3 degC   13.4 degC  0.84 mOhm     2.5 mV
+/SW     Q1.3-Q2.2T      2.7 mm  2.00 mm    5.3 degC   13.4 degC  0.67 mOhm     2.0 mV
+/SW     Q1.3-L1.1       4.4 mm  2.40 mm    4.0 degC    9.9 degC  0.89 mOhm     2.7 mV
+/VOUT   L1.2-C7.1      21.6 mm  2.00 mm    5.3 degC   13.4 degC  5.30 mOhm    15.9 mV
+/VOUT   L1.2-C8.1      18.2 mm  2.00 mm    5.3 degC   13.4 degC  4.46 mOhm    13.4 mV
+/VOUT   L1.2-R6.1      18.2 mm  2.00 mm    5.3 degC   13.4 degC  4.46 mOhm    13.4 mV
+/VLOAD  R6.4-J2.1       6.7 mm  2.00 mm    5.3 degC   13.4 degC  1.65 mOhm     4.9 mV
+GND     C2.2-C1.2       3.4 mm  2.00 mm    5.3 degC   13.4 degC  0.84 mOhm     2.5 mV
+GND     C1.2-Q2.3       6.2 mm  2.00 mm    5.3 degC   13.4 degC  1.51 mOhm     4.5 mV
+GND     C7.2-J2.2       7.0 mm  2.00 mm    5.3 degC   13.4 degC  1.72 mOhm     5.2 mV
+GND     C8.2-J2.2       5.0 mm  2.00 mm    5.3 degC   13.4 degC  1.22 mOhm     3.7 mV
+Length and R: the shortest chain of wide tracks between the pads, pad centre to pad centre at most.
+GND rows are the drawn return alone; both GND pours run in parallel with them.
+RESULT: PASS
+```
+
+![PCB top](hw/pcb_top.png)
+
+![PCB bottom](hw/pcb_bottom.png)
+
+*Top and bottom renders (kicad-cli pcb render). KiCad 10 ships no 3D models for L1 (Bourns SRP1245A) or R6 (Vishay WSK2512), and none were downloaded, so both show as bare pads and outlines (docs/pcb_3d_models.log).*
+
 ## Design notes
 
 - Duty and ripple: D = 5/12 = 0.417; with 15 uH at 200 kHz the inductor ripple is 0.97 A p-p (32 % of 3 A), peak 3.49 A against Isat 6 A (C04: limit Isat/1.2).
@@ -353,6 +602,90 @@ RESULT: PASS
 - Snubber: R close to sqrt(Lloop / Coss) for a 1 nH commutation loop and about 0.3 nF of switch-node capacitance, C about 3 to 4 x Coss; its loss is close to C x Vin^2 x fsw = 29 mW (C15 accepts +/-50 % of that rule of thumb).
 - Loop: with duty = (Vref + PI) / Vin the modulator gain is 1 V/V at any input voltage, so the margins in C18 hold across the input range; the worst corner (no load, L +20 %) still has 7.6 dB of gain margin.
 - Limit cycle: the ADC resolves 2 mV at the output but one DPWM tick is 30 mV, so an integrator always finds an error to integrate; the dead band (20 mV, more than half a tick) and the 0.75 LSB hysteresis remove that, and M1 / M4 in the negative gate show what happens without them.
+
+## Firmware (src/buck_esp32)
+
+**Structure.** The controller in src/buck_ctrl is compiled as a library, unmodified. Each job sits in its own file:
+
+| File | Job |
+|---|---|
+| control.cpp | the control task, on core 1 |
+| adc_sense.cpp | ADC sampling |
+| pwm_mcpwm.cpp, pwm_ledc.cpp | PWM backends, behind pwm_backend.h |
+| telemetry.cpp | the telemetry task, on core 0 and at low priority; the only code that prints |
+
+**Control tick.** A gptimer alarms every 20 us. Its ISR only counts the tick and notifies the control task, which keeps floating point out of interrupt context. Each update does the following:
+1. reads the three ADC channels;
+2. calls `buck_update()`;
+3. loads the new duty;
+4. does the fault bookkeeping;
+5. pushes a trace sample into a ring buffer.
+
+The cycle counter times every update.
+
+**PWM, product build (MCPWM).**
+- Timer: 80 MHz, 400 ticks, so 200 kHz.
+- Generator A drives PWM_H. The dead-time module derives PWM_L as its complement, with 4-tick (50 ns) rising and falling delays.
+- Off and hold: a software fault trips a one-shot brake that pulls both outputs low after the dead-time stage. Forcing the generator low alone would not do it: the dead-time stage would invert that onto PWM_L and turn the low side on.
+
+**PWM, Wokwi build (LEDC).** Wokwi has no MCPWM on the classic ESP32, so this build uses two 9-bit LEDC channels at 156.25 kHz:
+- H is high from count 0 to d.
+- L is high from d + 4 to 512 - 4. That gives 50 ns gaps on both edges.
+- The writes are ordered so that H and L cannot overlap, whether or not the hardware latches hpoint and duty together.
+
+**ADC.** ADC1 runs at 12 dB attenuation. Line-fitting calibration is used when the eFuse holds calibration data; otherwise the raw code x 3300 / 4095 is used. Readings are rescaled to the controller's 3.3 V / 4096-count scale.
+
+**Faults.** Every fault latches both gates low until reset:
+- OCP: from the controller, 3 samples above 4.5 A.
+- OVERRUN: 3 control ticks missed. One stall of 3 ticks is enough, which matches the 60 us OCP window.
+- PWM: a driver call failed, for example the MCPWM refusing to release the brake.
+
+**Telemetry.** The serial link runs at 921600 baud. It carries BOOT, START, READY, SS, STEP, FAULT and STAT lines. It also carries CSV trace rows: 100 us means inside capture windows around load steps and state changes, and one row every 10 ms otherwise. The line formats are listed at the top of buck_esp32.ino.
+
+## PCB layout (hw/kicad/gen_pcb.py)
+
+**Board.**
+- 54 x 40 mm, 2 layers, 1.6 mm FR4, 1 oz copper.
+- Four M3 corner holes: 3.2 mm, non-plated.
+- Rules:
+  - 0.2 mm track and clearance; signals are drawn at 0.25 mm.
+  - 0.6 mm vias with a 0.3 mm drill; 0.8 / 0.4 mm vias at the hot-loop and output ground pads.
+  - 0.5 mm copper to the board edge.
+
+**Hot loop.** C1 and C2 close the loop between Q1's drain and Q2's source.
+- The loop through C1 encloses 61.5 mm^2.
+- The B.Cu GND pour under it is unbroken.
+- 7 GND vias sit at its ground pads.
+
+**Gate drive.**
+- Low side: U1's LO pin is 5.3 mm from Q2's gate; the path through R2 is 7.0 mm of track.
+- High side: GH and its HS return run as a pair on B.Cu, at most 1.0 mm apart. HS leaves from a via 1.6 mm from Q1's source pad. The UCC27211's HB/HO/HS pin order forces one crossing, and the loop encloses 25.0 mm^2.
+- Bootstrap: C5 straddles HB and HS, 2.3 mm from each pin.
+
+**Kelvin sense.** R6 is a 4-terminal WSK2512 shunt.
+- Force pads 1 and 4 carry the load current. SH_P and SH_N leave only from sense pads 2 and 3.
+- The sense pads sit at opposite corners. So SH_P drops to B.Cu and passes under the shunt to U2, as in project 01.
+- The sense loop, closed through the shunt element, encloses 16.8 mm^2. The same two lines kept on F.Cu would enclose 24.2 mm^2.
+
+**Analog parts.** The dividers, the filter capacitors and U2 sit on the east side, by J3. The nearest analog track is 11.2 mm from switch-node copper or from L1.
+
+**Widths.**
+- IPC-2221 asks for 1.37 mm at 3 A for a 10 degC rise. Power copper is drawn at 2.0 mm, and 2.4 mm into L1.
+- Five custom DRC rules (sync_buck.kicad_dru) fail any power track narrower than 1.4 mm. Four rule areas name where they apply: PWR_VIN, PWR_SW (F.Cu), PWR_VLOAD and GND_HOT. The fifth rule covers every VOUT track.
+- The 4.5 A OCP level would need 2.39 mm for the same rise. It lasts at most 60 us, so it is reported, not designed for.
+
+**Ground.** Both layers carry a GND pour, tied by 77 stitching vias.
+
+**Commutation-loop inductance.** It is not extracted from the board. As a rough upper bound, the hot-loop perimeter (33.6 mm) at the usual 1 nH/mm rule of thumb gives about 34 nH (docs/pcb_checks.log). The SPICE decks assume 1 nH, so that is a lower bound this layout does not reach. The snubber values are a starting point, to re-tune on a built board.
+
+**Silkscreen.** Ten reference designators sit on the fab layer only, because there is no clear silkscreen spot for them: C3, C9, C10, C12, R7, R11, R12, U2, Q1 and Q2.
+
+**Fabrication files (hw/fab/).**
+- Gerber X2 for copper, mask, paste, silkscreen and the outline, plus a Gerber job file.
+- Excellon drill files, plated and non-plated, with drill maps.
+- Origin: the bottom-left board corner.
+
+These files have not been sent to a fab.
 
 ## Pin map (ESP32 header J3)
 
@@ -366,13 +699,28 @@ RESULT: PASS
 | 6 | ISENSE (0.5 V/A) | GPIO35, ADC1_CH7 |
 | 7 | VINSENSE (VIN x 0.175) | GPIO33, ADC1_CH5 |
 
+The Wokwi build drives GPIO18 and GPIO19 from LEDC instead of MCPWM, with the same 50 ns dead time.
+
 ## Known limitations
 
-- Simulation only: no PCB layout, no measured losses; the 1 nH commutation loop is an assumption and the FET is a generic VDMOS card, not a vendor model.
-- Inductor core loss, Rds(on) temperature rise and ADC noise and nonlinearity are not modelled.
-- The controller is portable C tested on the host. The ESP32 glue (MCPWM complementary outputs, ADC sampling at 50 kHz, the control interrupt) is not written yet, so nothing has run on the MCU.
-- The over-current trip is sampled (3 x 20 us). It handles overloads; a hard short needs a hardware comparator into the MCPWM fault input, which is not in this design.
-- Below about 7 V the UCC27211's own under-voltage lockout stops the bridge; the firmware has no separate input under-voltage lockout.
+- **No hardware.** Nothing is built and no losses are measured. The board is designed and DRC-checked, not fabricated. The FET is a generic VDMOS card, not a vendor model.
+- **The 1 nH commutation loop in SPICE is an assumption.** The layout's hot loop is not extracted, and the rule-of-thumb estimate is up to about 34 nH (see PCB layout). The snubber would need re-tuning on a built board.
+- **Not modelled:** inductor core loss, Rds(on) temperature rise, and ADC noise and nonlinearity.
+- **The MCPWM product build has never run.** It compiles, but Wokwi has no MCPWM on the classic ESP32. Its brake, force and dead-time ordering is argued from the ESP-IDF headers. Bring-up checks for a scope:
+  - the 50 ns dead time;
+  - both gates low at boot and after a fault;
+  - the duty-0 state.
+- **50 kHz timing on silicon is unmeasured.** The product reads three ADC channels per update with `adc_oneshot_read`; whether that plus the update fits in 20 us on a real ESP32 is not known. Wokwi measured 128 us for the three reads, but Wokwi's timing does not predict silicon. If the loop does not fit, the firmware latches FAULT OVERRUN with both gates low.
+- **The Wokwi run is a different build.** It ran the LEDC variant, which differs from the product in four ways:
+  - the loop runs 20x slower in simulated time;
+  - it is paced on the cycle counter with no timer interrupt;
+  - the ADC does one pipelined conversion per update;
+  - the ADC reads through Wokwi's 5 V transfer.
+
+  sim/wokwi/README_WOKWI.md gives each difference and its measurement. That build refuses to drive the gates unless it sees Wokwi's MAC address.
+- **Dead-time scatter in Wokwi.** The measured dead times spread from 39 to 86 ns around the 50 ns setting. There was at least one runt H pulse: an H period of 13 ns against 6400 ns. The cause is not established.
+- **The over-current trip is sampled** (3 x 20 us). It handles overloads. A hard short needs a hardware comparator into the MCPWM fault input, which is not in this design.
+- **No firmware input UVLO.** Below about 7 V the UCC27211's own under-voltage lockout stops the bridge.
 
 ## Status
 
@@ -380,11 +728,22 @@ Done:
 - main.py standalone model and self-check, all PASS.
 - LTspice and ngspice 47 power-stage simulations, cross-checked.
 - Controller in C with a model-in-the-loop host test (19/19) and a four-mutant negative gate.
-- KiCad schematic (ERC clean, netlist verified).
+- KiCad schematic: ERC clean, netlist verified.
+- ESP32 firmware: ADC sampling, complementary PWM with 50 ns dead time, a 50 kHz control task, and OCP / overrun / PWM fault latches. Both builds compile with no warnings.
+  - product build (MCPWM outputs, 50 kHz gptimer control task): compiled only, never executed;
+  - LEDC sim build: run in Wokwi, with a cycle-counter control tick at 20x time dilation instead of the gptimer interrupt.
+- On-target run in Wokwi against the host test's plant model:
+  - soft start, the 0.5 -> 3 -> 0.5 A steps (both `STEP_OK`), and the 6.25 A overload tripping with both gates low; 0 shoot-through;
+  - two negative builds make the scenario fail, as required;
+  - a stalled update latches FAULT OVERRUN.
+- PCB layout:
+  - 2 layers, 54 x 40 mm;
+  - DRC with schematic parity: 0 violations, 0 unconnected pads, 0 parity errors, warnings included;
+  - check_pcb.py: 39/39, including 23 sabotaged copies that the checks reject;
+  - Gerbers, drill files and renders exported.
 
 Not done:
-- ESP32 hardware glue and an on-target run.
-- PCB layout.
+- Hardware: fabrication, assembly and bring-up. The silicon checks listed under Known limitations are still open.
 
 ## Tools used
 
@@ -392,8 +751,18 @@ Not done:
 - LTspice (macOS, batch mode)
 - ngspice 47
 - clang (host test)
-- KiCad 10 (kicad-cli)
+- arduino-cli 1.2.0 with the esp32:esp32 core 3.2.0 (firmware)
+- Wokwi CLI 0.29.1 and WASI-SDK 25 clang (on-target run and the power-stage chip)
+- KiCad 10.0.7 (kicad-cli and its Python `pcbnew` for the schematic, the PCB and their checks)
 
 ## Credits
 
-Designed, specified and verified by Shon Zinger. Claude (Anthropic) assisted with: the power-stage and loop calculations, the LTspice and ngspice decks, the C controller and its host test harness, the KiCad schematic generator, main.py, and documentation.
+Designed, specified and verified by Shon Zinger. Claude (Anthropic) assisted with:
+- the power-stage and loop calculations;
+- the LTspice and ngspice decks;
+- the C controller and its host test harness;
+- the ESP32 firmware;
+- the Wokwi power-stage chip and scenarios;
+- the KiCad schematic and PCB generators and their checks;
+- main.py;
+- documentation.
