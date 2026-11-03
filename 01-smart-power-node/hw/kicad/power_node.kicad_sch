@@ -1523,7 +1523,7 @@
 					)
 				)
 			)
-			(property "Footprint" ""
+			(property "Footprint" "power_node:ESP32-DevKitC-V4_Socket"
 				(at 0 0 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -4629,7 +4629,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "power_node:ESP32-DevKitC-V4_Socket"
 			(at 236.22 68.58 0)
 			(hide yes)
 			(show_name no)
