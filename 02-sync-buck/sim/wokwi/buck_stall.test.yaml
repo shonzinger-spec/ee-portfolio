@@ -1,0 +1,22 @@
+# Negative scenario for the overrun latch: the firmware is built with -DFW_TEST_STALL_TICKS=4
+# (one control update busy-waits 4 ticks after 20 ms of control time). This scenario passes only
+# if the firmware latches FAULT OVERRUN; the normal build never prints it and times out.
+# Run from sim/wokwi (see docs/wokwi_stall.log for the build line):
+#   wokwi-cli . --scenario buck_stall.test.yaml --timeout 4000
+name: '02 sync buck: one stalled update must latch FAULT OVERRUN'
+version: 1
+author: 'Shon Zinger'
+
+steps:
+  - wait-serial: 'BOOT fw=buck_esp32 pwm=LEDC'
+  - wait-serial: 'READY'
+  - wait-serial: 'FAULT OVERRUN'
+  - delay: 20ms
+  - expect-pin:
+      part-id: esp
+      pin: '18'
+      value: 0
+  - expect-pin:
+      part-id: esp
+      pin: '19'
+      value: 0

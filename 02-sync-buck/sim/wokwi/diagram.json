@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "author": "Sync buck project",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": 0, "left": 0, "attrs": {} },
+    {
+      "type": "chip-buck_plant",
+      "id": "plant",
+      "top": 40,
+      "left": 220,
+      "attrs": { "loadMa": "1000", "vinMv": "12000", "stepNs": "6400", "timeScale": "20" }
+    },
+    { "type": "wokwi-led", "id": "ledflt", "top": -60, "left": 330, "attrs": { "color": "red", "label": "SHOOT-THROUGH" } }
+  ],
+  "connections": [
+    [ "esp:TX", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX", "$serialMonitor:TX", "", [] ],
+    [ "esp:18", "plant:PWM_H", "green", [] ],
+    [ "esp:19", "plant:PWM_L", "blue", [] ],
+    [ "plant:VSENSE", "esp:34", "orange", [] ],
+    [ "plant:ISENSE", "esp:35", "violet", [] ],
+    [ "plant:VINSENSE", "esp:33", "gold", [] ],
+    [ "plant:GND", "esp:GND.2", "black", [] ],
+    [ "plant:FLT", "ledflt:A", "red", [] ],
+    [ "ledflt:C", "esp:GND.2", "black", [] ]
+  ],
+  "serialMonitor": { "display": "always" }
+}

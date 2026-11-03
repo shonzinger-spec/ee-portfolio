@@ -1,0 +1,19 @@
+# wokwi-cli 0.29.1 (0aa185144b92), Tue Nov  3 13:24:19 EST 2026
+# Control-loop timing of buck_esp32 in Wokwi (diagnostic builds; not the shipped sources). Same diagram/chip as sim/wokwi
+# (chip timeScale 1 at the time). All builds: -DBUCK_PWM_LEDC -DFW_OVERRUN_LIMIT=1000000 (no overrun latch) and a small FW_STAT_DIV;
+# exec_* = one control update measured with the CPU cycle counter (includes interrupts taken during it), us of simulated time.
+#
+# A) 50 kHz gptimer interrupt + adc_oneshot replaced by the pipelined one-conversion ADC path, -DFW_STAT_DIV=50
+# cmd: wokwi-cli <diag dir> --timeout 650 --serial-log-file serial2.log
+STAT t_us=575329 state=SOFTSTART exec_max_us=1194.55 exec_mean_us=497.88 updates=50 overruns=1380 drop_samples=0 drop_events=0
+STAT t_us=603611 state=SOFTSTART exec_max_us=1002.81 exec_mean_us=498.15 updates=50 overruns=2754 drop_samples=0 drop_events=0
+STAT t_us=633308 state=SOFTSTART exec_max_us=1014.84 exec_mean_us=532.62 updates=50 overruns=4227 drop_samples=0 drop_events=0
+#
+# B) as A, plus cycle-counter sections in the update and around the ISR callback (DIAG fields: mean us per update;
+#    isr_cb_us = mean time inside the alarm callback, isr_n = alarms per STAT window); cmd: wokwi-cli <diag dir> --timeout 660
+STAT t_us=584956 state=SOFTSTART exec_max_us=1260.73 exec_mean_us=706.65 updates=50 overruns=1852 drop_samples=0 drop_events=0 DIAG tim=35.20 adc=149.85 upd=103.49 pwm=134.44 isr_cb_us=0.68 isr_n=1944
+STAT t_us=623956 state=SOFTSTART exec_max_us=1121.92 exec_mean_us=658.01 updates=50 overruns=3729 drop_samples=0 drop_events=0 DIAG tim=42.51 adc=155.67 upd=64.93 pwm=159.96 isr_cb_us=0.68 isr_n=1889
+#
+# C) no interrupt: task waits on the cycle counter every 20 us (FW_SIM_WOKWI tick at time scale 1), -DFW_STAT_DIV=500;
+#    DIAG tim = esp_timer_get_time, adc = pipelined read, upd = buck_update, pwm = pwm_set (pwm_max = worst case); cmd: wokwi-cli <diag dir> --timeout 640
+STAT t_us=591589 state=RUN exec_max_us=324.62 exec_mean_us=91.18 updates=500 overruns=2426 drop_samples=0 drop_events=0 DIAG tim=3.66 adc=24.72 upd=15.09 pwm=10.33 pwm_max=71.16

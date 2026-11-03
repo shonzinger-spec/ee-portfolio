@@ -1,0 +1,9 @@
+# arduino-cli 1.2.0 (esp32:esp32 core 3.2.0), Tue Nov  3 14:16:14 EST 2026
+arduino-cli  Version: 1.2.0 Commit: 9c495211 Date: 2025-02-24T15:57:28Z
+# cmd: arduino-cli compile -b esp32:esp32:esp32 --warnings all --clean --library src/buck_ctrl --build-property "compiler.cpp.extra_flags=-DBUCK_PWM_LEDC" --build-property "compiler.c.extra_flags=-DBUCK_PWM_LEDC" --output-dir sim/wokwi/build src/buck_esp32
+Sketch uses 313682 bytes (23%) of program storage space. Maximum is 1310720 bytes.
+Global variables use 49532 bytes (15%) of dynamic memory, leaving 278148 bytes for local variables. Maximum is 327680 bytes.
+EXIT=0
+# restore check (Tue Nov  3 14:16:39 EST 2026): cmp of the rebuilt sim/wokwi/build/buck_esp32.ino.bin against the binary that was in place before these runs (the one docs/wokwi_run.log ran):
+#   sizes 313824 / 313824 bytes, differing bytes: 70
+#   the 70 bytes are at offsets 177-208 (app ELF SHA-256 field), 2671-2677 (build time string) and 313792-313824 (image checksum and SHA-256 trailer); the code and data are identical

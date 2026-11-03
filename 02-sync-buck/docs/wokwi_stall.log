@@ -1,0 +1,211 @@
+# wokwi-cli 0.29.1 (0aa185144b92), Tue Nov  3 14:15:42 EST 2026
+# STALL run: firmware rebuilt with -DFW_TEST_STALL_TICKS=4 (one control update busy-waits 4 ticks after 20 ms of control time); buck_stall.test.yaml passes only if FAULT OVERRUN latches with both gates low
+# firmware build:
+# arduino-cli 1.2.0 (esp32:esp32 core 3.2.0), Tue Nov  3 14:15:42 EST 2026
+arduino-cli  Version: 1.2.0 Commit: 9c495211 Date: 2025-02-24T15:57:28Z
+# cmd: arduino-cli compile -b esp32:esp32:esp32 --warnings all --clean --library src/buck_ctrl --build-property "compiler.cpp.extra_flags=-DBUCK_PWM_LEDC -DFW_TEST_STALL_TICKS=4" --build-property "compiler.c.extra_flags=-DBUCK_PWM_LEDC -DFW_TEST_STALL_TICKS=4" --output-dir sim/wokwi/build src/buck_esp32
+Sketch uses 313758 bytes (23%) of program storage space. Maximum is 1310720 bytes.
+Global variables use 49540 bytes (15%) of dynamic memory, leaving 278140 bytes for local variables. Maximum is 327680 bytes.
+EXIT=0
+# cmd (in sim/wokwi): wokwi-cli . --scenario buck_stall.test.yaml --timeout 4000
+Wokwi CLI v0.29.1 (0aa185144b92)
+Connected to Wokwi Simulation API 1.0.0-20261103-g887603d8
+Starting simulation...
+[chip-buck_plant] PLANT init step_ns=6400 time_scale=20 load_mA=1000 vin_mV=12000 gap_ideal_ns=100 dt_ok_ns=40
+[chip-buck_plant] PLANT tp_us=0 vload_V=0.0000 vmin_V=0.0000 vmax_V=0.0000 il_A=0.0000 iload_A=0.0000 duty=0.0000 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=6 tp_us=0 why=periodic deadtimes=0 dt_min_ns=0 dt_max_ns=0 overlaps=0 overlap_ns=0 diode_us=6.4 flt=0 dt_lt40=0 int_dt_min_ns=0 int_dt_max_ns=0 per_h_ns=0..0 per_l_ns=0..0 dt_hist10ns=0,0,0,0,0,0,0,0,0,0,0
+ets Jul 29 2019 12:21:46
+
+rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:1156
+load:0x40078000,len:11456
+ho 0 tail 12 room 4
+load:0x40080400,len:2972
+entry 0x400805dc
+[chip-buck_plant] PLANT tp_us=2000 vload_V=0.0000 vmin_V=0.0000 vmax_V=0.0000 il_A=0.0000 iload_A=0.0000 duty=0.0000 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=40006 tp_us=2000 why=periodic deadtimes=0 dt_min_ns=0 dt_max_ns=0 overlaps=0 overlap_ns=0 diode_us=40006.4 flt=0 dt_lt40=0 int_dt_min_ns=0 int_dt_max_ns=0 per_h_ns=0..0 per_l_ns=0..0 dt_hist10ns=0,0,0,0,0,0,0,0,0,0,0
+[chip-buck_plant] PLANT tp_us=4000 vload_V=0.0000 vmin_V=0.0000 vmax_V=0.0000 il_A=0.0000 iload_A=0.0000 duty=0.0000 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=80006 tp_us=4000 why=periodic deadtimes=0 dt_min_ns=0 dt_max_ns=0 overlaps=0 overlap_ns=0 diode_us=80006.4 flt=0 dt_lt40=0 int_dt_min_ns=0 int_dt_max_ns=0 per_h_ns=0..0 per_l_ns=0..0 dt_hist10ns=0,0,0,0,0,0,0,0,0,0,0
+[chip-buck_plant] PLANT tp_us=6000 vload_V=0.0000 vmin_V=0.0000 vmax_V=0.0000 il_A=0.0000 iload_A=0.0000 duty=0.0000 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=120006 tp_us=6000 why=periodic deadtimes=0 dt_min_ns=0 dt_max_ns=0 overlaps=0 overlap_ns=0 diode_us=120006.4 flt=0 dt_lt40=0 int_dt_min_ns=0 int_dt_max_ns=0 per_h_ns=0..0 per_l_ns=0..0 dt_hist10ns=0,0,0,0,0,0,0,0,0,0,0
+[chip-buck_plant] PLANT tp_us=8000 vload_V=0.0000 vmin_V=0.0000 vmax_V=0.0000 il_A=0.0000 iload_A=0.0000 duty=0.0000 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=160006 tp_us=8000 why=periodic deadtimes=0 dt_min_ns=0 dt_max_ns=0 overlaps=0 overlap_ns=0 diode_us=160006.4 flt=0 dt_lt40=0 int_dt_min_ns=0 int_dt_max_ns=0 per_h_ns=0..0 per_l_ns=0..0 dt_hist10ns=0,0,0,0,0,0,0,0,0,0,0
+[chip-buck_plant] PLANT tp_us=10000 vload_V=0.0000 vmin_V=0.0000 vmax_V=0.0000 il_A=0.0000 iload_A=0.0000 duty=0.0000 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=200006 tp_us=10000 why=periodic deadtimes=0 dt_min_ns=0 dt_max_ns=0 overlaps=0 overlap_ns=0 diode_us=200006.4 flt=0 dt_lt40=0 int_dt_min_ns=0 int_dt_max_ns=0 per_h_ns=0..0 per_l_ns=0..0 dt_hist10ns=0,0,0,0,0,0,0,0,0,0,0
+[chip-buck_plant] PLANT tp_us=12000 vload_V=0.0000 vmin_V=0.0000 vmax_V=0.0000 il_A=0.0000 iload_A=0.0000 duty=0.0000 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=240006 tp_us=12000 why=periodic deadtimes=0 dt_min_ns=0 dt_max_ns=0 overlaps=0 overlap_ns=0 diode_us=240006.4 flt=0 dt_lt40=0 int_dt_min_ns=0 int_dt_max_ns=0 per_h_ns=0..0 per_l_ns=0..0 dt_hist10ns=0,0,0,0,0,0,0,0,0,0,0
+[chip-buck_plant] PLANT tp_us=14000 vload_V=0.0000 vmin_V=0.0000 vmax_V=0.0000 il_A=0.0000 iload_A=0.0000 duty=0.0000 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=280006 tp_us=14000 why=periodic deadtimes=0 dt_min_ns=0 dt_max_ns=0 overlaps=0 overlap_ns=0 diode_us=280006.4 flt=0 dt_lt40=0 int_dt_min_ns=0 int_dt_max_ns=0 per_h_ns=0..0 per_l_ns=0..0 dt_hist10ns=0,0,0,0,0,0,0,0,0,0,0
+[chip-buck_plant] PLANT tp_us=16000 vload_V=0.0000 vmin_V=0.0000 vmax_V=0.0000 il_A=0.0000 iload_A=0.0000 duty=0.0000 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=320006 tp_us=16000 why=periodic deadtimes=0 dt_min_ns=0 dt_max_ns=0 overlaps=0 overlap_ns=0 diode_us=320006.4 flt=0 dt_lt40=0 int_dt_min_ns=0 int_dt_max_ns=0 per_h_ns=0..0 per_l_ns=0..0 dt_hist10ns=0,0,0,0,0,0,0,0,0,0,0
+[chip-buck_plant] PLANT tp_us=18000 vload_V=0.0000 vmin_V=0.0000 vmax_V=0.0000 il_A=0.0000 iload_A=0.0000 duty=0.0000 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=360006 tp_us=18000 why=periodic deadtimes=0 dt_min_ns=0 dt_max_ns=0 overlaps=0 overlap_ns=0 diode_us=360006.4 flt=0 dt_lt40=0 int_dt_min_ns=0 int_dt_max_ns=0 per_h_ns=0..0 per_l_ns=0..0 dt_hist10ns=0,0,0,0,0,0,0,0,0,0,0
+[chip-buck_plant] PLANT tp_us=20000 vload_V=0.0000 vmin_V=0.0000 vmax_V=0.0000 il_A=0.0000 iload_A=0.0000 duty=0.0000 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=400006 tp_us=20000 why=periodic deadtimes=0 dt_min_ns=0 dt_max_ns=0 overlaps=0 overlap_ns=0 diode_us=400006.4 flt=0 dt_lt40=0 int_dt_min_ns=0 int_dt_max_ns=0 per_h_ns=0..0 per_l_ns=0..0 dt_hist10ns=0,0,0,0,0,0,0,0,0,0,0
+[chip-buck_plant] PLANT tp_us=22000 vload_V=0.0000 vmin_V=0.0000 vmax_V=0.0000 il_A=0.0000 iload_A=0.0000 duty=0.0000 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=440006 tp_us=22000 why=periodic deadtimes=0 dt_min_ns=0 dt_max_ns=0 overlaps=0 overlap_ns=0 diode_us=440006.4 flt=0 dt_lt40=0 int_dt_min_ns=0 int_dt_max_ns=0 per_h_ns=0..0 per_l_ns=0..0 dt_hist10ns=0,0,0,0,0,0,0,0,0,0,0
+[chip-buck_plant] PLANT tp_us=24000 vload_V=0.0000 vmin_V=0.0000 vmax_V=0.0000 il_A=0.0000 iload_A=0.0000 duty=0.0000 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=480006 tp_us=24000 why=periodic deadtimes=0 dt_min_ns=0 dt_max_ns=0 overlaps=0 overlap_ns=0 diode_us=480006.4 flt=0 dt_lt40=0 int_dt_min_ns=0 int_dt_max_ns=0 per_h_ns=0..0 per_l_ns=0..0 dt_hist10ns=0,0,0,0,0,0,0,0,0,0,0
+[chip-buck_plant] PLANT tp_us=26000 vload_V=0.0000 vmin_V=0.0000 vmax_V=0.0000 il_A=0.0000 iload_A=0.0000 duty=0.0000 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=520006 tp_us=26000 why=periodic deadtimes=0 dt_min_ns=0 dt_max_ns=0 overlaps=0 overlap_ns=0 diode_us=520006.4 flt=0 dt_lt40=0 int_dt_min_ns=0 int_dt_max_ns=0 per_h_ns=0..0 per_l_ns=0..0 dt_hist10ns=0,0,0,0,0,0,0,0,0,0,0
+BOOT fw=buck_esp32 pwm=LEDC
+[02 sync buck: one stalled update must latch FAULT OVERRUN] Expected text matched: "BOOT fw=buck_esp32 pwm=LEDC"
+[chip-buck_plant] PLANT tp_us=28000 vload_V=0.6256 vmin_V=0.0000 vmax_V=0.6256 il_A=0.5398 iload_A=0.1251 duty=0.0096 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=560006 tp_us=28000 why=periodic deadtimes=3926 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547392.8 flt=0 dt_lt40=0 int_dt_min_ns=40 int_dt_max_ns=85 per_h_ns=13..6400 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,215,3665,30,12,4,0,0
+ fsw_hz=156250 ctrl_hz=50000 adc_cal=WOKWI_5V_LINEAR baud=921600 cpu_mhz=240 overrun_limit=3
+WARNING SIM_BUILD_NOT_FOR_HARDWARE mac=wokwi: not for hardware (5 V ADC transfer, time dilation)
+SIM wokwi time_scale=20 tick_sim_us=400 (all t_us below are control time, 20 us per tick)
+t_us,vout_V,il_A,vin_V,duty_ticks,state,overruns
+START t_us=20 vout_V=0.000
+CAP begin t_us=100 reason=STATE
+100,0.000,0.000,12.00,3,1,0
+200,0.018,0.003,12.00,6,1,0
+300,0.125,0.025,12.00,10,1,0
+400,0.289,0.054,12.00,13,1,0
+500,0.449,0.086,12.00,17,1,0
+600,0.529,0.106,12.00,20,1,0
+700,0.578,0.113,12.00,23,1,0
+800,0.652,0.129,12.00,27,1,0
+900,0.783,0.154,12.00,31,1,0
+1000,0.922,0.183,12.00,34,1,0
+1100,1.044,0.209,12.00,37,1,0
+1200,1.121,0.223,12.00,41,1,0
+1300,1.193,0.236,12.00,44,1,0
+1400,1.281,0.258,12.00,48,1,0
+1500,1.410,0.277,12.00,51,1,0
+1600,1.530,0.306,12.00,54,1,0
+[chip-buck_plant] PLANT tp_us=30000 vload_V=2.6973 vmin_V=0.6258 vmax_V=2.6973 il_A=1.0016 iload_A=0.5395 duty=0.1429 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=600006 tp_us=30000 why=periodic deadtimes=16426 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547392.8 flt=0 dt_lt40=0 int_dt_min_ns=40 int_dt_max_ns=85 per_h_ns=13..6400 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,437,15808,115,51,15,0,0
+1700,1.638,0.325,12.00,58,1,0
+1800,1.716,0.342,12.00,61,1,0
+1900,1.807,0.360,12.00,64,1,0
+2000,1.903,0.378,12.00,68,1,0
+2100,2.022,0.401,12.00,71,1,0
+2200,2.131,0.428,12.00,75,1,0
+2300,2.234,0.442,12.00,78,1,0
+2400,2.318,0.463,12.00,81,1,0
+2500,2.416,0.482,12.00,85,1,0
+2600,2.516,0.501,12.00,88,1,0
+2700,2.626,0.525,12.00,91,1,0
+2800,2.719,0.542,12.00,95,1,0
+2900,2.816,0.561,12.00,98,1,0
+3000,2.914,0.585,12.00,102,1,0
+3100,3.030,0.603,12.00,105,1,0
+3200,3.135,0.627,12.00,108,1,0
+3300,3.235,0.645,12.00,112,1,0
+[chip-buck_plant] PLANT tp_us=32000 vload_V=4.7008 vmin_V=2.6976 vmax_V=4.7008 il_A=1.4273 iload_A=0.9402 duty=0.3115 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=640006 tp_us=32000 why=periodic deadtimes=28926 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547392.8 flt=0 dt_lt40=0 int_dt_min_ns=40 int_dt_max_ns=85 per_h_ns=13..6400 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,569,28050,186,94,27,0,0
+3400,3.321,0.662,12.00,115,1,0
+3500,3.419,0.684,12.00,118,1,0
+3600,3.516,0.702,12.00,122,1,0
+3700,3.628,0.722,12.00,125,1,0
+3800,3.727,0.747,12.00,128,1,0
+3900,3.827,0.763,12.00,132,1,0
+4000,3.916,0.783,12.00,135,1,0
+CAP end t_us=4000
+[chip-buck_plant] PLANT tp_us=34000 vload_V=5.0074 vmin_V=4.7012 vmax_V=5.0121 il_A=0.9961 iload_A=1.0015 duty=0.4162 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=680006 tp_us=34000 why=periodic deadtimes=41426 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547392.8 flt=0 dt_lt40=0 int_dt_min_ns=40 int_dt_max_ns=85 per_h_ns=13..6400 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,774,40326,198,99,29,0,0
+READY
+[02 sync buck: one stalled update must latch FAULT OVERRUN] Expected text matched: "READY"
+ t_us=6960
+CAP begin t_us=7000 reason=STATE
+6000,5.007,1.001,12.00,168,1,0
+6100,5.010,1.001,12.00,168,1,0
+6200,5.008,1.001,12.00,168,1,0
+6300,5.007,1.001,12.00,168,1,0
+6400,5.004,1.001,12.00,168,1,0
+6500,5.008,1.001,12.00,168,1,0
+6600,5.008,1.001,12.00,168,1,0
+6700,5.008,1.001,12.00,168,1,0
+6800,5.008,1.001,12.00,168,1,0
+6900,5.008,1.001,12.00,168,1,0
+7000,5.008,1.001,12.00,168,2,0
+SS t_us=7000 t_1pct_us=5380 t_run_us=6940
+7100,5.008,1.001,12.00,168,2,0
+7200,5.008,1.001,12.00,168,2,0
+7300,5.008,1.001,12.00,168,2,0
+7400,5.008,1.001,12.00,168,2,0
+7500,5.008,1.001,12.00,168,2,0
+7600,5.008,1.001,12.00,168,2,0
+7700,5.008,1.001,12.00,168,2,0
+7800,5.008,1.001,12.00,168,2,0
+7900,5.008,1.001,12.00,168,2,0
+8000,5.008,1.001,12.00,168,2,0
+8100,5.008,1.001,12.00,168,2,0
+8200,5.008,1.001,12.00,168,2,0
+8300,5.008,1.001,12.00,168,2,0
+8400,5.008,1.001,12.00,168,2,0
+8500,5.008,1.001,12.00,168,2,0
+[chip-buck_plant] PLANT tp_us=36000 vload_V=5.0073 vmin_V=5.0064 vmax_V=5.0077 il_A=1.0015 iload_A=1.0015 duty=0.4199 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=720006 tp_us=36000 why=periodic deadtimes=53926 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547392.8 flt=0 dt_lt40=0 int_dt_min_ns=50 int_dt_max_ns=50 per_h_ns=13..6400 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,774,52826,198,99,29,0,0
+8600,5.008,1.001,12.00,168,2,0
+8700,5.008,1.001,12.00,168,2,0
+8800,5.008,1.001,12.00,168,2,0
+8900,5.008,1.001,12.00,168,2,0
+9000,5.008,1.001,12.00,168,2,0
+9100,5.008,1.001,12.00,168,2,0
+9200,5.008,1.001,12.00,168,2,0
+9300,5.008,1.001,12.00,168,2,0
+9400,5.008,1.001,12.00,168,2,0
+9500,5.008,1.001,12.00,168,2,0
+9600,5.008,1.001,12.00,168,2,0
+9700,5.008,1.001,12.00,168,2,0
+9800,5.008,1.001,12.00,168,2,0
+9900,5.008,1.001,12.00,168,2,0
+10000,5.008,1.001,12.00,168,2,0
+10100,5.008,1.001,12.00,168,2,0
+10200,5.008,1.001,12.00,168,2,0
+[chip-buck_plant] PLANT tp_us=38000 vload_V=5.0072 vmin_V=5.0072 vmax_V=5.0073 il_A=1.0014 iload_A=1.0014 duty=0.4199 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=760006 tp_us=38000 why=periodic deadtimes=66426 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547392.8 flt=0 dt_lt40=0 int_dt_min_ns=50 int_dt_max_ns=50 per_h_ns=13..6400 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,774,65326,198,99,29,0,0
+10300,5.008,1.001,12.00,168,2,0
+10400,5.008,1.001,12.00,168,2,0
+10500,5.008,1.001,12.00,168,2,0
+10600,5.008,1.001,12.00,168,2,0
+10700,5.008,1.001,12.00,168,2,0
+10800,5.008,1.001,12.00,168,2,0
+10900,5.008,1.001,12.00,168,2,0
+CAP end t_us=10900
+[chip-buck_plant] PLANT tp_us=40000 vload_V=5.0072 vmin_V=5.0072 vmax_V=5.0072 il_A=1.0014 iload_A=1.0014 duty=0.4199 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=800006 tp_us=40000 why=periodic deadtimes=78926 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547392.8 flt=0 dt_lt40=0 int_dt_min_ns=50 int_dt_max_ns=50 per_h_ns=13..6400 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,774,77826,198,99,29,0,0
+[chip-buck_plant] PLANT tp_us=42000 vload_V=5.0072 vmin_V=5.0072 vmax_V=5.0072 il_A=1.0014 iload_A=1.0014 duty=0.4199 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=840006 tp_us=42000 why=periodic deadtimes=91426 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547392.8 flt=0 dt_lt40=0 int_dt_min_ns=50 int_dt_max_ns=50 per_h_ns=13..6400 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,774,90326,198,99,29,0,0
+[chip-buck_plant] PLANT tp_us=44000 vload_V=5.0072 vmin_V=5.0072 vmax_V=5.0072 il_A=1.0014 iload_A=1.0014 duty=0.4199 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=880006 tp_us=44000 why=periodic deadtimes=103926 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547392.8 flt=0 dt_lt40=0 int_dt_min_ns=50 int_dt_max_ns=50 per_h_ns=13..6400 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,774,102826,198,99,29,0,0
+[chip-buck_plant] PLANT tp_us=46000 vload_V=5.0072 vmin_V=5.0072 vmax_V=5.0072 il_A=1.0014 iload_A=1.0014 duty=0.4199 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=920006 tp_us=46000 why=periodic deadtimes=116426 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547392.8 flt=0 dt_lt40=0 int_dt_min_ns=50 int_dt_max_ns=50 per_h_ns=13..6400 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,774,115326,198,99,29,0,0
+STAT t_us=20000 state=RUN exec_max_us=1706.65 exec_mean_us=73.90 updates=1000 overruns=0 drop_samples=0 drop_events=0
+FAULT OVERRUN
+[02 sync buck: one stalled update must latch FAULT OVERRUN] Expected text matched: "FAULT OVERRUN"
+[02 sync buck: one stalled update must latch FAULT OVERRUN] delay 20ms
+[chip-buck_plant] PLANT tp_us=48000 vload_V=3.8824 vmin_V=3.8824 vmax_V=5.0072 il_A=0.0000 iload_A=0.7765 duty=0.4036 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=960006 tp_us=48000 why=periodic deadtimes=125120 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=559567.9 flt=0 dt_lt40=0 int_dt_min_ns=50 int_dt_max_ns=50 per_h_ns=13..6400 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,774,124020,198,99,29,0,0
+ t_us=20080 trip_us=0 vout_V=5.008 il_A=1.001 vin_V=12.00 raw_v=1660 raw_i=410 raw_vin=1724 duty_ticks=168 overruns=4
+CAP begin t_us=20160 reason=STATE
+19100,5.008,1.001,12.00,168,2,0
+19200,5.008,1.001,12.00,168,2,0
+19300,5.008,1.001,12.00,168,2,0
+19400,5.008,1.001,12.00,168,2,0
+19500,5.008,1.001,12.00,168,2,0
+19600,5.008,1.001,12.00,168,2,0
+19700,5.008,1.001,12.00,168,2,0
+19800,5.008,1.001,12.00,168,2,0
+19900,5.008,1.001,12.00,168,2,0
+20000,5.008,1.001,12.00,168,2,0
+20160,4.979,0.995,12.00,0,4,4
+20260,4.808,0.965,12.00,0,4,4
+20360,4.606,0.921,12.00,0,4,4
+20460,4.426,0.888,12.00,0,4,4
+20560,4.238,0.852,12.00,0,4,4
+20660,4.074,0.812,12.00,0,4,4
+20760,3.901,0.785,12.00,0,4,4
+20860,3.747,0.750,12.00,0,4,4
+20960,3.590,0.721,12.00,0,4,4
+21060,3.449,0.692,12.00,0,4,4
+21160,3.303,0.661
+[02 sync buck: one stalled update must latch FAULT OVERRUN] expect-pin esp:18 == 0
+[02 sync buck: one stalled update must latch FAULT OVERRUN] expect-pin esp:19 == 0
+[02 sync buck: one stalled update must latch FAULT OVERRUN] Scenario completed successfully
+EXIT=0 wall_s=8

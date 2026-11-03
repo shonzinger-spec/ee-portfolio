@@ -1,0 +1,19 @@
+# Wokwi for VS Code / wokwi-cli configuration (https://docs.wokwi.com/vscode/project-config)
+#
+# 1. Build the LEDC firmware variant (Wokwi has no MCPWM on the classic ESP32), from 02-sync-buck/:
+#      arduino-cli compile -b esp32:esp32:esp32 --warnings all --clean --library src/buck_ctrl \
+#        --build-property compiler.cpp.extra_flags=-DBUCK_PWM_LEDC \
+#        --build-property compiler.c.extra_flags=-DBUCK_PWM_LEDC \
+#        --output-dir sim/wokwi/build src/buck_esp32
+# 2. Build the power-stage chip:  sim/wokwi/build_chip.sh  (-> buck_plant.chip.wasm)
+#    The [[chip]] name "buck_plant" makes the part type "chip-buck_plant" in diagram.json;
+#    Wokwi reads the pinout and controls from buck_plant.chip.json.
+
+[wokwi]
+version = 1
+firmware = 'build/buck_esp32.ino.bin'
+elf = 'build/buck_esp32.ino.elf'
+
+[[chip]]
+name = 'buck_plant'
+binary = 'buck_plant.chip.wasm'

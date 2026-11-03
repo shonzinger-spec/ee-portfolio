@@ -1,0 +1,52 @@
+# Wokwi automation scenario mirroring test/host (test_buck_ctrl.c): soft start at 1 A, load step
+# 0.5 -> 3 -> 0.5 A, then a 6.25 A overload (0.8 ohm) that must latch the OCP with both gates low.
+# Delays are simulated time. The Wokwi build runs the control loop 20x slower in simulated time
+# (FW_SIM_TIME_SCALE = chip timeScale = 20, see README_WOKWI.md), so 300ms here = 15 ms of
+# control/plant time.
+# Run from sim/wokwi:
+#   wokwi-cli . --scenario buck_steps.test.yaml --timeout 4000 --serial-log-file ../../docs/wokwi_serial.log
+name: '02 sync buck: soft start, load step, OCP latch'
+version: 1
+author: 'Shon Zinger'
+
+steps:
+  - wait-serial: 'BOOT fw=buck_esp32 pwm=LEDC'
+  - wait-serial: 'READY'
+  - wait-serial: 'SS t_us='
+  - delay: 300ms                 # 15 ms steady state at 1 A
+  - set-control:
+      part-id: plant
+      name: loadMa
+      value: 500
+  - delay: 200ms                 # 10 ms at 0.5 A
+  - set-control:                 # load step 0.5 -> 3 A
+      part-id: plant
+      name: loadMa
+      value: 3000
+  - wait-serial: 'STEP_OK'       # STEP line of the 0.5 -> 3 A step; STEP_OK = dip >= 4.50 V, settled within 5 ms
+  - delay: 100ms                 # 5 ms more at 3 A
+  - set-control:                 # load release 3 -> 0.5 A
+      part-id: plant
+      name: loadMa
+      value: 500
+  - wait-serial: 'STEP_OK'       # STEP line of the release; STEP_OK = peak <= 5.50 V, settled within 5 ms
+  - wait-serial: 'STAT t_us='    # execution time and overrun count (one line per 1000 updates)
+  - set-control:                 # overload 6.25 A (0.8 ohm at 5 V)
+      part-id: plant
+      name: loadMa
+      value: 6250
+  - wait-serial: 'FAULT OCP'
+  - delay: 20ms                  # 1 ms of control time
+  - expect-pin:                  # both gates low after the latch
+      part-id: esp
+      pin: '18'
+      value: 0
+  - expect-pin:
+      part-id: esp
+      pin: '19'
+      value: 0
+  - expect-pin:                  # no shoot-through (H and L never high together) during the run
+      part-id: plant
+      pin: FLT
+      value: 0
+  - delay: 100ms                 # stays off; lets the chip print its final PGATE row

@@ -1,0 +1,30 @@
+# wokwi-cli 0.29.1 (0aa185144b92), Tue Nov  3 12:57:24 EST 2026
+# ADC probe on a simulated ESP32 (sim/wokwi/probe: adcprobe.ino + vstep chip on GPIO34/35/33).
+# cmd (in sim/wokwi/probe, after arduino-cli compile -b esp32:esp32:esp32 --output-dir build adcprobe and building vstep.chip.wasm): wokwi-cli . --timeout 800   (probe v1, 3.3 V held)
+# columns: raw = adc_oneshot_read code, cali_mv34 = adc_cali line fitting (simulated eFuse: efuse=0 is ADC_CALI_LINE_FITTING_EFUSE_VAL_EFUSE_VREF), *_us = CPU cycle counter / 240
+PROBE efuse_err=0 efuse=0 cali_err=0
+PROBE t_us=524179 raw34=2703 raw35=2703 raw33=2703 cali_mv34=2417 read1_us=56.97 read3_us=141.57 cali_us=6.25
+PROBE
+# probe v2: adcprobe.ino as in sim/wokwi/probe now (oneshot vs direct SENS-register reads), vstep steps after 600 ms; cmd: wokwi-cli . --timeout 680
+[chip-vstep] VSTEP t_us=5000 v=0.250
+[chip-vstep] VSTEP t_us=610000 v=0.500
+[chip-vstep] VSTEP t_us=615000 v=1.000
+[chip-vstep] VSTEP t_us=620000 v=2.000
+[chip-vstep] VSTEP t_us=625000 v=2.024
+[chip-vstep] VSTEP t_us=630000 v=3.000
+[chip-vstep] VSTEP t_us=635000 v=3.300
+[chip-vstep] VSTEP t_us=640000 v=4.000
+[chip-vstep] VSTEP t_us=645000 v=4.900
+[chip-vstep] VSTEP t_us=650000 v=6.000
+PROBE2 start
+PROBE2 t_us=521356 os=205,205,205 ll=205,205,205 os3_us=141.44 ll3_us=47.00
+PROBE2 t_us=525697 os=205,205,205 ll=205,205,205 os3_us=128.26 ll3_us=47.00
+PROBE2 t_us=613697 os=410,410,410 ll=410,410,410 os3_us=128.26 ll3_us=47.00
+PROBE2 t_us=617697 os=819,819,819 ll=819,819,819 os3_us=128.26 ll3_us=47.00
+PROBE2 t_us=621697 os=1638,1638,1638 ll=1638,1638,1638 os3_us=128.26 ll3_us=47.00
+PROBE2 t_us=625697 os=1657,1657,1657 ll=1657,1657,1657 os3_us=128.26 ll3_us=47.00
+PROBE2 t_us=633697 os=2457,2457,2457 ll=2457,2457,2457 os3_us=128.26 ll3_us=47.00
+PROBE2 t_us=637697 os=2703,2703,2703 ll=2703,2703,2703 os3_us=128.26 ll3_us=47.00
+PROBE2 t_us=641697 os=3276,3276,3276 ll=3276,3276,3276 os3_us=128.26 ll3_us=47.00
+PROBE2 t_us=645697 os=4013,4013,4013 ll=4013,4013,4013 os3_us=128.26 ll3_us=47.00
+PROBE2 t_us=653697 os=4095,4095,4095 ll=4095,4095,4095 os3_us=128.26 ll3_us=47.00

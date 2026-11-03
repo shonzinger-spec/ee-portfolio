@@ -1,0 +1,6 @@
+# arduino-cli 1.2.0 (esp32:esp32 core 3.2.0), Tue Nov  3 14:16:39 EST 2026
+arduino-cli  Version: 1.2.0 Commit: 9c495211 Date: 2025-02-24T15:57:28Z
+# cmd: arduino-cli compile -b esp32:esp32:esp32 --warnings all --clean --library src/buck_ctrl src/buck_esp32
+Sketch uses 324302 bytes (24%) of program storage space. Maximum is 1310720 bytes.
+Global variables use 49348 bytes (15%) of dynamic memory, leaving 278332 bytes for local variables. Maximum is 327680 bytes.
+EXIT=0

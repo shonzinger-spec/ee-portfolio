@@ -1,0 +1,572 @@
+# wokwi-cli 0.29.1 (0aa185144b92), Tue Nov  3 14:14:11 EST 2026
+# NEGATIVE run 2: firmware rebuilt with -DBUCK_KI=100.0f (integral gain 800 -> 100); buck_steps.test.yaml must fail (non-zero exit) at the first 'STEP_OK'
+# host model with -DBUCK_KI=100.0f (test/host, same plant and controller):
+# cmd (in test/host): cc -std=c99 -O2 -I../../src/buck_ctrl -I. -DBUCK_KI=100.0f -o <scratch>/t ../../src/buck_ctrl/buck_ctrl.c plant.c test_buck_ctrl.c -lm && <scratch>/t
+PASS startup overshoot <= 2 %         max 5.0285 V (limit 5.10 V)
+PASS startup settle +/-1 % <= 8 ms    5.70 ms (limit 8 ms)
+PASS step dip >= 4.50 V (-10 %)       min 4.5827 V (limit 4.50 V)
+FAIL step recovery +/-1 % <= 5 ms     6.86 ms (limit 5 ms)
+PASS release peak <= 5.50 V (+10 %)   max 5.4163 V (limit 5.50 V)
+FAIL release recovery +/-1 % <= 5 ms  5.62 ms (limit 5 ms)
+RESULT: 17/19 PASS
+# firmware build:
+# arduino-cli 1.2.0 (esp32:esp32 core 3.2.0), Tue Nov  3 14:14:12 EST 2026
+arduino-cli  Version: 1.2.0 Commit: 9c495211 Date: 2025-02-24T15:57:28Z
+# cmd: arduino-cli compile -b esp32:esp32:esp32 --warnings all --clean --library src/buck_ctrl --build-property "compiler.cpp.extra_flags=-DBUCK_PWM_LEDC -DBUCK_KI=100.0f" --build-property "compiler.c.extra_flags=-DBUCK_PWM_LEDC -DBUCK_KI=100.0f" --output-dir sim/wokwi/build src/buck_esp32
+Sketch uses 313682 bytes (23%) of program storage space. Maximum is 1310720 bytes.
+Global variables use 49532 bytes (15%) of dynamic memory, leaving 278148 bytes for local variables. Maximum is 327680 bytes.
+EXIT=0
+# cmd (in sim/wokwi): wokwi-cli . --scenario buck_steps.test.yaml --timeout 4000
+Wokwi CLI v0.29.1 (0aa185144b92)
+Connected to Wokwi Simulation API 1.0.0-20261103-g887603d8
+Starting simulation...
+[chip-buck_plant] PLANT init step_ns=6400 time_scale=20 load_mA=1000 vin_mV=12000 gap_ideal_ns=100 dt_ok_ns=40
+[chip-buck_plant] PLANT tp_us=0 vload_V=0.0000 vmin_V=0.0000 vmax_V=0.0000 il_A=0.0000 iload_A=0.0000 duty=0.0000 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=6 tp_us=0 why=periodic deadtimes=0 dt_min_ns=0 dt_max_ns=0 overlaps=0 overlap_ns=0 diode_us=6.4 flt=0 dt_lt40=0 int_dt_min_ns=0 int_dt_max_ns=0 per_h_ns=0..0 per_l_ns=0..0 dt_hist10ns=0,0,0,0,0,0,0,0,0,0,0
+ets Jul 29 2019 12:21:46
+
+rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:1156
+load:0x40078000,len:11456
+ho 0 tail 12 room 4
+load:0x40080400,len:2972
+entry 0x400805dc
+[chip-buck_plant] PLANT tp_us=2000 vload_V=0.0000 vmin_V=0.0000 vmax_V=0.0000 il_A=0.0000 iload_A=0.0000 duty=0.0000 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=40006 tp_us=2000 why=periodic deadtimes=0 dt_min_ns=0 dt_max_ns=0 overlaps=0 overlap_ns=0 diode_us=40006.4 flt=0 dt_lt40=0 int_dt_min_ns=0 int_dt_max_ns=0 per_h_ns=0..0 per_l_ns=0..0 dt_hist10ns=0,0,0,0,0,0,0,0,0,0,0
+[chip-buck_plant] PLANT tp_us=4000 vload_V=0.0000 vmin_V=0.0000 vmax_V=0.0000 il_A=0.0000 iload_A=0.0000 duty=0.0000 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=80006 tp_us=4000 why=periodic deadtimes=0 dt_min_ns=0 dt_max_ns=0 overlaps=0 overlap_ns=0 diode_us=80006.4 flt=0 dt_lt40=0 int_dt_min_ns=0 int_dt_max_ns=0 per_h_ns=0..0 per_l_ns=0..0 dt_hist10ns=0,0,0,0,0,0,0,0,0,0,0
+[chip-buck_plant] PLANT tp_us=6000 vload_V=0.0000 vmin_V=0.0000 vmax_V=0.0000 il_A=0.0000 iload_A=0.0000 duty=0.0000 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=120006 tp_us=6000 why=periodic deadtimes=0 dt_min_ns=0 dt_max_ns=0 overlaps=0 overlap_ns=0 diode_us=120006.4 flt=0 dt_lt40=0 int_dt_min_ns=0 int_dt_max_ns=0 per_h_ns=0..0 per_l_ns=0..0 dt_hist10ns=0,0,0,0,0,0,0,0,0,0,0
+[chip-buck_plant] PLANT tp_us=8000 vload_V=0.0000 vmin_V=0.0000 vmax_V=0.0000 il_A=0.0000 iload_A=0.0000 duty=0.0000 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=160006 tp_us=8000 why=periodic deadtimes=0 dt_min_ns=0 dt_max_ns=0 overlaps=0 overlap_ns=0 diode_us=160006.4 flt=0 dt_lt40=0 int_dt_min_ns=0 int_dt_max_ns=0 per_h_ns=0..0 per_l_ns=0..0 dt_hist10ns=0,0,0,0,0,0,0,0,0,0,0
+[chip-buck_plant] PLANT tp_us=10000 vload_V=0.0000 vmin_V=0.0000 vmax_V=0.0000 il_A=0.0000 iload_A=0.0000 duty=0.0000 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=200006 tp_us=10000 why=periodic deadtimes=0 dt_min_ns=0 dt_max_ns=0 overlaps=0 overlap_ns=0 diode_us=200006.4 flt=0 dt_lt40=0 int_dt_min_ns=0 int_dt_max_ns=0 per_h_ns=0..0 per_l_ns=0..0 dt_hist10ns=0,0,0,0,0,0,0,0,0,0,0
+[chip-buck_plant] PLANT tp_us=12000 vload_V=0.0000 vmin_V=0.0000 vmax_V=0.0000 il_A=0.0000 iload_A=0.0000 duty=0.0000 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=240006 tp_us=12000 why=periodic deadtimes=0 dt_min_ns=0 dt_max_ns=0 overlaps=0 overlap_ns=0 diode_us=240006.4 flt=0 dt_lt40=0 int_dt_min_ns=0 int_dt_max_ns=0 per_h_ns=0..0 per_l_ns=0..0 dt_hist10ns=0,0,0,0,0,0,0,0,0,0,0
+[chip-buck_plant] PLANT tp_us=14000 vload_V=0.0000 vmin_V=0.0000 vmax_V=0.0000 il_A=0.0000 iload_A=0.0000 duty=0.0000 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=280006 tp_us=14000 why=periodic deadtimes=0 dt_min_ns=0 dt_max_ns=0 overlaps=0 overlap_ns=0 diode_us=280006.4 flt=0 dt_lt40=0 int_dt_min_ns=0 int_dt_max_ns=0 per_h_ns=0..0 per_l_ns=0..0 dt_hist10ns=0,0,0,0,0,0,0,0,0,0,0
+[chip-buck_plant] PLANT tp_us=16000 vload_V=0.0000 vmin_V=0.0000 vmax_V=0.0000 il_A=0.0000 iload_A=0.0000 duty=0.0000 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=320006 tp_us=16000 why=periodic deadtimes=0 dt_min_ns=0 dt_max_ns=0 overlaps=0 overlap_ns=0 diode_us=320006.4 flt=0 dt_lt40=0 int_dt_min_ns=0 int_dt_max_ns=0 per_h_ns=0..0 per_l_ns=0..0 dt_hist10ns=0,0,0,0,0,0,0,0,0,0,0
+[chip-buck_plant] PLANT tp_us=18000 vload_V=0.0000 vmin_V=0.0000 vmax_V=0.0000 il_A=0.0000 iload_A=0.0000 duty=0.0000 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=360006 tp_us=18000 why=periodic deadtimes=0 dt_min_ns=0 dt_max_ns=0 overlaps=0 overlap_ns=0 diode_us=360006.4 flt=0 dt_lt40=0 int_dt_min_ns=0 int_dt_max_ns=0 per_h_ns=0..0 per_l_ns=0..0 dt_hist10ns=0,0,0,0,0,0,0,0,0,0,0
+[chip-buck_plant] PLANT tp_us=20000 vload_V=0.0000 vmin_V=0.0000 vmax_V=0.0000 il_A=0.0000 iload_A=0.0000 duty=0.0000 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=400006 tp_us=20000 why=periodic deadtimes=0 dt_min_ns=0 dt_max_ns=0 overlaps=0 overlap_ns=0 diode_us=400006.4 flt=0 dt_lt40=0 int_dt_min_ns=0 int_dt_max_ns=0 per_h_ns=0..0 per_l_ns=0..0 dt_hist10ns=0,0,0,0,0,0,0,0,0,0,0
+[chip-buck_plant] PLANT tp_us=22000 vload_V=0.0000 vmin_V=0.0000 vmax_V=0.0000 il_A=0.0000 iload_A=0.0000 duty=0.0000 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=440006 tp_us=22000 why=periodic deadtimes=0 dt_min_ns=0 dt_max_ns=0 overlaps=0 overlap_ns=0 diode_us=440006.4 flt=0 dt_lt40=0 int_dt_min_ns=0 int_dt_max_ns=0 per_h_ns=0..0 per_l_ns=0..0 dt_hist10ns=0,0,0,0,0,0,0,0,0,0,0
+[chip-buck_plant] PLANT tp_us=24000 vload_V=0.0000 vmin_V=0.0000 vmax_V=0.0000 il_A=0.0000 iload_A=0.0000 duty=0.0000 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=480006 tp_us=24000 why=periodic deadtimes=0 dt_min_ns=0 dt_max_ns=0 overlaps=0 overlap_ns=0 diode_us=480006.4 flt=0 dt_lt40=0 int_dt_min_ns=0 int_dt_max_ns=0 per_h_ns=0..0 per_l_ns=0..0 dt_hist10ns=0,0,0,0,0,0,0,0,0,0,0
+[chip-buck_plant] PLANT tp_us=26000 vload_V=0.0000 vmin_V=0.0000 vmax_V=0.0000 il_A=0.0000 iload_A=0.0000 duty=0.0000 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=520006 tp_us=26000 why=periodic deadtimes=0 dt_min_ns=0 dt_max_ns=0 overlaps=0 overlap_ns=0 diode_us=520006.4 flt=0 dt_lt40=0 int_dt_min_ns=0 int_dt_max_ns=0 per_h_ns=0..0 per_l_ns=0..0 dt_hist10ns=0,0,0,0,0,0,0,0,0,0,0
+BOOT fw=buck_esp32 pwm=LEDC
+[02 sync buck: soft start, load step, OCP latch] Expected text matched: "BOOT fw=buck_esp32 pwm=LEDC"
+[chip-buck_plant] PLANT tp_us=28000 vload_V=0.5978 vmin_V=0.0000 vmax_V=0.5978 il_A=0.5303 iload_A=0.1196 duty=0.0090 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=560006 tp_us=28000 why=periodic deadtimes=3877 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=40 int_dt_max_ns=85 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,559,3269,34,9,6,0,0
+ fsw_hz=156250 ctrl_hz=50000 adc_cal=WOKWI_5V_LINEAR baud=921600 cpu_mhz=240 overrun_limit=3
+WARNING SIM_BUILD_NOT_FOR_HARDWARE mac=wokwi: not for hardware (5 V ADC transfer, time dilation)
+SIM wokwi time_scale=20 tick_sim_us=400 (all t_us below are control time, 20 us per tick)
+t_us,vout_V,il_A,vin_V,duty_ticks,state,overruns
+START t_us=20 vout_V=0.000
+CAP begin t_us=100 reason=STATE
+100,0.000,0.000,12.00,2,1,0
+200,0.016,0.002,12.00,6,1,0
+300,0.115,0.023,12.00,9,1,0
+400,0.276,0.052,12.00,13,1,0
+500,0.428,0.083,12.00,16,1,0
+600,0.505,0.102,12.00,19,1,0
+700,0.555,0.111,12.00,23,1,0
+800,0.632,0.126,12.00,26,1,0
+900,0.762,0.150,12.00,29,1,0
+1000,0.891,0.177,12.00,33,1,0
+1100,0.998,0.199,12.00,36,1,0
+1200,1.071,0.213,12.00,39,1,0
+1300,1.153,0.228,12.00,43,1,0
+1400,1.250,0.253,12.00,46,1,0
+1500,1.372,0.272,12.00,49,1,0
+1600,1.479,0.296,12.00,53,1,0
+[chip-buck_plant] PLANT tp_us=30000 vload_V=2.6361 vmin_V=0.5980 vmax_V=2.6361 il_A=1.0096 iload_A=0.5272 duty=0.1385 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=600006 tp_us=30000 why=periodic deadtimes=16377 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=40 int_dt_max_ns=85 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,2273,13919,119,48,18,0,0
+1700,1.576,0.315,12.00,56,1,0
+1800,1.667,0.333,12.00,60,1,0
+1900,1.775,0.355,12.00,63,1,0
+2000,1.876,0.373,12.00,66,1,0
+2100,1.978,0.392,12.00,70,1,0
+2200,2.069,0.415,12.00,73,1,0
+2300,2.171,0.432,12.00,76,1,0
+2400,2.271,0.453,12.00,80,1,0
+2500,2.377,0.473,12.00,83,1,0
+2600,2.469,0.492,12.00,86,1,0
+2700,2.574,0.514,12.00,90,1,0
+2800,2.668,0.532,12.00,93,1,0
+2900,2.770,0.551,12.00,96,1,0
+3000,2.864,0.575,12.00,100,1,0
+3100,2.967,0.590,12.00,103,1,0
+3200,3.068,0.613,12.00,107,1,0
+3300,3.182,0.635,12.00,110,1,0
+[chip-buck_plant] PLANT tp_us=32000 vload_V=4.6384 vmin_V=2.6364 vmax_V=4.6384 il_A=1.3619 iload_A=0.9277 duty=0.3063 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=640006 tp_us=32000 why=periodic deadtimes=28877 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=40 int_dt_max_ns=85 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,4382,24159,212,95,29,0,0
+3400,3.284,0.655,12.00,113,1,0
+3500,3.383,0.675,12.00,117,1,0
+3600,3.471,0.692,12.00,120,1,0
+3700,3.567,0.712,12.00,123,1,0
+3800,3.668,0.735,12.00,127,1,0
+3900,3.778,0.752,12.00,130,1,0
+4000,3.877,0.776,12.00,133,1,0
+CAP end t_us=4000
+[chip-buck_plant] PLANT tp_us=34000 vload_V=4.9745 vmin_V=4.6387 vmax_V=5.0149 il_A=0.9932 iload_A=0.9949 duty=0.4131 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=680006 tp_us=34000 why=periodic deadtimes=41377 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=40 int_dt_max_ns=85 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,6248,34769,229,99,32,0,0
+READY
+[02 sync buck: soft start, load step, OCP latch] Expected text matched: "READY"
+ t_us=6960
+CAP begin t_us=7000 reason=STATE
+6000,5.012,1.001,12.00,167,1,0
+6100,4.989,0.999,12.00,167,1,0
+6200,4.967,0.994,12.00,167,1,0
+6300,4.969,0.992,12.00,167,1,0
+6400,4.986,0.998,12.00,167,1,0
+6500,4.997,0.999,12.00,167,1,0
+6600,4.990,0.998,12.00,167,1,0
+6700,4.978,0.995,12.00,168,1,0
+6800,4.980,0.996,12.00,168,1,0
+6900,5.006,1.000,12.00,168,1,0
+7000,5.026,1.005,12.00,168,2,0
+SS t_us=
+[02 sync buck: soft start, load step, OCP latch] Expected text matched: "SS t_us="
+[02 sync buck: soft start, load step, OCP latch] delay 300ms
+[chip-buck_plant] PLANT tp_us=36000 vload_V=5.0076 vmin_V=4.9745 vmax_V=5.0295 il_A=0.9910 iload_A=1.0015 duty=0.4199 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=720006 tp_us=36000 why=periodic deadtimes=53877 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,9373,44144,229,99,32,0,0
+7000 t_1pct_us=5780 t_run_us=6940
+7100,5.021,1.005,12.00,168,2,0
+7200,5.003,1.000,12.00,168,2,0
+7300,4.993,0.999,12.00,168,2,0
+7400,5.000,0.999,12.00,168,2,0
+7500,5.014,1.003,12.00,168,2,0
+7600,5.015,1.004,12.00,168,2,0
+7700,5.008,1.001,12.00,168,2,0
+7800,5.002,1.001,12.00,168,2,0
+7900,5.002,1.001,12.00,168,2,0
+8000,5.008,1.001,12.00,168,2,0
+8100,5.010,1.001,12.00,168,2,0
+8200,5.009,1.001,12.00,168,2,0
+8300,5.006,1.001,12.00,168,2,0
+8400,5.004,1.001,12.00,168,2,0
+8500,5.006,1.001,12.00,168,2,0
+8600,5.010,1.001,12.00,168,2,0
+8700,5.009,1.001,12.00,168,2,0
+8800,5.008,1.001,12.00,168,2,0
+8900,5.004,1.001,12.00,168,2,0
+9000,5.007,1.001,12.00,168,2,0
+9100,5.008,1.001,12.00,168,2,0
+[chip-buck_plant] PLANT tp_us=38000 vload_V=5.0073 vmin_V=5.0057 vmax_V=5.0082 il_A=1.0016 iload_A=1.0015 duty=0.4199 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=760006 tp_us=38000 why=periodic deadtimes=66377 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,12498,53519,229,99,32,0,0
+9200,5.008,1.001,12.00,168,2,0
+9300,5.008,1.001,12.00,168,2,0
+9400,5.008,1.001,12.00,168,2,0
+9500,5.008,1.001,12.00,168,2,0
+9600,5.008,1.001,12.00,168,2,0
+9700,5.008,1.001,12.00,168,2,0
+9800,5.008,1.001,12.00,168,2,0
+9900,5.008,1.001,12.00,168,2,0
+10000,5.008,1.001,12.00,168,2,0
+10100,5.008,1.001,12.00,168,2,0
+10200,5.008,1.001,12.00,168,2,0
+10300,5.008,1.001,12.00,168,2,0
+10400,5.008,1.001,12.00,168,2,0
+10500,5.008,1.001,12.00,168,2,0
+10600,5.008,1.001,12.00,168,2,0
+10700,5.008,1.001,12.00,168,2,0
+10800,5.008,1.001,12.00,168,2,0
+10900,5.008,1.001,12.00,168,2,0
+CAP end t_us=10900
+[chip-buck_plant] PLANT tp_us=40000 vload_V=5.0072 vmin_V=5.0071 vmax_V=5.0073 il_A=1.0015 iload_A=1.0014 duty=0.4199 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=800006 tp_us=40000 why=periodic deadtimes=78877 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,15623,62894,229,99,32,0,0
+[chip-buck_plant] PLANT tp_us=42000 vload_V=5.0072 vmin_V=5.0072 vmax_V=5.0072 il_A=1.0015 iload_A=1.0014 duty=0.4199 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=840006 tp_us=42000 why=periodic deadtimes=91377 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,18748,72269,229,99,32,0,0
+[chip-buck_plant] PLANT tp_us=44000 vload_V=5.0072 vmin_V=5.0072 vmax_V=5.0072 il_A=1.0015 iload_A=1.0014 duty=0.4199 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=880006 tp_us=44000 why=periodic deadtimes=103877 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,21873,81644,229,99,32,0,0
+[chip-buck_plant] PLANT tp_us=46000 vload_V=5.0072 vmin_V=5.0072 vmax_V=5.0072 il_A=1.0015 iload_A=1.0014 duty=0.4199 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=920006 tp_us=46000 why=periodic deadtimes=116377 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,24998,91019,229,99,32,0,0
+[chip-buck_plant] PLANT tp_us=48000 vload_V=5.0072 vmin_V=5.0072 vmax_V=5.0072 il_A=1.0015 iload_A=1.0014 duty=0.4199 load_mA=1000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=960006 tp_us=48000 why=periodic deadtimes=128877 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,28123,100394,229,99,32,0,0
+STAT t_us=20000 state=RUN exec_max_us=219.78 exec_mean_us=71.45 updates=1000 overruns=0 drop_samples=0 drop_events=0
+20100,5.008,1.001,12.00,168,2,0
+[02 sync buck: soft start, load step, OCP latch] delay 200ms
+[chip-buck_plant] PSEG t0_us=0 t1_us=49873 load_mA=1000 vin_mV=12000 next_load_mA=500 next_vin_mV=12000 vmin_V=0.0000 vmax_V=5.0295 settle_us=33004 v_end_V=5.0072 il_end_A=1.0014
+[chip-buck_plant] PGATE t_sim_us=997472 tp_us=49873 why=control deadtimes=140585 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,31050,109175,229,99,32,0,0
+[chip-buck_plant] PLANT tp_us=50000 vload_V=5.0962 vmin_V=5.0072 vmax_V=5.0962 il_A=0.5606 iload_A=0.5096 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=50100 vload_V=5.0584 vmin_V=5.0584 vmax_V=5.0963 il_A=0.1845 iload_A=0.5058 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=50200 vload_V=4.9910 vmin_V=4.9910 vmax_V=5.0582 il_A=0.2426 iload_A=0.4991 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=50300 vload_V=4.9743 vmin_V=4.9718 vmax_V=4.9908 il_A=0.5700 iload_A=0.4974 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=50400 vload_V=5.0147 vmin_V=4.9744 vmax_V=5.0147 il_A=0.7471 iload_A=0.5015 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=50501 vload_V=5.0547 vmin_V=5.0148 vmax_V=5.0547 il_A=0.6161 iload_A=0.5055 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=50601 vload_V=5.0510 vmin_V=5.0510 vmax_V=5.0590 il_A=0.3918 iload_A=0.5051 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=50701 vload_V=5.0177 vmin_V=5.0177 vmax_V=5.0509 il_A=0.3403 iload_A=0.5018 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=50801 vload_V=4.9981 vmin_V=4.9981 vmax_V=5.0176 il_A=0.4774 iload_A=0.4998 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=50901 vload_V=5.0103 vmin_V=4.9980 vmax_V=5.0103 il_A=0.6095 iload_A=0.5010 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=51001 vload_V=5.0336 vmin_V=5.0104 vmax_V=5.0336 il_A=0.5940 iload_A=0.5034 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=51102 vload_V=5.0400 vmin_V=5.0336 vmax_V=5.0407 il_A=0.4822 iload_A=0.5040 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=51202 vload_V=5.0265 vmin_V=5.0265 vmax_V=5.0400 il_A=0.4185 iload_A=0.5026 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=51302 vload_V=5.0124 vmin_V=5.0124 vmax_V=5.0264 il_A=0.4610 iload_A=0.5012 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=51402 vload_V=5.0133 vmin_V=5.0108 vmax_V=5.0133 il_A=0.5386 iload_A=0.5013 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=51502 vload_V=5.0246 vmin_V=5.0133 vmax_V=5.0246 il_A=0.5585 iload_A=0.5025 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=51602 vload_V=5.0316 vmin_V=5.0246 vmax_V=5.0316 il_A=0.5126 iload_A=0.5032 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=51703 vload_V=5.0277 vmin_V=5.0277 vmax_V=5.0317 il_A=0.4662 iload_A=0.5028 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=51803 vload_V=5.0197 vmin_V=5.0197 vmax_V=5.0277 il_A=0.4700 iload_A=0.5020 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=51903 vload_V=5.0172 vmin_V=5.0171 vmax_V=5.0196 il_A=0.5081 iload_A=0.5017 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=52003 vload_V=5.0217 vmin_V=5.0172 vmax_V=5.0217 il_A=0.5310 iload_A=0.5022 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=52103 vload_V=5.0267 vmin_V=5.0218 vmax_V=5.0267 il_A=0.5172 iload_A=0.5027 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=52203 vload_V=5.0265 vmin_V=5.0265 vmax_V=5.0273 il_A=0.4905 iload_A=0.5027 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=52304 vload_V=5.0227 vmin_V=5.0227 vmax_V=5.0265 il_A=0.4828 iload_A=0.5023 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=52404 vload_V=5.0202 vmin_V=5.0202 vmax_V=5.0227 il_A=0.4982 iload_A=0.5020 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=52504 vload_V=5.0214 vmin_V=5.0201 vmax_V=5.0214 il_A=0.5144 iload_A=0.5021 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=52604 vload_V=5.0242 vmin_V=5.0214 vmax_V=5.0242 il_A=0.5137 iload_A=0.5024 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=52704 vload_V=5.0251 vmin_V=5.0242 vmax_V=5.0252 il_A=0.5007 iload_A=0.5025 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=52804 vload_V=5.0236 vmin_V=5.0236 vmax_V=5.0251 il_A=0.4925 iload_A=0.5024 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=52904 vload_V=5.0219 vmin_V=5.0219 vmax_V=5.0236 il_A=0.4969 iload_A=0.5022 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=53005 vload_V=5.0219 vmin_V=5.0216 vmax_V=5.0219 il_A=0.5062 iload_A=0.5022 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=53105 vload_V=5.0232 vmin_V=5.0219 vmax_V=5.0232 il_A=0.5090 iload_A=0.5023 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=53205 vload_V=5.0241 vmin_V=5.0232 vmax_V=5.0241 il_A=0.5039 iload_A=0.5024 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=53305 vload_V=5.0237 vmin_V=5.0237 vmax_V=5.0241 il_A=0.4982 iload_A=0.5024 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=53405 vload_V=5.0227 vmin_V=5.0227 vmax_V=5.0237 il_A=0.4983 iload_A=0.5023 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=53505 vload_V=5.0224 vmin_V=5.0224 vmax_V=5.0227 il_A=0.5027 iload_A=0.5022 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=53606 vload_V=5.0229 vmin_V=5.0224 vmax_V=5.0229 il_A=0.5057 iload_A=0.5023 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=53706 vload_V=5.0235 vmin_V=5.0229 vmax_V=5.0235 il_A=0.5042 iload_A=0.5023 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=53806 vload_V=5.0235 vmin_V=5.0235 vmax_V=5.0236 il_A=0.5011 iload_A=0.5024 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=53906 vload_V=5.0231 vmin_V=5.0231 vmax_V=5.0235 il_A=0.5000 iload_A=0.5023 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=54006 vload_V=5.0228 vmin_V=5.0228 vmax_V=5.0231 il_A=0.5017 iload_A=0.5023 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=54106 vload_V=5.0229 vmin_V=5.0227 vmax_V=5.0229 il_A=0.5037 iload_A=0.5023 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=54207 vload_V=5.0232 vmin_V=5.0229 vmax_V=5.0232 il_A=0.5037 iload_A=0.5023 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=54307 vload_V=5.0233 vmin_V=5.0232 vmax_V=5.0233 il_A=0.5022 iload_A=0.5023 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=54407 vload_V=5.0232 vmin_V=5.0232 vmax_V=5.0233 il_A=0.5012 iload_A=0.5023 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=54507 vload_V=5.0230 vmin_V=5.0230 vmax_V=5.0232 il_A=0.5016 iload_A=0.5023 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=54607 vload_V=5.0229 vmin_V=5.0229 vmax_V=5.0230 il_A=0.5027 iload_A=0.5023 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=54707 vload_V=5.0231 vmin_V=5.0229 vmax_V=5.0231 il_A=0.5031 iload_A=0.5023 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=54808 vload_V=5.0232 vmin_V=5.0231 vmax_V=5.0232 il_A=0.5026 iload_A=0.5023 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=54908 vload_V=5.0232 vmin_V=5.0232 vmax_V=5.0232 il_A=0.5018 iload_A=0.5023 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=55008 vload_V=5.0231 vmin_V=5.0231 vmax_V=5.0232 il_A=0.5018 iload_A=0.5023 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=55108 vload_V=5.0230 vmin_V=5.0230 vmax_V=5.0231 il_A=0.5023 iload_A=0.5023 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=55208 vload_V=5.0231 vmin_V=5.0230 vmax_V=5.0231 il_A=0.5027 iload_A=0.5023 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=55308 vload_V=5.0231 vmin_V=5.0231 vmax_V=5.0231 il_A=0.5025 iload_A=0.5023 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=55408 vload_V=5.0231 vmin_V=5.0231 vmax_V=5.0231 il_A=0.5022 iload_A=0.5023 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=55509 vload_V=5.0231 vmin_V=5.0231 vmax_V=5.0231 il_A=0.5020 iload_A=0.5023 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=55609 vload_V=5.0231 vmin_V=5.0230 vmax_V=5.0231 il_A=0.5022 iload_A=0.5023 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=55709 vload_V=5.0231 vmin_V=5.0230 vmax_V=5.0231 il_A=0.5025 iload_A=0.5023 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=55809 vload_V=5.0231 vmin_V=5.0231 vmax_V=5.0231 il_A=0.5025 iload_A=0.5023 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=55909 vload_V=5.0231 vmin_V=5.0231 vmax_V=5.0231 il_A=0.5023 iload_A=0.5023 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=56009 vload_V=5.0231 vmin_V=5.0231 vmax_V=5.0231 il_A=0.5022 iload_A=0.5023 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=56110 vload_V=5.0231 vmin_V=5.0231 vmax_V=5.0231 il_A=0.5022 iload_A=0.5023 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=56210 vload_V=5.0231 vmin_V=5.0231 vmax_V=5.0231 il_A=0.5024 iload_A=0.5023 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=56310 vload_V=5.0231 vmin_V=5.0231 vmax_V=5.0231 il_A=0.5024 iload_A=0.5023 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=56410 vload_V=5.0231 vmin_V=5.0231 vmax_V=5.0231 il_A=0.5024 iload_A=0.5023 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=56510 vload_V=5.0231 vmin_V=5.0231 vmax_V=5.0231 il_A=0.5022 iload_A=0.5023 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=56610 vload_V=5.0231 vmin_V=5.0231 vmax_V=5.0231 il_A=0.5023 iload_A=0.5023 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=56711 vload_V=5.0231 vmin_V=5.0231 vmax_V=5.0231 il_A=0.5023 iload_A=0.5023 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=56811 vload_V=5.0231 vmin_V=5.0231 vmax_V=5.0231 il_A=0.5024 iload_A=0.5023 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=56911 vload_V=5.0231 vmin_V=5.0231 vmax_V=5.0231 il_A=0.5023 iload_A=0.5023 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=57011 vload_V=5.0231 vmin_V=5.0231 vmax_V=5.0231 il_A=0.5023 iload_A=0.5023 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=57111 vload_V=5.0231 vmin_V=5.0231 vmax_V=5.0231 il_A=0.5023 iload_A=0.5023 duty=0.4199 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=57211 vload_V=5.0222 vmin_V=5.0222 vmax_V=5.0231 il_A=0.4738 iload_A=0.5022 duty=0.4196 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=57312 vload_V=5.0043 vmin_V=5.0043 vmax_V=5.0222 il_A=0.3885 iload_A=0.5004 duty=0.4180 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=57412 vload_V=4.9856 vmin_V=4.9856 vmax_V=5.0043 il_A=0.4446 iload_A=0.4986 duty=0.4180 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=57512 vload_V=4.9866 vmin_V=4.9833 vmax_V=4.9866 il_A=0.5479 iload_A=0.4987 duty=0.4180 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=57612 vload_V=5.0017 vmin_V=4.9867 vmax_V=5.0017 il_A=0.5748 iload_A=0.5002 duty=0.4180 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=57712 vload_V=5.0111 vmin_V=5.0017 vmax_V=5.0111 il_A=0.5139 iload_A=0.5011 duty=0.4180 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=57812 vload_V=5.0059 vmin_V=5.0059 vmax_V=5.0112 il_A=0.4521 iload_A=0.5006 duty=0.4180 load_mA=500 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=57912 vload_V=4.9952 vmin_V=4.9952 vmax_V=5.0059 il_A=0.4569 iload_A=0.4995 duty=0.4180 load_mA=500 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=1158259 tp_us=57913 why=periodic deadtimes=190831 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=41 int_dt_max_ns=63 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,43612,146797,291,99,32,0,0
+30100,4.998,0.501,12.00,167,2,0
+[chip-buck_plant] PSEG t0_us=49873 t1_us=59873 load_mA=500 vin_mV=12000 next_load_mA=3000 next_vin_mV=12000 vmin_V=4.9718 vmax_V=5.0963 settle_us=731 v_end_V=5.0004 il_end_A=0.5001
+[chip-buck_plant] PGATE t_sim_us=1197472 tp_us=59873 why=control deadtimes=203085 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,46676,155987,291,99,32,0,0
+[chip-buck_plant] PLANT tp_us=59912 vload_V=4.7775 vmin_V=4.7775 vmax_V=5.0053 il_A=0.8107 iload_A=2.8665 duty=0.4180 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=60013 vload_V=4.5885 vmin_V=4.5859 vmax_V=4.7762 il_A=2.8844 iload_A=2.7531 duty=0.4180 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=60113 vload_V=4.8062 vmin_V=4.5887 vmax_V=4.8062 il_A=4.3894 iload_A=2.8837 duty=0.4180 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=60213 vload_V=5.0774 vmin_V=4.8072 vmax_V=5.0774 il_A=3.9282 iload_A=3.0464 duty=0.4180 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=60313 vload_V=5.1021 vmin_V=5.0779 vmax_V=5.1264 il_A=2.5902 iload_A=3.0613 duty=0.4180 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=60413 vload_V=4.9307 vmin_V=4.9307 vmax_V=5.1018 il_A=2.0447 iload_A=2.9584 duty=0.4180 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=60513 vload_V=4.8028 vmin_V=4.8028 vmax_V=4.9301 il_A=2.6171 iload_A=2.8817 duty=0.4180 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=60614 vload_V=4.8387 vmin_V=4.7970 vmax_V=4.8387 il_A=3.3638 iload_A=2.9032 duty=0.4180 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=60714 vload_V=4.9503 vmin_V=4.8391 vmax_V=4.9503 il_A=3.4506 iload_A=2.9702 duty=0.4180 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=60814 vload_V=4.9975 vmin_V=4.9506 vmax_V=4.9977 il_A=2.9905 iload_A=2.9985 duty=0.4180 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=60914 vload_V=4.9509 vmin_V=4.9509 vmax_V=4.9975 il_A=2.6334 iload_A=2.9706 duty=0.4180 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=61014 vload_V=4.8882 vmin_V=4.8882 vmax_V=4.9507 il_A=2.7207 iload_A=2.9329 duty=0.4180 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=61114 vload_V=4.8809 vmin_V=4.8754 vmax_V=4.8881 il_A=3.0562 iload_A=2.9285 duty=0.4184 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=61215 vload_V=4.9363 vmin_V=4.8810 vmax_V=4.9363 il_A=3.2754 iload_A=2.9618 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=61315 vload_V=4.9834 vmin_V=4.9365 vmax_V=4.9834 il_A=3.1044 iload_A=2.9900 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=61415 vload_V=4.9755 vmin_V=4.9755 vmax_V=4.9869 il_A=2.8424 iload_A=2.9853 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=61515 vload_V=4.9379 vmin_V=4.9379 vmax_V=4.9754 il_A=2.7914 iload_A=2.9627 duty=0.4199 load_mA=3000 vin_V=12.00
+CAP begin t_us=32700 reason=DI
+31700,5.000,0.501,12.00,167,2,0
+31800,4.998,0.501,12.00,167,2,0
+31900,4.998,0.501,12.00,167,2,0
+32000,5.001,0.501,12.00,167,2,0
+32100,5.002,0.501,12.00,167,2,0
+32200,5.000,0.501,12.00,167,2,0
+32300,4.998,0.501,12.00,167,2,0
+32400,4.998,0.501,12.00,167,2,0
+32500,4.999,0.501,12.00,167,2,0
+32600,5.002,0.986,12.00,167,2,0
+32700,4.706,2.863,12.00,167,2,0
+32800,4.626,2.770,12.00,167,2,0
+32900,4.882,2.917,12.00,167,2,0
+33000,5.092,3.048,12.00,167,2,0
+33100,5.063,3.038,12.00,167,2,0
+33200,4.898,2.950,12.00,167,2,0
+33300,4.805,2.882,12.00,167,2,0
+33400,4.863,2.922,12.00,167,2,0
+33500,4.967,2.971,12.00,167,2,0
+33600,4.990,2.996,12.00,167,2,0
+33700,4.934,2.964,12.00,167,2,0
+33800,4.884,2.934,12.00,168,2,0
+33900,4.892,2.936,12.00,168,2,0
+34000,4.947,2.965,12.00,168,2,0
+34100,4.983,2.991,12.00,168,2,0
+[chip-buck_plant] PLANT tp_us=61615 vload_V=4.9190 vmin_V=4.9190 vmax_V=4.9378 il_A=2.9395 iload_A=2.9514 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=61715 vload_V=4.9329 vmin_V=4.9190 vmax_V=4.9329 il_A=3.0704 iload_A=2.9597 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=61816 vload_V=4.9548 vmin_V=4.9329 vmax_V=4.9548 il_A=3.0526 iload_A=2.9729 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=61916 vload_V=4.9594 vmin_V=4.9549 vmax_V=4.9604 il_A=2.9506 iload_A=2.9757 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=62016 vload_V=4.9472 vmin_V=4.9472 vmax_V=4.9594 il_A=2.8971 iload_A=2.9683 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=62116 vload_V=4.9362 vmin_V=4.9362 vmax_V=4.9472 il_A=2.9330 iload_A=2.9617 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=62216 vload_V=4.9375 vmin_V=4.9352 vmax_V=4.9375 il_A=2.9932 iload_A=2.9625 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=62316 vload_V=4.9459 vmin_V=4.9375 vmax_V=4.9459 il_A=3.0072 iload_A=2.9676 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=62416 vload_V=4.9505 vmin_V=4.9460 vmax_V=4.9505 il_A=2.9747 iload_A=2.9703 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=62517 vload_V=4.9476 vmin_V=4.9476 vmax_V=4.9505 il_A=2.9440 iload_A=2.9686 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=62617 vload_V=4.9426 vmin_V=4.9426 vmax_V=4.9476 il_A=2.9466 iload_A=2.9656 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=62717 vload_V=4.9413 vmin_V=4.9412 vmax_V=4.9426 il_A=2.9695 iload_A=2.9648 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=62817 vload_V=4.9440 vmin_V=4.9413 vmax_V=4.9440 il_A=2.9826 iload_A=2.9664 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=62917 vload_V=4.9466 vmin_V=4.9440 vmax_V=4.9466 il_A=2.9751 iload_A=2.9680 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=63017 vload_V=4.9464 vmin_V=4.9464 vmax_V=4.9469 il_A=2.9613 iload_A=2.9679 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=63118 vload_V=4.9445 vmin_V=4.9445 vmax_V=4.9464 il_A=2.9575 iload_A=2.9667 duty=0.4199 load_mA=3000 vin_V=12.00
+34200,4.968,2.979,12.00,168,2,0
+34300,4.932,2.964,12.00,168,2,0
+34400,4.921,2.952,12.00,168,2,0
+34500,4.939,2.962,12.00,168,2,0
+34600,4.957,2.972,12.00,168,2,0
+34700,4.957,2.974,12.00,168,2,0
+34800,4.945,2.967,12.00,168,2,0
+34900,4.936,2.962,12.00,168,2,0
+35000,4.938,2.964,12.00,168,2,0
+35100,4.946,2.968,12.00,168,2,0
+35200,4.950,2.970,12.00,168,2,0
+35300,4.946,2.967,12.00,168,2,0
+35400,4.941,2.965,12.00,168,2,0
+35500,4.941,2.965,12.00,168,2,0
+35600,4.944,2.966,12.00,168,2,0
+35700,4.946,2.966,12.00,168,2,0
+35800,4.946,2.966,12.00,168,2,0
+[chip-buck_plant] PLANT tp_us=63218 vload_V=4.9434 vmin_V=4.9434 vmax_V=4.9445 il_A=2.9647 iload_A=2.9660 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=63318 vload_V=4.9440 vmin_V=4.9434 vmax_V=4.9440 il_A=2.9718 iload_A=2.9664 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=63418 vload_V=4.9452 vmin_V=4.9440 vmax_V=4.9452 il_A=2.9716 iload_A=2.9671 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=63518 vload_V=4.9455 vmin_V=4.9452 vmax_V=4.9455 il_A=2.9664 iload_A=2.9673 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=63618 vload_V=4.9449 vmin_V=4.9449 vmax_V=4.9455 il_A=2.9633 iload_A=2.9669 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=63719 vload_V=4.9443 vmin_V=4.9443 vmax_V=4.9449 il_A=2.9648 iload_A=2.9666 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=63819 vload_V=4.9443 vmin_V=4.9442 vmax_V=4.9443 il_A=2.9680 iload_A=2.9666 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=63919 vload_V=4.9447 vmin_V=4.9443 vmax_V=4.9447 il_A=2.9689 iload_A=2.9668 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=64019 vload_V=4.9450 vmin_V=4.9447 vmax_V=4.9450 il_A=2.9674 iload_A=2.9670 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=64119 vload_V=4.9449 vmin_V=4.9449 vmax_V=4.9450 il_A=2.9657 iload_A=2.9669 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=64219 vload_V=4.9446 vmin_V=4.9446 vmax_V=4.9449 il_A=2.9657 iload_A=2.9668 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=64320 vload_V=4.9445 vmin_V=4.9445 vmax_V=4.9446 il_A=2.9669 iload_A=2.9667 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=64420 vload_V=4.9447 vmin_V=4.9445 vmax_V=4.9447 il_A=2.9676 iload_A=2.9668 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=64520 vload_V=4.9448 vmin_V=4.9447 vmax_V=4.9448 il_A=2.9673 iload_A=2.9669 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=64620 vload_V=4.9448 vmin_V=4.9448 vmax_V=4.9448 il_A=2.9666 iload_A=2.9669 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=64720 vload_V=4.9447 vmin_V=4.9447 vmax_V=4.9448 il_A=2.9663 iload_A=2.9668 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=64820 vload_V=4.9447 vmin_V=4.9447 vmax_V=4.9447 il_A=2.9667 iload_A=2.9668 duty=0.4199 load_mA=3000 vin_V=12.00
+35900,4.944,2.966,12.00,168,2,0
+36000,4.944,2.966,12.00,168,2,0
+36100,4.944,2.966,12.00,168,2,0
+36200,4.944,2.966,12.00,168,2,0
+36300,4.944,2.966,12.00,168,2,0
+36400,4.944,2.966,12.00,168,2,0
+36500,4.944,2.966,12.00,168,2,0
+36600,4.944,2.966,12.00,168,2,0
+CAP end t_us=36600
+[chip-buck_plant] PLANT tp_us=64920 vload_V=4.9447 vmin_V=4.9446 vmax_V=4.9447 il_A=2.9671 iload_A=2.9668 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=65021 vload_V=4.9447 vmin_V=4.9447 vmax_V=4.9447 il_A=2.9671 iload_A=2.9668 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=65121 vload_V=4.9448 vmin_V=4.9447 vmax_V=4.9448 il_A=2.9668 iload_A=2.9669 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=65221 vload_V=4.9447 vmin_V=4.9447 vmax_V=4.9448 il_A=2.9667 iload_A=2.9668 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=65321 vload_V=4.9447 vmin_V=4.9447 vmax_V=4.9447 il_A=2.9667 iload_A=2.9668 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=65421 vload_V=4.9447 vmin_V=4.9447 vmax_V=4.9447 il_A=2.9669 iload_A=2.9668 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=65521 vload_V=4.9447 vmin_V=4.9447 vmax_V=4.9447 il_A=2.9669 iload_A=2.9668 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=65622 vload_V=4.9447 vmin_V=4.9447 vmax_V=4.9447 il_A=2.9669 iload_A=2.9668 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=65722 vload_V=4.9447 vmin_V=4.9447 vmax_V=4.9447 il_A=2.9668 iload_A=2.9668 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=65822 vload_V=4.9447 vmin_V=4.9447 vmax_V=4.9447 il_A=2.9668 iload_A=2.9668 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=65922 vload_V=4.9447 vmin_V=4.9447 vmax_V=4.9447 il_A=2.9668 iload_A=2.9668 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=66022 vload_V=4.9447 vmin_V=4.9447 vmax_V=4.9447 il_A=2.9669 iload_A=2.9668 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=66122 vload_V=4.9447 vmin_V=4.9447 vmax_V=4.9447 il_A=2.9668 iload_A=2.9668 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=66223 vload_V=4.9447 vmin_V=4.9447 vmax_V=4.9447 il_A=2.9668 iload_A=2.9668 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=66323 vload_V=4.9447 vmin_V=4.9447 vmax_V=4.9447 il_A=2.9668 iload_A=2.9668 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=66423 vload_V=4.9447 vmin_V=4.9447 vmax_V=4.9447 il_A=2.9668 iload_A=2.9668 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=66523 vload_V=4.9447 vmin_V=4.9447 vmax_V=4.9447 il_A=2.9668 iload_A=2.9668 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=66623 vload_V=4.9447 vmin_V=4.9447 vmax_V=4.9447 il_A=2.9669 iload_A=2.9668 duty=0.4199 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=66723 vload_V=4.9491 vmin_V=4.9447 vmax_V=4.9491 il_A=3.0368 iload_A=2.9695 duty=0.4209 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=66824 vload_V=4.9693 vmin_V=4.9492 vmax_V=4.9693 il_A=3.0803 iload_A=2.9816 duty=0.4219 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=66924 vload_V=4.9816 vmin_V=4.9694 vmax_V=4.9816 il_A=3.0061 iload_A=2.9890 duty=0.4219 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=67024 vload_V=4.9756 vmin_V=4.9756 vmax_V=4.9818 il_A=2.9282 iload_A=2.9853 duty=0.4219 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=67124 vload_V=4.9632 vmin_V=4.9632 vmax_V=4.9755 il_A=2.9291 iload_A=2.9779 duty=0.4219 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=67224 vload_V=4.9594 vmin_V=4.9592 vmax_V=4.9632 il_A=2.9836 iload_A=2.9756 duty=0.4219 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=67324 vload_V=4.9654 vmin_V=4.9594 vmax_V=4.9654 il_A=3.0181 iload_A=2.9793 duty=0.4219 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=67424 vload_V=4.9720 vmin_V=4.9655 vmax_V=4.9720 il_A=3.0028 iload_A=2.9832 duty=0.4219 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=67525 vload_V=4.9721 vmin_V=4.9720 vmax_V=4.9729 il_A=2.9690 iload_A=2.9832 duty=0.4219 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=67625 vload_V=4.9675 vmin_V=4.9675 vmax_V=4.9721 il_A=2.9578 iload_A=2.9805 duty=0.4219 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=67725 vload_V=4.9646 vmin_V=4.9646 vmax_V=4.9675 il_A=2.9739 iload_A=2.9788 duty=0.4219 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=67825 vload_V=4.9658 vmin_V=4.9645 vmax_V=4.9658 il_A=2.9921 iload_A=2.9795 duty=0.4219 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PLANT tp_us=67925 vload_V=4.9686 vmin_V=4.9658 vmax_V=4.9686 il_A=2.9926 iload_A=2.9812 duty=0.4219 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=1358515 tp_us=67926 why=periodic deadtimes=253411 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=41 int_dt_max_ns=72 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,50540,202444,295,100,32,0,0
+STAT t_us=40000 state=RUN exec_max_us=112.94 exec_mean_us=67.44 updates=1000 overruns=0 drop_samples=0 drop_events=0
+40100,4.968,2.979,12.00,169,2,0
+STEP t_us=32500 i_from_A=0.501 i_to_A=2.981 vmin_V=4.626 vmax_V=5.092 settle_us=7000 STEP_FAIL
+[chip-buck_plant] PLANT tp_us=69925 vload_V=4.9677 vmin_V=4.9665 vmax_V=4.9697 il_A=2.9807 iload_A=2.9806 duty=0.4219 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=1398515 tp_us=69926 why=periodic deadtimes=265911 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,53665,211819,295,100,32,0,0
+[chip-buck_plant] PLANT tp_us=71925 vload_V=4.9677 vmin_V=4.9677 vmax_V=4.9678 il_A=2.9806 iload_A=2.9806 duty=0.4219 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=1438515 tp_us=71926 why=periodic deadtimes=278411 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,56790,221194,295,100,32,0,0
+[chip-buck_plant] PLANT tp_us=73925 vload_V=4.9677 vmin_V=4.9677 vmax_V=4.9677 il_A=2.9806 iload_A=2.9806 duty=0.4219 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=1478515 tp_us=73926 why=periodic deadtimes=290911 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,59915,230569,295,100,32,0,0
+[chip-buck_plant] PLANT tp_us=75925 vload_V=4.9677 vmin_V=4.9677 vmax_V=4.9677 il_A=2.9806 iload_A=2.9806 duty=0.4219 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=1518515 tp_us=75926 why=periodic deadtimes=303411 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,63040,239944,295,100,32,0,0
+[chip-buck_plant] PLANT tp_us=77925 vload_V=5.0129 vmin_V=4.9677 vmax_V=5.0433 il_A=3.0159 iload_A=3.0077 duty=0.4252 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=1558515 tp_us=77926 why=periodic deadtimes=315911 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=40 int_dt_max_ns=85 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,66167,249315,295,101,33,0,0
+50100,5.008,3.007,12.00,170,2,0
+[chip-buck_plant] PLANT tp_us=79925 vload_V=5.0146 vmin_V=5.0129 vmax_V=5.0161 il_A=3.0085 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=1598515 tp_us=79926 why=periodic deadtimes=328411 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,69292,258690,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=81925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0147 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=1638515 tp_us=81926 why=periodic deadtimes=340911 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,72417,268065,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=83925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=1678515 tp_us=83926 why=periodic deadtimes=353411 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,75542,277440,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=85925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=1718515 tp_us=85926 why=periodic deadtimes=365911 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,78667,286815,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=87925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=1758515 tp_us=87926 why=periodic deadtimes=378411 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,81792,296190,295,101,33,0,0
+STAT t_us=60000 state=RUN exec_max_us=92.88 exec_mean_us=68.50 updates=1000 overruns=0 drop_samples=0 drop_events=0
+60100,5.014,3.008,12.00,170,2,0
+[chip-buck_plant] PLANT tp_us=89925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=1798515 tp_us=89926 why=periodic deadtimes=390911 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,84917,305565,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=91925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=1838515 tp_us=91926 why=periodic deadtimes=403411 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,88042,314940,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=93925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=1878515 tp_us=93926 why=periodic deadtimes=415911 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,91167,324315,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=95925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=1918515 tp_us=95926 why=periodic deadtimes=428411 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,94292,333690,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=97925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=1958515 tp_us=97926 why=periodic deadtimes=440911 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,97417,343065,295,101,33,0,0
+70100,5.014,3.008,12.00,170,2,0
+[chip-buck_plant] PLANT tp_us=99925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=1998515 tp_us=99926 why=periodic deadtimes=453411 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,100542,352440,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=101925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=2038515 tp_us=101926 why=periodic deadtimes=465911 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,103667,361815,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=103925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=2078515 tp_us=103926 why=periodic deadtimes=478411 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,106792,371190,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=105925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=2118515 tp_us=105926 why=periodic deadtimes=490911 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,109917,380565,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=107925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=2158515 tp_us=107926 why=periodic deadtimes=503411 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,113042,389940,295,101,33,0,0
+STAT t_us=80000 state=RUN exec_max_us=92.62 exec_mean_us=68.40 updates=1000 overruns=0 drop_samples=0 drop_events=0
+80100,5.014,3.008,12.00,170,2,0
+[chip-buck_plant] PLANT tp_us=109925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=2198515 tp_us=109926 why=periodic deadtimes=515911 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,116167,399315,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=111925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=2238515 tp_us=111926 why=periodic deadtimes=528411 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,119292,408690,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=113925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=2278515 tp_us=113926 why=periodic deadtimes=540911 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,122417,418065,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=115925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=2318515 tp_us=115926 why=periodic deadtimes=553411 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,125542,427440,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=117925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=2358515 tp_us=117926 why=periodic deadtimes=565911 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,128667,436815,295,101,33,0,0
+90100,5.014,3.008,12.00,170,2,0
+[chip-buck_plant] PLANT tp_us=119925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=2398515 tp_us=119926 why=periodic deadtimes=578411 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,131792,446190,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=121925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=2438515 tp_us=121926 why=periodic deadtimes=590911 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,134917,455565,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=123925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=2478515 tp_us=123926 why=periodic deadtimes=603411 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,138042,464940,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=125925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=2518515 tp_us=125926 why=periodic deadtimes=615911 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,141167,474315,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=127925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=2558515 tp_us=127926 why=periodic deadtimes=628411 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,144292,483690,295,101,33,0,0
+STAT t_us=100000 state=RUN exec_max_us=92.75 exec_mean_us=68.50 updates=1000 overruns=0 drop_samples=0 drop_events=0
+100100,5.014,3.008,12.00,170,2,0
+[chip-buck_plant] PLANT tp_us=129925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=2598515 tp_us=129926 why=periodic deadtimes=640911 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,147417,493065,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=131925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=2638515 tp_us=131926 why=periodic deadtimes=653411 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,150542,502440,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=133925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=2678515 tp_us=133926 why=periodic deadtimes=665911 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,153667,511815,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=135925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=2718515 tp_us=135926 why=periodic deadtimes=678411 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,156792,521190,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=137925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=2758515 tp_us=137926 why=periodic deadtimes=690911 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,159917,530565,295,101,33,0,0
+110100,5.014,3.008,12.00,170,2,0
+[chip-buck_plant] PLANT tp_us=139925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=2798515 tp_us=139926 why=periodic deadtimes=703411 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,163042,539940,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=141925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=2838515 tp_us=141926 why=periodic deadtimes=715911 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,166167,549315,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=143925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=2878515 tp_us=143926 why=periodic deadtimes=728411 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,169292,558690,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=145925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=2918515 tp_us=145926 why=periodic deadtimes=740911 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,172417,568065,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=147925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=2958515 tp_us=147926 why=periodic deadtimes=753411 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,175542,577440,295,101,33,0,0
+STAT t_us=120000 state=RUN exec_max_us=92.75 exec_mean_us=68.42 updates=1000 overruns=0 drop_samples=0 drop_events=0
+120100,5.014,3.008,12.00,170,2,0
+[chip-buck_plant] PLANT tp_us=149925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=2998515 tp_us=149926 why=periodic deadtimes=765911 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,178667,586815,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=151925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=3038515 tp_us=151926 why=periodic deadtimes=778411 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,181792,596190,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=153925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=3078515 tp_us=153926 why=periodic deadtimes=790911 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,184917,605565,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=155925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=3118515 tp_us=155926 why=periodic deadtimes=803411 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,188042,614940,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=157925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=3158515 tp_us=157926 why=periodic deadtimes=815911 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,191167,624315,295,101,33,0,0
+130100,5.014,3.008,12.00,170,2,0
+[chip-buck_plant] PLANT tp_us=159925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=3198515 tp_us=159926 why=periodic deadtimes=828411 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,194292,633690,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=161925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=3238515 tp_us=161926 why=periodic deadtimes=840911 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,197417,643065,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=163925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=3278515 tp_us=163926 why=periodic deadtimes=853411 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,200542,652440,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=165925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=3318515 tp_us=165926 why=periodic deadtimes=865911 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,203667,661815,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=167925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=3358515 tp_us=167926 why=periodic deadtimes=878411 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,206792,671190,295,101,33,0,0
+STAT t_us=140000 state=RUN exec_max_us=92.75 exec_mean_us=68.43 updates=1000 overruns=0 drop_samples=0 drop_events=0
+140100,5.014,3.008,12.00,170,2,0
+[chip-buck_plant] PLANT tp_us=169925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=3398515 tp_us=169926 why=periodic deadtimes=890911 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,209917,680565,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=171925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=3438515 tp_us=171926 why=periodic deadtimes=903411 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,213042,689940,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=173925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=3478515 tp_us=173926 why=periodic deadtimes=915911 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,216167,699315,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=175925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=3518515 tp_us=175926 why=periodic deadtimes=928411 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,219292,708690,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=177925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=3558515 tp_us=177926 why=periodic deadtimes=940911 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,222417,718065,295,101,33,0,0
+150100,5.014,3.008,12.00,170,2,0
+[chip-buck_plant] PLANT tp_us=179925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=3598515 tp_us=179926 why=periodic deadtimes=953411 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,225542,727440,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=181925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=3638515 tp_us=181926 why=periodic deadtimes=965911 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,228667,736815,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=183925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=3678515 tp_us=183926 why=periodic deadtimes=978411 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,231792,746190,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=185925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=3718515 tp_us=185926 why=periodic deadtimes=990911 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,234917,755565,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=187925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=3758515 tp_us=187926 why=periodic deadtimes=1003411 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,238042,764940,295,101,33,0,0
+STAT t_us=160000 state=RUN exec_max_us=92.62 exec_mean_us=68.43 updates=1000 overruns=0 drop_samples=0 drop_events=0
+160100,5.014,3.008,12.00,170,2,0
+[chip-buck_plant] PLANT tp_us=189925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=3798515 tp_us=189926 why=periodic deadtimes=1015911 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,241167,774315,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=191925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=3838515 tp_us=191926 why=periodic deadtimes=1028411 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,244292,783690,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=193925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=3878515 tp_us=193926 why=periodic deadtimes=1040911 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,247417,793065,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=195925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=3918515 tp_us=195926 why=periodic deadtimes=1053411 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,250542,802440,295,101,33,0,0
+[chip-buck_plant] PLANT tp_us=197925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=3958515 tp_us=197926 why=periodic deadtimes=1065911 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,253667,811815,295,101,33,0,0
+170100,5.014,3.008,12.00,170,2,0
+[chip-buck_plant] PLANT tp_us=199925 vload_V=5.0146 vmin_V=5.0146 vmax_V=5.0146 il_A=3.0088 iload_A=3.0088 duty=0.4259 load_mA=3000 vin_V=12.00
+[chip-buck_plant] PGATE t_sim_us=3998515 tp_us=199926 why=periodic deadtimes=1078411 dt_min_ns=40 dt_max_ns=85 overlaps=0 overlap_ns=0 diode_us=547552.0 flt=0 dt_lt40=0 int_dt_min_ns=49 int_dt_max_ns=51 per_h_ns=13..6401 per_l_ns=6390..6435 dt_hist10ns=0,0,0,0,256792,821190,295,101,33,0,0
+
+Timeout: simulation did not finish in 4000ms
+EXIT=42 wall_s=65

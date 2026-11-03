@@ -1,0 +1,5 @@
+# clang (WASI-SDK 25.0, clang version 19.1.5-wasi-sdk (https://github.com/llvm/llvm-project ab4b5a2db582958af1ee308a790cfdb42bd24720)), Tue Nov  3 13:36:40 EST 2026
+# cmd: sim/wokwi/build_chip.sh --web
+-rwxr-xr-x  1 shonzinger  staff  153400 Nov  3 13:36 buck_plant.chip.wasm
+web/buck_plant.chip.c compiles
+EXIT=0

@@ -1,0 +1,7 @@
+[wokwi]
+version = 1
+firmware = 'build/adcprobe.ino.bin'
+elf = 'build/adcprobe.ino.elf'
+[[chip]]
+name = 'vstep'
+binary = 'vstep.chip.wasm'

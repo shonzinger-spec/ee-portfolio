@@ -1,0 +1,6 @@
+{ "version": 1, "author": "probe", "editor": "wokwi",
+  "parts": [ { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": 0, "left": 0, "attrs": {} },
+             { "type": "chip-vstep", "id": "vs", "top": 40, "left": 220, "attrs": {} } ],
+  "connections": [ [ "esp:TX", "$serialMonitor:RX", "", [] ], [ "esp:RX", "$serialMonitor:TX", "", [] ],
+    [ "vs:OUT", "esp:34", "", [] ], [ "vs:OUT", "esp:35", "", [] ], [ "vs:OUT", "esp:33", "", [] ], [ "vs:GND", "esp:GND.2", "", [] ] ],
+  "serialMonitor": { "display": "always" } }

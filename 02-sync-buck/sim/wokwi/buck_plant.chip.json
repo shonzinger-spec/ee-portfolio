@@ -1,0 +1,23 @@
+{
+  "name": "Buck power stage",
+  "author": "Sync buck project",
+  "pins": ["PWM_H", "PWM_L", "VSENSE", "ISENSE", "VINSENSE", "FLT", "GND"],
+  "controls": [
+    {
+      "id": "loadMa",
+      "label": "Load current at 5 V (mA)",
+      "type": "range",
+      "min": 0,
+      "max": 7000,
+      "step": 10
+    },
+    {
+      "id": "vinMv",
+      "label": "Input voltage (mV)",
+      "type": "range",
+      "min": 0,
+      "max": 20000,
+      "step": 100
+    }
+  ]
+}
