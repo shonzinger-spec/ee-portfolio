@@ -1,40 +1,58 @@
-# gen_pcb.py, Tue Nov  3 14:24:59 UTC 2026
+# gen_pcb.py --export, Tue Nov  3 14:39:59 UTC 2026
 # KiCad 10.0.6 (Ubuntu 26.10 packages), Freerouting 2.5.0 on OpenJDK 25.0.4.1
-# cmd: FREEROUTING_JAR=/opt/freerouting/freerouting-2.5.0-executable.jar python3 hw/kicad/gen_pcb.py
-14:25:08: Debug: Adding duplicate image handler for 'PNG file'
-14:25:08: Debug: Adding duplicate image handler for 'JPEG file'
-14:25:08: Debug: Adding duplicate image handler for 'TIFF file'
-14:25:08: Debug: Adding duplicate image handler for 'GIF file'
-14:25:08: Debug: Adding duplicate image handler for 'PNM file'
-14:25:08: Debug: Adding duplicate image handler for 'PCX file'
-14:25:08: Debug: Adding duplicate image handler for 'IFF file'
-14:25:08: Debug: Adding duplicate image handler for 'Windows icon file'
-14:25:08: Debug: Adding duplicate image handler for 'Windows cursor file'
-14:25:08: Debug: Adding duplicate image handler for 'Windows animated cursor file'
-14:25:08: Debug: Adding duplicate image handler for 'TGA file'
-14:25:08: Debug: Adding duplicate image handler for 'XPM file'
-freerouting: [425914\42C8A1] Pipeline thread limits: autorouter pass is single-threaded, optimizer.max_threads=1.
-freerouting: [425914\42C8A1] Fanout pass #1 on board '3bc56e15eb220327daf665b9694c617f' completed in 0.35 seconds with 5 SMD pins fanouted, 0 not routed, 0 insert errors, +2 extra vias (0 SMD pins still to check in pass, ripup costs=100).
-freerouting: [425914\42C8A1] Fanout pass #2 on board '9e27593ea86107d813814073fd81f937' completed in 0.10 seconds with 1 SMD pin fanouted, 0 not routed, 0 insert errors, +1 extra via (0 SMD pins still to check in pass, ripup costs=200).
-freerouting: [425914\42C8A1] Fanout pass #3 on board '9e27593ea86107d813814073fd81f937' completed in 0.05 seconds with 0 SMD pins fanouted, 0 not routed, 0 insert errors, +0 extra vias (0 SMD pins still to check in pass, ripup costs=300).
-freerouting: [425914\42C8A1] Fanout stage completed: started with 26 total SMD pins, completed in 0.54 seconds, escaped pins: 26/26 (100.0%), using 0.54 total CPU seconds, 0.11 GB total allocated, and 74.5 MB peak heap usage.
-freerouting: [425914\42C8A1] Auto-routing stage started on board '9e27593ea86107d813814073fd81f937' with baseline score 750.00 for 6 unrouted items.
-freerouting: [425914\42C8A1] Auto-routing pass #1 on board '9e27593ea86107d813814073fd81f937' was completed in 0.53 seconds with score 1000.00 (0 unrouted and 0 violations), using 0.88 CPU seconds and the job allocated 0.21 GB of memory so far.
-freerouting: [425914\42C8A1] Auto-routing pass #2 on board '40fc32ec98806bc1c207914b6814d4ac' was completed in 0.02 seconds with score 1000.00 (0 unrouted and 0 violations), using 0.88 CPU seconds and the job allocated 0.21 GB of memory so far.
-freerouting: [425914\42C8A1] Auto-routing stage completed: started with 8 unrouted nets, completed in 1.34 seconds, final score: 1000.00 (0 unrouted and 0 violations), using 0.88 total CPU seconds, 0.21 GB total allocated, and 37.3 MB peak heap usage.
-freerouting: [425914\42C8A1] Optimization stage started on board '40fc32ec98806bc1c207914b6814d4ac'. Baseline router score: 1000.00, optimizer score: 427.08, incomplete connections: 0, clearance violations: 0.
-freerouting: [425914\42C8A1] Optimizer pass #1 on board 'e0162e8cc4965681dda953c12e79cf4d' was completed in 1.21 seconds with the score of 461.81 (0 unrouted and 0 violations).
-freerouting: [425914\42C8A1] Optimizer pass #1: optimizer score 427.08 -> 461.81 (IMPROVED, 8.1301%), router score: 1000.00, incomplete connections: 0, clearance violations: 0.
-freerouting: [425914\42C8A1] Optimizer pass #2 on board '70dbcd381360933587836442eae8f2e9' was completed in 1.75 seconds with the score of 472.22 (0 unrouted and 0 violations).
-freerouting: [425914\42C8A1] Optimizer pass #2: optimizer score 461.81 -> 472.22 (IMPROVED, 2.2556%), router score: 1000.00, incomplete connections: 0, clearance violations: 0.
-freerouting: [425914\42C8A1] Stopping optimizer because the improvement in this pass (2.2556%) is below the threshold (2.50%).
-freerouting: [425914\42C8A1] Optimization stage completed:. Baseline router score: 1000.00, baseline optimizer score: 427.08, final router score: 1000.00, final optimizer score: 472.22, completed in 3.23 seconds, using 3.02 total CPU seconds, 1.43 GB total allocated, and 153.3 MB peak heap usage.
-freerouting: [425914\42C8A1] Job '425914\42C8A1' finished with state: COMPLETED (elapsed: 4.84 seconds, finished at UTC: 2026-11-03T14:25:07.673770566Z).
+# cmd: FREEROUTING_JAR=/opt/freerouting/freerouting-2.5.0-executable.jar python3 hw/kicad/gen_pcb.py --export
+# (kicad-cli's 3D-render progress lines and wxWidgets debug lines omitted)
+Found 0 violations
+Found 0 unconnected items
+Found 0 schematic parity issues
+Saved DRC Report to docs/pcb_drc.rpt
+Plotted to 'hw/fab/power_node-F_Cu.gtl'.
+Plotted to 'hw/fab/power_node-B_Cu.gbl'.
+Plotted to 'hw/fab/power_node-F_Paste.gtp'.
+Plotted to 'hw/fab/power_node-B_Paste.gbp'.
+Plotted to 'hw/fab/power_node-F_Silkscreen.gto'.
+Plotted to 'hw/fab/power_node-B_Silkscreen.gbo'.
+Plotted to 'hw/fab/power_node-F_Mask.gts'.
+Plotted to 'hw/fab/power_node-B_Mask.gbs'.
+Plotted to 'hw/fab/power_node-Edge_Cuts.gm1'.
+Created file 'hw/fab/power_node-PTH.drl'
+Created file 'hw/fab/power_node-NPTH.drl'
+Created file 'hw/fab/power_node-PTH-drl_map.gbr'.
+Created file 'hw/fab/power_node-NPTH-drl_map.gbr'.
+Done.
+Rendering time 0.952 s
+Successfully created 3D render image
+Rendering time 0.875 s
+Successfully created 3D render image
+freerouting: [B1F0A0\61828D] Pipeline thread limits: autorouter pass is single-threaded, optimizer.max_threads=1.
+freerouting: [B1F0A0\61828D] Fanout pass #1 on board '3bc56e15eb220327daf665b9694c617f' completed in 0.31 seconds with 5 SMD pins fanouted, 0 not routed, 0 insert errors, +2 extra vias (0 SMD pins still to check in pass, ripup costs=100).
+freerouting: [B1F0A0\61828D] Fanout pass #2 on board '9e27593ea86107d813814073fd81f937' completed in 0.13 seconds with 1 SMD pin fanouted, 0 not routed, 0 insert errors, +1 extra via (0 SMD pins still to check in pass, ripup costs=200).
+freerouting: [B1F0A0\61828D] Fanout pass #3 on board '9e27593ea86107d813814073fd81f937' completed in 0.07 seconds with 0 SMD pins fanouted, 0 not routed, 0 insert errors, +0 extra vias (0 SMD pins still to check in pass, ripup costs=300).
+freerouting: [B1F0A0\61828D] Fanout stage completed: started with 26 total SMD pins, completed in 0.55 seconds, escaped pins: 26/26 (100.0%), using 0.55 total CPU seconds, 0.11 GB total allocated, and 46.4 MB peak heap usage.
+freerouting: [B1F0A0\61828D] Auto-routing stage started on board '9e27593ea86107d813814073fd81f937' with baseline score 750.00 for 6 unrouted items.
+freerouting: [B1F0A0\61828D] Auto-routing pass #1 on board '9e27593ea86107d813814073fd81f937' was completed in 0.65 seconds with score 1000.00 (0 unrouted and 0 violations), using 0.87 CPU seconds and the job allocated 0.19 GB of memory so far.
+freerouting: [B1F0A0\61828D] Auto-routing pass #2 on board '40fc32ec98806bc1c207914b6814d4ac' was completed in 0.04 seconds with score 1000.00 (0 unrouted and 0 violations), using 0.87 CPU seconds and the job allocated 0.19 GB of memory so far.
+freerouting: [B1F0A0\61828D] Auto-routing stage completed: started with 8 unrouted nets, completed in 1.60 seconds, final score: 1000.00 (0 unrouted and 0 violations), using 0.87 total CPU seconds, 0.19 GB total allocated, and 108.4 MB peak heap usage.
+freerouting: [B1F0A0\61828D] Optimization stage started on board '40fc32ec98806bc1c207914b6814d4ac'. Baseline router score: 1000.00, optimizer score: 427.08, incomplete connections: 0, clearance violations: 0.
+freerouting: [B1F0A0\61828D] Optimizer pass #1 on board 'e0162e8cc4965681dda953c12e79cf4d' was completed in 1.14 seconds with the score of 461.81 (0 unrouted and 0 violations).
+freerouting: [B1F0A0\61828D] Optimizer pass #1: optimizer score 427.08 -> 461.81 (IMPROVED, 8.1301%), router score: 1000.00, incomplete connections: 0, clearance violations: 0.
+freerouting: [B1F0A0\61828D] Optimizer pass #2 on board '70dbcd381360933587836442eae8f2e9' was completed in 1.61 seconds with the score of 472.22 (0 unrouted and 0 violations).
+freerouting: [B1F0A0\61828D] Optimizer pass #2: optimizer score 461.81 -> 472.22 (IMPROVED, 2.2556%), router score: 1000.00, incomplete connections: 0, clearance violations: 0.
+freerouting: [B1F0A0\61828D] Stopping optimizer because the improvement in this pass (2.2556%) is below the threshold (2.50%).
+freerouting: [B1F0A0\61828D] Optimization stage completed:. Baseline router score: 1000.00, baseline optimizer score: 427.08, final router score: 1000.00, final optimizer score: 472.22, completed in 2.98 seconds, using 2.83 total CPU seconds, 1.41 GB total allocated, and 200.1 MB peak heap usage.
+freerouting: [B1F0A0\61828D] Job 'B1F0A0\61828D' finished with state: COMPLETED (elapsed: 4.89 seconds, finished at UTC: 2026-11-03T14:40:07.980628637Z).
 tracks and vias: 63 drawn here (locked), 39 from Freerouting
 GND vias added in pour gaps: 16
 unrouted connections: 0
-wrote /home/user/ee-portfolio/01-smart-power-node/hw/kicad/power_node.kicad_pcb
+wrote hw/kicad/power_node.kicad_pcb
+$ /usr/bin/kicad-cli pcb drc --schematic-parity --severity-all --exit-code-violations -o docs/pcb_drc.rpt power_node.kicad_pcb
+$ /usr/bin/kicad-cli pcb export gerbers --layers F.Cu,B.Cu,F.Paste,B.Paste,F.Silkscreen,B.Silkscreen,F.Mask,B.Mask,Edge.Cuts --subtract-soldermask --use-drill-file-origin -o hw/fab/ power_node.kicad_pcb
+$ /usr/bin/kicad-cli pcb export drill --format excellon --drill-origin plot --excellon-units mm --excellon-separate-th --generate-map --map-format gerberx2 -o hw/fab/ power_node.kicad_pcb
+$ /usr/bin/kicad-cli pcb render --side top --width 1600 --height 1100 --zoom 1.15 --quality basic --background opaque -o hw/pcb_top.png power_node.kicad_pcb
+$ /usr/bin/kicad-cli pcb render --side bottom --width 1600 --height 1100 --zoom 1.15 --quality basic --background opaque -o hw/pcb_bottom.png power_node.kicad_pcb
 EXIT=0
-# two runs, same output:
-56811c00fb1f1dca78ba308eae090f36366875387941c788e81762658a496ff5  hw/kicad/power_node.kicad_pcb
-56811c00fb1f1dca78ba308eae090f36366875387941c788e81762658a496ff5  hw/kicad/power_node.kicad_pcb
+# two more runs from the committed state, then one from a copy of hw/kicad without
+# power_node.kicad_pro/_pcb/_dru (gen_schematic.py writes the minimal project file first):
+1166168586ee7ab12091b261e5240596609d253463517b3446aa7c90bef5f187  hw/kicad/power_node.kicad_pcb
+1166168586ee7ab12091b261e5240596609d253463517b3446aa7c90bef5f187  hw/kicad/power_node.kicad_pcb
+1166168586ee7ab12091b261e5240596609d253463517b3446aa7c90bef5f187  <copy>/hw/kicad/power_node.kicad_pcb

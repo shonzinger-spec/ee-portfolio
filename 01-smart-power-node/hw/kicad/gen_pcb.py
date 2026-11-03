@@ -4,7 +4,8 @@
 Writes, next to this script:
   power_node.kicad_pcb   the board
   power_node.kicad_pro   KiCad adds the board's design rules and net classes to the project file
-  power_node.kicad_dru   custom DRC rule: the power traces must stay at least 1.9 mm wide
+  power_node.kicad_dru   custom DRC rules: the power traces and the ground return (group GND_RETURN)
+                         must stay at least 1.9 mm wide
 
 Needs KiCad 10's Python (it imports pcbnew), kicad-cli, Java 25 and the Freerouting 2.5.0 jar
 (Maven Central, app.freerouting:freerouting:2.5.0, file freerouting-2.5.0-executable.jar):
@@ -47,6 +48,7 @@ ORIGIN = (100.0, 60.0)          # board top-left corner on the A4 sheet
 W, H, CORNER_R = 75.0, 50.0, 2.0
 
 POWER_W = 2.0                   # VSUPPLY, VLOAD and the ground return; see trace_width.py
+RETURN_GROUP = "GND_RETURN"     # group holding the ground-return trace (J2.2 -> J1.2)
 SUPPLY_W = 0.4                  # +3V3 and GND signal connections
 SIG_W = 0.25
 NETCLASSES = [                  # name, track, clearance, via diameter, via drill, nets
@@ -297,6 +299,7 @@ def silk(board):
 
 # ----------------------------------------------------------------- hand-routed copper
 def track(board, net, layer, width, pts):
+    out = []
     for a, b in zip(pts, pts[1:]):
         t = pcbnew.PCB_TRACK(board)
         t.SetStart(P(*a))
@@ -306,6 +309,8 @@ def track(board, net, layer, width, pts):
         t.SetNet(net)
         t.SetLocked(True)
         board.Add(t)
+        out.append(t)
+    return out
 
 
 def copper(board, locked):
@@ -335,7 +340,11 @@ def route(board, net, pad):
     j22, j12 = pad("J2", "2"), pad("J1", "2")          # load current return, beside the power path
     dx = j22[0] - j12[0]
     yk = j12[1] - dx - 1.2
-    track(board, net("GND"), F, POWER_W, [j22, (j22[0], yk), (j12[0], yk + dx), j12])
+    group = pcbnew.PCB_GROUP(board)                    # GND is not in the Power class: the DRC rule
+    group.SetName(RETURN_GROUP)                        # for the return finds it by this group
+    board.Add(group)
+    for t in track(board, net("GND"), F, POWER_W, [j22, (j22[0], yk), (j12[0], yk + dx), j12]):
+        group.AddItem(t)
     # Kelvin sense: SENSE_N leaves R1 pad 3 on U2's side. Pad 2 (SENSE_P) lies on the far side of the
     # current path, so SENSE_P drops to B.Cu at the pad and comes back up beside R2.
     track(board, net("/SENSE_N"), F, SIG_W, [pad("R1", "3"), pad("R3", "1")])
@@ -441,6 +450,9 @@ DRU = """(version 1)
 (rule "Power traces stay at least 1.9 mm wide (2.0 mm drawn, sized by trace_width.py)"
 	(condition "A.NetClass == 'Power'")
 	(constraint track_width (min 1.9mm)))
+(rule "The ground return (group GND_RETURN) stays at least 1.9 mm wide"
+	(condition "A.Type == 'Track' && A.memberOfGroup('GND_RETURN')")
+	(constraint track_width (min 1.9mm)))
 """
 
 
@@ -459,6 +471,10 @@ def export():
     hw = os.path.normpath(os.path.join(HERE, ".."))
     fab = os.path.join(hw, "fab")
     docs = os.path.normpath(os.path.join(hw, "..", "docs"))
+    # DRC first: a board with any violation, unconnected pad or parity error stops here,
+    # before the fabrication files are touched
+    run([KICAD_CLI, "pcb", "drc", "--schematic-parity", "--severity-all", "--exit-code-violations",
+         "-o", os.path.join(docs, "pcb_drc.rpt"), PCB])
     os.makedirs(fab, exist_ok=True)
     for f in os.listdir(fab):                      # previous outputs of this function only
         if f.startswith(PROJECT):
@@ -469,20 +485,20 @@ def export():
     run([KICAD_CLI, "pcb", "export", "drill", "--format", "excellon", "--drill-origin", "plot",
          "--excellon-units", "mm", "--excellon-separate-th", "--generate-map", "--map-format", "gerberx2",
          "-o", fab + os.sep, PCB])
-    run([KICAD_CLI, "pcb", "drc", "--schematic-parity", "--severity-all", "--exit-code-violations",
-         "-o", os.path.join(docs, "pcb_drc.rpt"), PCB])
     for side in ("top", "bottom"):
         run([KICAD_CLI, "pcb", "render", "--side", side, "--width", "1600", "--height", "1100", "--zoom", "1.15",
              "--quality", "basic", "--background", "opaque", "-o", os.path.join(hw, "pcb_%s.png" % side), PCB])
 
 
 def main():
-    pcbnew.KIID.SeedGenerator(UUID_SEED)
     comps, nets = read_netlist()
     missing = sorted(set(comps) - set(PLACE))
     if missing:
         raise SystemExit("no placement for %s" % ", ".join(missing))
     board = pcbnew.NewBoard(PCB)
+    # seeded after NewBoard and after every reload: loading the project file draws UUIDs too, more
+    # or fewer depending on what the file holds, which would shift the sequence between runs
+    pcbnew.KIID.SeedGenerator(UUID_SEED)
     setup(board)
     N = add_nets(board, nets)
     fps = place(board, comps, nets, N)
@@ -507,6 +523,7 @@ def main():
     stitched = 0
     while True:                          # fill on the board as saved, not on this session's caches
         board = pcbnew.LoadBoard(PCB)
+        pcbnew.KIID.SeedGenerator(UUID_SEED + 1 + stitched)
         pcbnew.ZONE_FILLER(board).Fill(board.Zones())
         added = stitch_voids(board)
         pcbnew.SaveBoard(PCB, board)
