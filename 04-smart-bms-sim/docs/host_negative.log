@@ -1,0 +1,37 @@
+== mutant m1 ==
+FAIL S3 OV trip opens the charge FET          first after -0.1 s, 0 trips
+FAIL S3 trip within 300 ms of 4.25 V          0.0 s (limit 0.3 s)
+FAIL S3 peak cell <= 4.30 V                   4468 mV
+FAIL S3 no cell above 100 % SoC               peak 104.94 %
+FAIL S3 peak temperature < 45 degC            45.21 degC
+FAIL S3 after 2 h: OV held, no current, dsg on 3.000 A, dsg 1
+RESULT: 28/34 PASS
+mutant m1: test FAILED as required
+== mutant m2 ==
+FAIL S1 balanced: OCV spread <= 10 mV         22.0 mV -> 63.5 mV
+FAIL S1 bleed resistors used                  0 s of balancing
+RESULT: 32/34 PASS
+mutant m2: test FAILED as required
+== mutant m3 ==
+FAIL S4 SCD trip opens the discharge FET      108 A peak
+FAIL S4 FET off within 200 ms                 0.6 s (limit 0.2 s)
+FAIL S4 cell temperature rise < 2 K           3.23 K
+FAIL S4 SCD stays latched without a charger   dsg 0 at 30 s
+RESULT: 30/34 PASS
+mutant m3: test FAILED as required
+== mutant m4 ==
+FAIL S7 no charge current below 0 degC        3.000 A peak
+FAIL S7 charging starts once cells >= 3 degC  after 0 s at -4.10 degC
+RESULT: 32/34 PASS
+mutant m4: test FAILED as required
+== mutant m5 ==
+FAIL S6 OTD trip opens the discharge FET      after -0 s
+FAIL S6 peak temperature <= 62 degC           70.48 degC
+FAIL S6 re-enabled after cooling below 55 degC 0
+RESULT: 31/34 PASS
+mutant m5: test FAILED as required
+== mutant m6 ==
+FAIL S1 no cell above 100 % SoC               peak 101.00 %
+RESULT: 33/34 PASS
+mutant m6: test FAILED as required
+NEGATIVE GATE: 6/6 mutants caught

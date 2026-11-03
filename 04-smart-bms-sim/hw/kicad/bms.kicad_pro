@@ -1,0 +1,33 @@
+{
+  "board": {
+    "design_settings": {}
+  },
+  "boards": [],
+  "erc": {
+    "rule_severities": {
+      "single_global_label": "ignore",
+      "four_way_junction": "ignore",
+      "simulation_model_issue": "ignore",
+      "footprint_filter": "ignore"
+    }
+  },
+  "libraries": {
+    "pinned_footprint_libs": [],
+    "pinned_symbol_libs": []
+  },
+  "meta": {
+    "filename": "bms.kicad_pro",
+    "version": 1
+  },
+  "schematic": {
+    "legacy_lib_dir": "",
+    "legacy_lib_list": []
+  },
+  "sheets": [
+    [
+      "f8d740e2-c53e-5c90-85ba-a475b65f853c",
+      "Root"
+    ]
+  ],
+  "text_variables": {}
+}

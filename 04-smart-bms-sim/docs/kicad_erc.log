@@ -1,0 +1,72 @@
+# cmd: cd hw/kicad && python3 gen_schematic.py --export
+# cmd: kicad-cli sch erc --severity-all -o erc.rpt bms.kicad_sch
+# cmd: python3 check_netlist.py
+ ** ERC messages: 0  Errors 0  Warnings 0
+
+ ** Ignored checks:
+    - Global label only appears once in the schematic
+    - Four connection points are joined together
+    - SPICE model issue
+    - Assigned footprint doesn't match footprint filters
+PASS GND       C1.2 C15.2 C2.2 C25.2 C3.2 C35.2 C4.2 C45.2 C51.2 C52.2 C53.2 C54.2 J1.1 J3.2 Q3.2 R12.2 R13.1 R22.2 R3.2 R32.2 R42.2 R71.2 RS1.1 TH1.2 TH2.2 TH3.2 TH4.2 U1.11 U2.2 U3.2 U4.2 U5.2 U6.2 U7.2 U8.2
+PASS B1        J1.2 Q4.2 R11.1 R23.1 R61.2 R72.2 U3.4
+PASS B2        J1.3 Q5.2 R21.1 R33.1 R62.2 R73.2 U4.4
+PASS B3        J1.4 Q6.2 R31.1 R43.1 R63.2 R74.2 U5.4
+PASS B4        F1.1 J1.5 R1.1 R41.1 R64.2 U6.4
+PASS PACK+     F1.2 J2.1
+PASS PACKN     D2.2 J2.2 Q2.3 R8.2
+PASS N_SH      D1.2 Q1.3 R7.2 RS1.4
+PASS MID       Q1.2 Q2.2
+PASS GD        D1.1 Q1.1 R7.1 U7.3
+PASS GC        D2.1 Q2.1 R8.1 U8.3
+PASS DSG_C     R5.2 U7.4
+PASS CHG_C     R6.2 U8.4
+PASS DSG_LED   R91.2 U7.1
+PASS CHG_LED   R92.2 U8.1
+PASS DSG_EN    J3.17 R91.1
+PASS CHG_EN    J3.16 R92.1
+PASS VAMP      C1.1 R1.2 R5.1 R6.1 U1.4
+PASS ISNS_P    RS1.2 U2.3
+PASS ISNS_N    RS1.3 U2.4
+PASS +3V3      C2.1 J3.1 R2.1 R51.1 R52.1 R53.1 R54.1 U2.6
+PASS IREF      C3.1 R2.2 R3.1 U2.5
+PASS IAMP      R4.1 U2.1
+PASS ISENSE    C4.1 J3.7 R4.2
+PASS INP1      R11.2 R12.1 U1.3
+PASS INN1      R13.2 R14.1 U1.2
+PASS AMP1      R14.2 R15.1 U1.1
+PASS VCELL1    C15.1 J3.3 R15.2
+PASS TS1       C51.1 J3.8 R51.2 TH1.1
+PASS GB1       Q3.1 R71.1 U3.3
+PASS BLD1      Q3.3 R61.1
+PASS BAL1      J3.12 R81.1
+PASS BAL1_LED  R81.2 U3.1
+PASS INP2      R21.2 R22.1 U1.5
+PASS INN2      R23.2 R24.1 U1.6
+PASS AMP2      R24.2 R25.1 U1.7
+PASS VCELL2    C25.1 J3.4 R25.2
+PASS TS2       C52.1 J3.9 R52.2 TH2.1
+PASS GB2       Q4.1 R72.1 U4.3
+PASS BLD2      Q4.3 R62.1
+PASS BAL2      J3.13 R82.1
+PASS BAL2_LED  R82.2 U4.1
+PASS INP3      R31.2 R32.1 U1.10
+PASS INN3      R33.2 R34.1 U1.9
+PASS AMP3      R34.2 R35.1 U1.8
+PASS VCELL3    C35.1 J3.5 R35.2
+PASS TS3       C53.1 J3.10 R53.2 TH3.1
+PASS GB3       Q5.1 R73.1 U5.3
+PASS BLD3      Q5.3 R63.1
+PASS BAL3      J3.14 R83.1
+PASS BAL3_LED  R83.2 U5.1
+PASS INP4      R41.2 R42.1 U1.12
+PASS INN4      R43.2 R44.1 U1.13
+PASS AMP4      R44.2 R45.1 U1.14
+PASS VCELL4    C45.1 J3.6 R45.2
+PASS TS4       C54.1 J3.11 R54.2 TH4.1
+PASS GB4       Q6.1 R74.1 U6.3
+PASS BLD4      Q6.3 R64.1
+PASS BAL4      J3.15 R84.1
+PASS BAL4_LED  R84.2 U6.1
+info: 0 single-pin nets (expected 0)
+RESULT: PASS

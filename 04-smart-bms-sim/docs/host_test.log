@@ -1,0 +1,56 @@
+PASS unit: OCV -> SoC table lookup            3710 mV -> 45.0 %
+# S1 charge 3 A / 16.8 V from 29-33 % SoC, then 2 h rest; 25 degC
+PASS S1 no protection trip                    faults 0
+PASS S1 max cell < OV trip - 10 mV            4229 mV (limit 4240 mV)
+PASS S1 charger terminates < 3 h              2636 s
+PASS S1 no cell above 100 % SoC               peak 97.58 %
+PASS S1 SoC set to 100 % at end of charge     100.0 % at termination
+PASS S1 balanced: OCV spread <= 10 mV         22.0 mV -> 7.4 mV
+PASS S1 bleed resistors used                  4835 s of balancing
+METRIC s1_t_chg_s 2636.4
+METRIC s1_vpk_mv 4229
+METRIC s1_spread_mv 7.38
+METRIC s1_bal_s 4834.9
+METRIC s1_socpk 0.97583
+# S2 discharge 3 A from 15 % SoC to the UV trip, then 60 s rest
+PASS S2 UV trip opens the discharge FET       after 546 s, dsg 0
+PASS S2 smallest cell (2.94 Ah) trips first   cell 1
+PASS S2 lowest cell >= UV trip - 50 mV        2799 mV (limit 2750 mV)
+PASS S2 SoC reset to 0 % at UV                0.0 %
+PASS S2 no FET chatter after the trip         1 FET transitions (limit 1)
+METRIC s2_t_trip_s 546.2
+# S3 faulty charger: 3 A constant current, no CV, from 90 % SoC, 2 h
+PASS S3 OV trip opens the charge FET          first after 70.6 s, 20 trips
+PASS S3 trip within 300 ms of 4.25 V          0.2 s (limit 0.3 s)
+PASS S3 peak cell <= 4.30 V                   4250 mV
+PASS S3 no cell above 100 % SoC               peak 96.00 %
+PASS S3 peak temperature < 45 degC            25.87 degC
+PASS S3 after 2 h: OV held, no current, dsg on 0.000 A, dsg 1
+PASS S3 OV clears under 1 A discharge         after 0.2 s
+METRIC s3_t_off_s 70.6
+METRIC s3_trips 20
+METRIC s3_vpk_mv 4250
+METRIC s3_socpk 0.96003
+# S4 50 mOhm short at t = 10 s, removed at 15 s, charger connected at 30 s
+PASS S4 SCD trip opens the discharge FET      105 A peak
+PASS S4 FET off within 200 ms                 0.2 s (limit 0.2 s)
+PASS S4 cell temperature rise < 2 K           0.65 K
+PASS S4 SCD stays latched without a charger   dsg 0 at 30 s
+PASS S4 charger clears the latch              after 1.1 s
+METRIC s4_ipk_a 105.26
+# S5 12 A overload at t = 10 s
+PASS S5 OCD (not SCD) trip                    faults 8
+PASS S5 OCD after 0.5-0.6 s                   0.6 s
+# S6 cooling failure: Rth 60 K/W, 40 degC ambient, 6 A discharge from 100 %
+PASS S6 OTD trip opens the discharge FET      after 908 s
+PASS S6 peak temperature <= 62 degC           60.01 degC
+PASS S6 re-enabled after cooling below 55 degC 1
+METRIC s6_t_otd_s 908.4
+METRIC s6_tpk_c 60.010
+# S7 charger at -5 degC ambient, ambient to 10 degC at 60 s
+PASS S7 no charge current below 0 degC        0.000 A peak
+PASS S7 charging starts once cells >= 3 degC  after 521 s at 2.95 degC
+# S8 open thermistor 60-120 s, 1 A discharge
+PASS S8 sensor fault opens both FETs          faults 256
+PASS S8 sensor fault stays latched            dsg 0
+RESULT: 34/34 PASS (ALL PASS)

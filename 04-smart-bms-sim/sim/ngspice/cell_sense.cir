@@ -1,0 +1,124 @@
+* Project 04 smart BMS - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+* Four difference amplifiers, gain 0.5 (2M / 1M), read each cell of the 4S stack
+* against its own negative tap and drive a 10k / 1 uF filter into an ESP32-S3 ADC pin.
+* Same circuit and refs as hw/kicad (U1 = OPA4197 quad, R1 / C1 amplifier supply).
+*
+* Runs, printed for main.py (section [6]) to parse:
+*   TRAN    cells at 4.00 V, cell 4 steps to 4.25 V at 20 ms: settling of VCELL4 to 1 mV (input-referred)
+*   NOMINAL every cell 4.20 V: input-referred error per channel, tap currents, pin levels
+*   CORNER  resistor tolerance (0.01 % and 0.1 %) x 16 resistor corners x op-amp offset
+*           +/-250 uV, at 2.80 V and 4.25 V per cell: input-referred error per channel
+
+.param tol=1e-4 ka=0 kb=0 kc=0 kd=0 vos=0 vc=4.2 iq=4m
+
+* Cell stack: B0 = GND
+V1 b1 0  dc {vc}
+V2 b2 b1 dc {vc}
+V3 b3 b2 dc {vc}
+V4 b4 x4 dc {vc}
+Vstep x4 b3 dc 0 pwl(0 0 20m 0 20.01m 0.25)   ; transient step only, 0 V in every .op
+
+* Amplifier supply from the top of the stack; Iq = 4 x 1 mA (OPA4197 typical per channel)
+R1 b4 vamp 100
+C1 vamp 0 1u
+Iq vamp 0 {iq}
+
+* Rail-to-rail op-amp: open-loop gain 1e5, input offset vos, output clamped 5 mV inside
+* the rails, 1 MHz-class dominant pole (10 ns integrator node) for the transient run
+.subckt opa inp inn out vcc vee
+Bg n1 vee V = min(max(1e5 * (v(inp) - v(inn) + {vos}), 0.005), v(vcc, vee) - 0.005)
+Rp n1 n2 1k
+Cp n2 vee 16p
+Eb out vee n2 vee 1
+.ends
+
+* Channel n: Rn1 B(n)->INPn, Rn2 INPn->GND, Rn3 B(n-1)->INNn, Rn4 INNn->AMPn,
+*            Rn5 AMPn->VCELLn, Cn5 VCELLn->GND
+R11 b1 inp1 {2Meg * (1 + tol * ka)}
+R12 inp1 0  {1Meg * (1 + tol * kb)}
+R13 0 inn1  {2Meg * (1 + tol * kc)}
+R14 inn1 amp1 {1Meg * (1 + tol * kd)}
+XU1A inp1 inn1 amp1 vamp 0 opa
+R15 amp1 vcell1 10k
+C15 vcell1 0 1u
+
+R21 b2 inp2 {2Meg * (1 + tol * ka)}
+R22 inp2 0  {1Meg * (1 + tol * kb)}
+R23 b1 inn2 {2Meg * (1 + tol * kc)}
+R24 inn2 amp2 {1Meg * (1 + tol * kd)}
+XU1B inp2 inn2 amp2 vamp 0 opa
+R25 amp2 vcell2 10k
+C25 vcell2 0 1u
+
+R31 b3 inp3 {2Meg * (1 + tol * ka)}
+R32 inp3 0  {1Meg * (1 + tol * kb)}
+R33 b2 inn3 {2Meg * (1 + tol * kc)}
+R34 inn3 amp3 {1Meg * (1 + tol * kd)}
+XU1C inp3 inn3 amp3 vamp 0 opa
+R35 amp3 vcell3 10k
+C35 vcell3 0 1u
+
+R41 b4 inp4 {2Meg * (1 + tol * ka)}
+R42 inp4 0  {1Meg * (1 + tol * kb)}
+R43 b3 inn4 {2Meg * (1 + tol * kc)}
+R44 inn4 amp4 {1Meg * (1 + tol * kd)}
+XU1D inp4 inn4 amp4 vamp 0 opa
+R45 amp4 vcell4 10k
+C45 vcell4 0 1u
+
+.control
+set noaskquit
+alterparam vc = 4.0
+reset
+tran 50u 120m
+meas tran tset when v(vcell4)=2.1245 rise=1
+let ts = tset - 20m
+echo "TRAN settle_1mV_s $&ts"
+alterparam vc = 4.2
+reset
+
+op
+let e1 = 2 * v(vcell1) - v(b1)
+let e2 = 2 * v(vcell2) - (v(b2) - v(b1))
+let e3 = 2 * v(vcell3) - (v(b3) - v(b2))
+let e4 = 2 * v(vcell4) - (v(b4) - v(b3))
+let i1 = -i(v1)
+let i2 = -i(v2)
+let i3 = -i(v3)
+let i4 = -i(v4)
+echo "NOMINAL err_V $&e1 $&e2 $&e3 $&e4"
+echo "NOMINAL cell_A $&i1 $&i2 $&i3 $&i4"
+echo "NOMINAL pins_V $&v(inp4) $&v(vamp) $&v(vcell4)"
+
+foreach t 1e-4 1e-3
+  foreach v 2.8 4.25
+    foreach a -1 1
+      foreach b -1 1
+        foreach c -1 1
+          foreach d -1 1
+            foreach o -250u 250u
+              alterparam tol = $t
+              alterparam vc = $v
+              alterparam ka = $a
+              alterparam kb = $b
+              alterparam kc = $c
+              alterparam kd = $d
+              alterparam vos = $o
+              reset
+              op
+              let e1 = 2 * v(vcell1) - v(b1)
+              let e2 = 2 * v(vcell2) - (v(b2) - v(b1))
+              let e3 = 2 * v(vcell3) - (v(b3) - v(b2))
+              let e4 = 2 * v(vcell4) - (v(b4) - v(b3))
+              echo "CORNER $t $v $a $b $c $d $o $&e1 $&e2 $&e3 $&e4"
+              destroy
+            end
+          end
+        end
+      end
+    end
+  end
+end
+quit
+.endc
+.end

@@ -1,0 +1,1360 @@
+
+Note: No compatibility mode selected!
+
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+Initial Transient Solution
+--------------------------
+
+Node                                   Voltage
+----                                   -------
+b1                                           4
+b2                                           8
+b3                                          12
+b4                                          16
+x4                                          12
+vamp                                      15.6
+inp1                                   1.33333
+inn1                                   1.33331
+amp1                                   1.99997
+xu1a.n1                                1.99997
+xu1a.n2                                1.99997
+vcell1                                 1.99997
+inp2                                   2.66667
+inn2                                   2.66665
+amp2                                   1.99997
+xu1b.n1                                1.99997
+xu1b.n2                                1.99997
+vcell2                                 1.99997
+inp3                                         4
+inn3                                   3.99998
+amp3                                   1.99997
+xu1c.n1                                1.99997
+xu1c.n2                                1.99997
+vcell3                                 1.99997
+inp4                                   5.33333
+inn4                                   5.33331
+amp4                                   1.99997
+xu1d.n1                                1.99997
+xu1d.n2                                1.99997
+vcell4                                 1.99997
+b.xu1d.bg#branch                  -8.32661e-20
+b.xu1c.bg#branch                  -1.04083e-19
+b.xu1b.bg#branch                  -4.71662e-15
+b.xu1a.bg#branch                  -4.71662e-15
+e.xu1d.eb#branch                   3.33334e-06
+e.xu1c.eb#branch                   2.00001e-06
+e.xu1b.eb#branch                   6.66677e-07
+e.xu1a.eb#branch                  -6.66657e-07
+vstep#branch                       -0.00400533
+v4#branch                          -0.00400533
+v3#branch                          -0.00401267
+v2#branch                          -0.00401733
+v1#branch                          -0.00401933
+
+
+No. of Data Rows : 2418
+tset                =  7.58780e-02
+TRAN settle_1mV_s 0.055878
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+NOMINAL err_V -6.29991E-05 -6.29991E-05 -6.29991E-05 -6.29991E-05
+NOMINAL cell_A 0.0040203 0.0040182 0.0040133 0.0040056
+NOMINAL pins_V 5.6 16.4 2.09997
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 2.8 -1 -1 -1 -1 -250u -0.000791988 -0.000791988 -0.000791988 -0.000791988
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 2.8 -1 -1 -1 -1 250u 0.000707989 0.000707989 0.000707989 0.000707989
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 2.8 -1 -1 -1 1 -250u -0.000605358 -0.000978723 -0.00135209 -0.00172545
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 2.8 -1 -1 -1 1 250u 0.000894719 0.000521354 0.000147989 -0.000225376
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 2.8 -1 -1 1 -1 -250u -0.000978581 -0.00060529 -0.000232 0.000141291
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 2.8 -1 -1 1 -1 250u 0.000521297 0.000894587 0.00126788 0.00164117
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 2.8 -1 -1 1 1 -250u -0.000791988 -0.000791988 -0.000791988 -0.000791988
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 2.8 -1 -1 1 1 250u 0.000707989 0.000707989 0.000707989 0.000707989
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 2.8 -1 1 -1 -1 -250u -0.000418648 -4.53078E-05 0.000328032 0.000701373
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 2.8 -1 1 -1 -1 250u 0.00108133 0.00145467 0.00182801 0.00220135
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 2.8 -1 1 -1 1 -250u -0.000231993 -0.000231993 -0.000231993 -0.000231993
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 2.8 -1 1 -1 1 250u 0.00126808 0.00126808 0.00126808 0.00126808
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 2.8 -1 1 1 -1 -250u -0.000605265 0.00014134 0.000887946 0.00163455
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 2.8 -1 1 1 -1 250u 0.000894612 0.00164122 0.00238782 0.00313443
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 2.8 -1 1 1 1 -250u -0.000418648 -4.53078E-05 0.000328032 0.000701373
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 2.8 -1 1 1 1 250u 0.00108133 0.00145467 0.00182801 0.00220135
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 2.8 1 -1 -1 -1 -250u -0.0011653 -0.00153862 -0.00191193 -0.00228525
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 2.8 1 -1 -1 -1 250u 0.000334674 -3.86412E-05 -0.000411956 -0.000785272
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 2.8 1 -1 -1 1 -250u -0.000978699 -0.0017254 -0.00247211 -0.00321881
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 2.8 1 -1 -1 1 250u 0.000521379 -0.000225326 -0.000972032 -0.00171874
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 2.8 1 -1 1 -1 -250u -0.00135187 -0.00135187 -0.00135187 -0.00135187
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 2.8 1 -1 1 -1 250u 0.000148007 0.000148007 0.000148007 0.000148007
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 2.8 1 -1 1 1 -250u -0.0011653 -0.00153862 -0.00191193 -0.00228525
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 2.8 1 -1 1 1 250u 0.000334674 -3.86412E-05 -0.000411956 -0.000785272
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 2.8 1 1 -1 -1 -250u -0.000791988 -0.000791988 -0.000791988 -0.000791988
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 2.8 1 1 -1 -1 250u 0.000707989 0.000707989 0.000707989 0.000707989
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 2.8 1 1 -1 1 -250u -0.000605358 -0.000978723 -0.00135209 -0.00172545
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 2.8 1 1 -1 1 250u 0.000894719 0.000521354 0.000147989 -0.000225376
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 2.8 1 1 1 -1 -250u -0.000978581 -0.00060529 -0.000232 0.000141291
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 2.8 1 1 1 -1 250u 0.000521297 0.000894587 0.00126788 0.00164117
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 2.8 1 1 1 1 -250u -0.000791988 -0.000791988 -0.000791988 -0.000791988
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 2.8 1 1 1 1 250u 0.000707989 0.000707989 0.000707989 0.000707989
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 4.25 -1 -1 -1 -1 -250u -0.000813738 -0.000813738 -0.000813738 -0.000813738
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 4.25 -1 -1 -1 -1 250u 0.00068624 0.00068624 0.00068624 0.00068624
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 4.25 -1 -1 -1 1 -250u -0.000530435 -0.00109715 -0.00166386 -0.00223058
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 4.25 -1 -1 -1 1 250u 0.000969643 0.000402928 -0.000163787 -0.000730502
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 4.25 -1 -1 1 -1 -250u -0.00109698 -0.000530383 3.62187E-05 0.00060282
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 4.25 -1 -1 1 -1 250u 0.000402893 0.000969495 0.0015361 0.0021027
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 4.25 -1 -1 1 1 -250u -0.000813738 -0.000813738 -0.000813738 -0.000813738
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 4.25 -1 -1 1 1 250u 0.00068624 0.00068624 0.00068624 0.00068624
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 4.25 -1 1 -1 -1 -250u -0.000247061 0.000319616 0.000886293 0.00145297
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 4.25 -1 1 -1 -1 250u 0.00125292 0.00181959 0.00238627 0.00295295
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 4.25 -1 1 -1 1 -250u 3.62802E-05 3.62802E-05 3.62802E-05 3.62802E-05
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 4.25 -1 1 -1 1 250u 0.00153636 0.00153636 0.00153636 0.00153636
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 4.25 -1 1 1 -1 -250u -0.000530345 0.000602896 0.00173614 0.00286938
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 4.25 -1 1 1 -1 250u 0.000969532 0.00210277 0.00323601 0.00436925
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 4.25 -1 1 1 1 -250u -0.000247061 0.000319616 0.000886293 0.00145297
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 4.25 -1 1 1 1 250u 0.00125292 0.00181959 0.00238627 0.00295295
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 4.25 1 -1 -1 -1 -250u -0.00138038 -0.00194702 -0.00251366 -0.00308029
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 4.25 1 -1 -1 -1 250u 0.0001196 -0.000447039 -0.00101368 -0.00158032
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 4.25 1 -1 -1 1 -250u -0.00109711 -0.0022305 -0.0033639 -0.00449729
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 4.25 1 -1 -1 1 250u 0.000402966 -0.000730426 -0.00186382 -0.00299721
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 4.25 1 -1 1 -1 -250u -0.00166359 -0.00166359 -0.00166359 -0.00166359
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 4.25 1 -1 1 -1 250u -0.000163708 -0.000163708 -0.000163708 -0.000163708
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 4.25 1 -1 1 1 -250u -0.00138038 -0.00194702 -0.00251366 -0.00308029
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 4.25 1 -1 1 1 250u 0.0001196 -0.000447039 -0.00101368 -0.00158032
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 4.25 1 1 -1 -1 -250u -0.000813738 -0.000813738 -0.000813738 -0.000813738
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 4.25 1 1 -1 -1 250u 0.00068624 0.00068624 0.00068624 0.00068624
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 4.25 1 1 -1 1 -250u -0.000530435 -0.00109715 -0.00166386 -0.00223058
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 4.25 1 1 -1 1 250u 0.000969643 0.000402928 -0.000163787 -0.000730502
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 4.25 1 1 1 -1 -250u -0.00109698 -0.000530383 3.62187E-05 0.00060282
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 4.25 1 1 1 -1 250u 0.000402893 0.000969495 0.0015361 0.0021027
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 4.25 1 1 1 1 -250u -0.000813738 -0.000813738 -0.000813738 -0.000813738
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-4 4.25 1 1 1 1 250u 0.00068624 0.00068624 0.00068624 0.00068624
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 2.8 -1 -1 -1 -1 -250u -0.000791988 -0.000791988 -0.000791988 -0.000791988
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 2.8 -1 -1 -1 -1 250u 0.000707989 0.000707989 0.000707989 0.000707989
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 2.8 -1 -1 -1 1 -250u 0.00107599 -0.00266102 -0.00639804 -0.0101351
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 2.8 -1 -1 -1 1 250u 0.00257697 -0.00116005 -0.00489706 -0.00863407
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 2.8 -1 -1 1 -1 -250u -0.00265623 0.00107331 0.00480286 0.00853241
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 2.8 -1 -1 1 -1 250u -0.00115726 0.00257229 0.00630184 0.0100314
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 2.8 -1 -1 1 1 -250u -0.000791988 -0.000791988 -0.000791988 -0.000791988
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 2.8 -1 -1 1 1 250u 0.000707989 0.000707989 0.000707989 0.000707989
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 2.8 -1 1 -1 -1 -250u 0.00294253 0.00667706 0.0104116 0.0141461
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 2.8 -1 1 -1 -1 250u 0.00444251 0.00817703 0.0119116 0.0156461
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 2.8 -1 1 -1 1 -250u 0.004813 0.004813 0.004813 0.004813
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 2.8 -1 1 -1 1 250u 0.00631398 0.00631398 0.00631398 0.00631398
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 2.8 -1 1 1 -1 -250u 0.0010758 0.00853738 0.015999 0.0234605
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 2.8 -1 1 1 -1 250u 0.00257478 0.0100364 0.0174979 0.0249595
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 2.8 -1 1 1 1 -250u 0.00294253 0.00667706 0.0104116 0.0141461
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 2.8 -1 1 1 1 250u 0.00444251 0.00817703 0.0119116 0.0156461
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 2.8 1 -1 -1 -1 -250u -0.00452402 -0.00825605 -0.0119881 -0.0157201
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 2.8 1 -1 -1 -1 250u -0.00302404 -0.00675608 -0.0104881 -0.0142201
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 2.8 1 -1 -1 1 -250u -0.00265853 -0.0101301 -0.0176016 -0.0250731
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 2.8 1 -1 -1 1 250u -0.00115755 -0.00862909 -0.0161006 -0.0235722
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 2.8 1 -1 1 -1 -250u -0.00638578 -0.00638578 -0.00638578 -0.00638578
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 2.8 1 -1 1 -1 250u -0.0048868 -0.0048868 -0.0048868 -0.0048868
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 2.8 1 -1 1 1 -250u -0.00452402 -0.00825605 -0.0119881 -0.0157201
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 2.8 1 -1 1 1 250u -0.00302404 -0.00675608 -0.0104881 -0.0142201
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 2.8 1 1 -1 -1 -250u -0.000791988 -0.000791988 -0.000791988 -0.000791988
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 2.8 1 1 -1 -1 250u 0.000707989 0.000707989 0.000707989 0.000707989
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 2.8 1 1 -1 1 -250u 0.00107599 -0.00266102 -0.00639804 -0.0101351
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 2.8 1 1 -1 1 250u 0.00257697 -0.00116005 -0.00489706 -0.00863407
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 2.8 1 1 1 -1 -250u -0.00265623 0.00107331 0.00480286 0.00853241
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 2.8 1 1 1 -1 250u -0.00115726 0.00257229 0.00630184 0.0100314
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 2.8 1 1 1 1 -250u -0.000791988 -0.000791988 -0.000791988 -0.000791988
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 2.8 1 1 1 1 250u 0.000707989 0.000707989 0.000707989 0.000707989
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 4.25 -1 -1 -1 -1 -250u -0.000813738 -0.000813738 -0.000813738 -0.000813738
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 4.25 -1 -1 -1 -1 250u 0.00068624 0.00068624 0.00068624 0.00068624
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 4.25 -1 -1 -1 1 -250u 0.00202185 -0.00365041 -0.00932266 -0.0149949
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 4.25 -1 -1 -1 1 250u 0.00352282 -0.00214943 -0.00782168 -0.0134939
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 4.25 -1 -1 1 -1 -250u -0.00364366 0.00201726 0.00767819 0.0133391
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 4.25 -1 -1 1 -1 250u -0.00214468 0.00351624 0.00917716 0.0148381
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 4.25 -1 -1 1 1 -250u -0.000813738 -0.000813738 -0.000813738 -0.000813738
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 4.25 -1 -1 1 1 250u 0.00068624 0.00068624 0.00068624 0.00068624
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 4.25 -1 1 -1 -1 -250u 0.00485473 0.0105232 0.0161917 0.0218601
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 4.25 -1 1 -1 -1 250u 0.00635471 0.0120232 0.0176917 0.0233601
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 4.25 -1 1 -1 1 -250u 0.0076941 0.0076941 0.0076941 0.0076941
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 4.25 -1 1 -1 1 250u 0.00919508 0.00919508 0.00919508 0.00919508
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 4.25 -1 1 1 -1 -250u 0.00202104 0.0133467 0.0246723 0.0359979
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 4.25 -1 1 1 -1 250u 0.00352002 0.0148456 0.0261713 0.0374969
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 4.25 -1 1 1 1 -250u 0.00485473 0.0105232 0.0161917 0.0218601
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 4.25 -1 1 1 1 250u 0.00635471 0.0120232 0.0176917 0.0233601
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 4.25 1 -1 -1 -1 -250u -0.00647843 -0.0121431 -0.0178078 -0.0234725
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 4.25 1 -1 -1 -1 250u -0.00497845 -0.0106431 -0.0163078 -0.0219725
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 4.25 1 -1 -1 1 -250u -0.00364663 -0.0149874 -0.0263281 -0.0376688
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 4.25 1 -1 -1 1 250u -0.00214565 -0.0134864 -0.0248271 -0.0361678
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 4.25 1 -1 1 -1 -250u -0.00930458 -0.00930458 -0.00930458 -0.00930458
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 4.25 1 -1 1 -1 250u -0.0078056 -0.0078056 -0.0078056 -0.0078056
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 4.25 1 -1 1 1 -250u -0.00647843 -0.0121431 -0.0178078 -0.0234725
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 4.25 1 -1 1 1 250u -0.00497845 -0.0106431 -0.0163078 -0.0219725
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 4.25 1 1 -1 -1 -250u -0.000813738 -0.000813738 -0.000813738 -0.000813738
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 4.25 1 1 -1 -1 250u 0.00068624 0.00068624 0.00068624 0.00068624
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 4.25 1 1 -1 1 -250u 0.00202185 -0.00365041 -0.00932266 -0.0149949
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 4.25 1 1 -1 1 250u 0.00352282 -0.00214943 -0.00782168 -0.0134939
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 4.25 1 1 1 -1 -250u -0.00364366 0.00201726 0.00767819 0.0133391
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 4.25 1 1 1 -1 250u -0.00214468 0.00351624 0.00917716 0.0148381
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 4.25 1 1 1 1 -250u -0.000813738 -0.000813738 -0.000813738 -0.000813738
+Reset re-loads circuit * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Circuit: * project 04 smart bms - cell-voltage sense front end (ngspice 47, batch: ngspice -b)
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+No. of Data Rows : 1
+CORNER 1e-3 4.25 1 1 1 1 250u 0.00068624 0.00068624 0.00068624 0.00068624
+ngspice-47 done
