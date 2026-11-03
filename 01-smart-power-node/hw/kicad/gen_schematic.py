@@ -3,10 +3,13 @@
 
 Writes, next to this script:
   power_node.kicad_sch   schematic (symbols copied verbatim from the stock KiCad libraries)
-  power_node.kicad_pro   minimal project file
+  power_node.kicad_pro   minimal project file, only if there is none yet (gen_pcb.py adds the board's
+                         design rules and net classes to it)
   power_node.kicad_sym   project library holding the custom ESP32-DevKitC-V4 symbol
+  power_node.pretty/     project footprint library: ESP32-DevKitC-V4_Socket, the U1 footprint
   sym-lib-table          project symbol library table (stock libs + power_node.kicad_sym)
-  fp-lib-table           project footprint library table (stock libs used by the footprints)
+  fp-lib-table           project footprint library table (stock libs used by the footprints +
+                         power_node.pretty)
 
 Stdlib only and deterministic: every UUID is uuid5() of a fixed name, no timestamps.
 
@@ -150,6 +153,8 @@ J3_PINS = [("GND", "G"), ("IO23", "I/O"), ("IO22", "I/O"), ("TX", "I/O"), ("RX",
 U1_NAME = "ESP32-DevKitC-V4"
 U1_HALF_W, U1_PIN_LEN = 12.7, 3.81   # long pins so two-digit numbers clear the NC flags
 U1_LIB_ID = PROJECT + ":" + U1_NAME
+FP_U1 = PROJECT + ":ESP32-DevKitC-V4_Socket"   # project footprint, written by u1_footprint()
+U1_ROW_PITCH = 25.4                             # DevKitC header J2 to header J3, centre to centre
 DEVKITC_URL = ("https://docs.espressif.com/projects/esp-dev-kits/en/latest/esp32/"
                "esp32-devkitc/user_guide.html")
 
@@ -209,7 +214,7 @@ def u1_symbol(sym_name):
             ["in_pos_files", "yes"], ["duplicate_pin_numbers_are_jumpers", "no"],
             lib_prop("Reference", "U", 0, 30.48),
             lib_prop("Value", U1_NAME, 0, 33.02),
-            lib_prop("Footprint", "", 0, 0, hide=True),
+            lib_prop("Footprint", FP_U1, 0, 0, hide=True),
             lib_prop("Datasheet", DEVKITC_URL, 0, 0, hide=True),
             lib_prop("Description",
                      "ESP32-DevKitC V4 (ESP32-WROOM-32E) dev board, both 19-pin headers per "
@@ -219,6 +224,77 @@ def u1_symbol(sym_name):
             ["symbol", Q(U1_NAME + "_0_1")] + gfx,
             ["symbol", Q(U1_NAME + "_1_1")] + pins,
             ["embedded_fonts", "no"]]
+
+
+def u1_footprint():
+    """U1 footprint: two 1x19 2.54 mm sockets the DevKitC V4 plugs into, pin 1 (J2.1, 3V3) at the
+    origin, J2 (pads 1-19) at x = 0, J3 (pads 20-38) at x = 25.4, pin 1 / antenna end towards -y.
+    Board outline on F.Fab from Espressif's V4 dimension drawing (esp-dev-kits repository,
+    docs/_static/esp32-devkitc/esp32-devkitc-v4-dimensions-back.jpg): 27.9 mm across the headers,
+    48.2 mm along a 19-pin header, 54.4 mm overall including the module that overhangs the pin-1 end.
+    27.9 - 2.54 = 25.36 mm between the header centre lines, i.e. the 25.4 mm (1.0 in) grid."""
+    cx, ylast = U1_ROW_PITCH, 18 * 2.54
+    usb_end = 47.6                     # header end (46.99) + about 0.6 mm, read off the drawing
+    ant_end = usb_end - 54.4           # module (antenna) end, beyond the pin-1 header end
+    mod = (cx / 2 - 9.0, cx / 2 + 9.0)  # ESP32-WROOM-32E module, 18 mm wide
+
+    def fpfont(size):
+        return ["font", ["size", size, size], ["thickness", round(0.15 * size, 3)]]
+
+    def stroke(w):
+        return ["stroke", ["width", w], ["type", "solid"]]
+
+    def line(a, b, layer, w):
+        return ["fp_line", ["start", a[0], a[1]], ["end", b[0], b[1]], stroke(w), ["layer", Q(layer)]]
+
+    def rect(a, b, layer, w):
+        return ["fp_rect", ["start", a[0], a[1]], ["end", b[0], b[1]], stroke(w), ["fill", "no"],
+                ["layer", Q(layer)]]
+
+    def text(s, x, y, layer, size=1.0, ang=0):
+        return ["fp_text", "user", Q(s), ["at", x, y, ang], ["layer", Q(layer)], ["effects", fpfont(size)]]
+
+    def prop(name, value, x, y, layer, hide=False):
+        p = ["property", Q(name), Q(value), ["at", x, y, 0], ["layer", Q(layer)]]
+        if hide:
+            p.append(["hide", "yes"])
+        return p + [["effects", fpfont(1.0)]]
+
+    desc = ("Two 1x19 2.54 mm sockets for an Espressif ESP32-DevKitC V4, rows 25.4 mm apart. Pads 1-19 = "
+            "DevKitC header J2.1-J2.19 (pad 1 = 3V3), pads 20-38 = J3.1-J3.19 (pad 20 = GND); pin 1 is at "
+            "the module/antenna end. F.Fab outline per Espressif's V4 dimension drawing")
+    fp = ["footprint", Q(FP_U1.split(":")[1]), ["version", 20260206], ["generator", Q("gen_schematic.py")],
+          ["generator_version", Q("10.0")], ["layer", Q("F.Cu")], ["descr", Q(desc)],
+          ["tags", Q("ESP32 DevKitC socket module")],
+          prop("Reference", "REF**", cx / 2, 12.0, "F.SilkS"),
+          prop("Value", FP_U1.split(":")[1], cx / 2, 26.0, "F.Fab"),
+          prop("Datasheet", DEVKITC_URL, 0, 0, "F.Fab", hide=True),
+          prop("Description", desc, 0, 0, "F.Fab", hide=True),
+          ["attr", "through_hole"]]
+    for x in (0, cx):                                    # socket strips
+        fp.append(rect((x - 1.33, -1.33), (x + 1.33, ylast + 1.33), "F.SilkS", 0.12))
+    fp.append(["fp_poly", ["pts", ["xy", -2.3, -0.6], ["xy", -2.3, 0.6], ["xy", -1.7, 0]], stroke(0.12),
+               ["fill", "yes"], ["layer", Q("F.SilkS")]])
+    fp += [text("3V3", -3.9, 0, "F.SilkS", 0.8), text("GND", cx + 2.9, 0, "F.SilkS", 0.8),
+           text("USB END", cx / 2, ylast - 1.5, "F.SilkS")]
+    fp += [rect((-1.25, -1.27), (cx + 1.25, usb_end), "F.Fab", 0.1),            # DevKitC board
+           rect((mod[0], ant_end), (mod[1], -1.27), "F.Fab", 0.1),              # module overhang
+           line((mod[0], ant_end + 6.19), (mod[1], ant_end + 6.19), "F.Fab", 0.1),
+           text("ANTENNA", cx / 2, ant_end + 3.1, "F.Fab"),
+           text("${REFERENCE}", cx / 2, ylast / 2, "F.Fab", 1.0, 90),
+           rect((-1.8, ant_end - 0.5), (cx + 1.8, usb_end + 0.5), "F.CrtYd", 0.05)]
+    for col, first in ((0, 1), (cx, 20)):
+        for k in range(19):
+            n = first + k
+            fp.append(["pad", Q(str(n)), "thru_hole", "rect" if n == 1 else "circle", ["at", col, 2.54 * k],
+                       ["size", 1.7, 1.7], ["drill", 1], ["layers", Q("*.Cu"), Q("*.Mask")],
+                       ["remove_unused_layers", "no"]])
+    fp.append(["embedded_fonts", "no"])
+    for col in (0, cx):
+        fp.append(["model", Q("${KICAD10_3DMODEL_DIR}/Connector_PinSocket_2.54mm.3dshapes/"
+                              "PinSocket_1x19_P2.54mm_Vertical.step"),
+                   ["offset", ["xyz", col, 0, 0]], ["scale", ["xyz", 1, 1, 1]], ["rotate", ["xyz", 0, 0, 0]]])
+    return ser(fp) + "\n"
 
 
 def u1_pins():
@@ -509,7 +585,7 @@ def build():
 
     # ---------------- U1 ESP32-DevKitC V4 ---------------------------------------------
     u1 = s.place("U1", U1_LIB_ID, U1_NAME, 236.22, 68.58,
-                 footprint="", fields={"Reference": (236.22, 35.56, None),
+                 footprint=FP_U1, fields={"Reference": (236.22, 35.56, None),
                                        "Value": (236.22, 38.1, None)})
     used = {"1", "14", "20", "22", "25", "26"}   # 3V3, GND(J2.14), GND(J3.1), IO22, IO21, GND(J3.7)
     s.wire(u1["1"], (215.9, u1["1"][1]))
@@ -591,7 +667,8 @@ def library_text():
 
 
 STOCK_SYMBOL_LIBS = ("Connector_Generic", "Device", "Sensor_Energy", "power")
-STOCK_FOOTPRINT_LIBS = ("Capacitor_SMD", "Connector_PinHeader_2.54mm", "Package_SO", "Resistor_SMD")
+STOCK_FOOTPRINT_LIBS = ("Capacitor_SMD", "Connector_PinHeader_2.54mm", "MountingHole", "Package_SO",
+                        "Resistor_SMD")
 
 
 def lib_table(kind, entries):
@@ -605,7 +682,9 @@ SYM_LIB_TABLE = lib_table("sym", [(n, "${KICAD10_SYMBOL_DIR}/%s.kicad_sym" % n, 
                           [(PROJECT, "${KIPRJMOD}/%s.kicad_sym" % PROJECT,
                             "Project symbols: ESP32-DevKitC-V4")])
 FP_LIB_TABLE = lib_table("fp", [(n, "${KICAD10_FOOTPRINT_DIR}/%s.pretty" % n, "KiCad stock")
-                                for n in STOCK_FOOTPRINT_LIBS])
+                                for n in STOCK_FOOTPRINT_LIBS] +
+                         [(PROJECT, "${KIPRJMOD}/%s.pretty" % PROJECT,
+                           "Project footprints: ESP32-DevKitC-V4 socket")])
 
 
 def write(path, text):
@@ -635,8 +714,12 @@ def export():
 
 def main():
     write(os.path.join(HERE, PROJECT + ".kicad_sch"), build())
-    write(os.path.join(HERE, PROJECT + ".kicad_pro"), project_json())
+    pro = os.path.join(HERE, PROJECT + ".kicad_pro")
+    if not os.path.exists(pro):          # kept once gen_pcb.py has stored the board's rules in it
+        write(pro, project_json())
     write(os.path.join(HERE, PROJECT + ".kicad_sym"), library_text())
+    os.makedirs(os.path.join(HERE, PROJECT + ".pretty"), exist_ok=True)
+    write(os.path.join(HERE, PROJECT + ".pretty", FP_U1.split(":")[1] + ".kicad_mod"), u1_footprint())
     write(os.path.join(HERE, "sym-lib-table"), SYM_LIB_TABLE)
     write(os.path.join(HERE, "fp-lib-table"), FP_LIB_TABLE)
     print("wrote", os.path.join(HERE, PROJECT + ".kicad_sch"))
