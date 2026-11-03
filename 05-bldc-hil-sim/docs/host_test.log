@@ -1,0 +1,70 @@
+cc -std=c99 -O2 -Wall -Wextra -Werror -I../../src/bldc -I. -o build/test_bldc ../../src/bldc/bldc.c plant.c test_bldc.c -lm
+./build/test_bldc --trace ../../docs
+# BLDC host test: timer tick 31.25 ns, PWM 20000 Hz, dead time 16 ticks (500 ns)
+PASS unit: commutation table on back-EMF flat tops 6 sectors 6/6
+PASS unit: PWM frequency 20 kHz                   20000 Hz
+# S0 fixed operating point: 2000 rpm imposed, duty 0.75, no controller
+PASS S0 no shoot-through                          0 ticks
+  info: Isrc 1.9088 A, Ia rms 2.2573 A, Ia peak 3.5966 A
+METRIC s0_isrc_a 1.90885
+METRIC s0_ia_rms 2.25727
+METRIC s0_ia_pk 3.59658
+# S1 start to 2000 rpm (ramp 4000 rpm/s), 0.05 N m load, 1.0 s; us timer wraps at 0.3 s
+PASS S1 dead time in the compare pair >= 500 ns   500.0 ns (16 ticks)
+PASS S1 no fault                                  faults 0
+PASS S1 no shoot-through                          0 ticks overlap
+PASS S1 both-off gap at the switches >= 200 ns    min 250.0 ns (limit 200 ns)
+PASS S1 within +/-1 % of 2000 rpm by 0.7 s        last outside band 0.514 s
+PASS S1 overshoot < 5 %                           peak 2030.0 rpm (1.50 %)
+PASS S1 steady-state speed error < 0.5 %          2000.11 rpm
+PASS S1 speed ripple < 2 % peak-peak              2.08 rpm p-p
+PASS S1 phase current <= 1.1 x limit              2.90 A (limit 8.8 A)
+PASS S1 inverter + winding efficiency > 90 %      95.04 % (air-gap power / supply)
+  info: load power / supply power 80.28 % (friction takes the rest at 0.05 N m)
+METRIC s1_t_settle_s 0.51365
+METRIC s1_rpm_pk 2030.03
+METRIC s1_rpm_ss 2000.11
+METRIC s1_rpm_pp 2.0846
+METRIC s1_isrc_a 0.543525
+METRIC s1_eff 0.950363
+METRIC s1_eff_load 0.802815
+METRIC s1_gap_ns 250
+METRIC s1_iph_pk 2.89766
+# S2 load step 0.05 -> 0.20 N m at 1.0 s, 0.5 s
+PASS S2 no fault                                  faults 0
+PASS S2 speed dip < 25 %                          min 1633.6 rpm (18.32 %)
+PASS S2 back within +/-1 % in < 250 ms            0.184 s
+PASS S2 steady-state speed error < 0.5 %          1999.17 rpm
+PASS S2 no shoot-through                          0 ticks overlap
+METRIC s2_rpm_min 1633.65
+METRIC s2_t_rec_s 0.1836
+METRIC s2_rpm_ss 1999.17
+METRIC s2_isrc_a 2.1431
+METRIC s2_i_ref 3.1113
+# S4 Hall A wire breaks (reads 0) at 1.5 s
+PASS S4 Hall fault latched                        faults 2
+PASS S4 fault within 10 ms of the break           after 2.60 ms
+PASS S4 gates off, phase currents zero            moe 0, sum |i| 0 A
+METRIC s4_t_fault_ms 2.6
+# S3 locked rotor, 2000 rpm commanded, 0.8 s
+PASS S3 current held at the limit                 8.005 A in the phases (limit 8.0 A)
+PASS S3 phase current <= 1.1 x limit              8.16 A
+PASS S3 stall fault (not over-current)            faults 4
+PASS S3 stall trip after 0.5 s of torque          at 0.501 s
+PASS S3 gates off, phase currents zero            moe 0
+METRIC s3_i_mean_a 8.00522
+METRIC s3_t_stall_s 0.501
+# S5 low-side MOSFET of phase B failed short, start to 2000 rpm, 0.3 s
+PASS S5 over-current fault latched                faults 1
+PASS S5 trip within 2 PWM periods                 25.3 us after the first shoot-through
+PASS S5 total shoot-through time < 50 us          1.28 us, peak 600 A
+PASS S5 gates off                                 moe 0
+METRIC s5_t_trip_us 25.3437
+METRIC s5_overlap_us 1.28125
+# S6 no load: start to 2000 rpm, stop command (0 rpm) at 0.8 s, 3.0 s
+PASS S6 stop: idle, no fault                      from 2000 rpm, state 0, faults 0
+PASS S6 outputs released after the 0.5 s ramp     after 0.500 s
+PASS S6 rotor stopped, gates off                  at 1.710 s, moe 0
+METRIC s6_t_idle_s 0.500026
+METRIC s6_t_stop_s 1.71045
+RESULT: 33/33 PASS (ALL PASS)

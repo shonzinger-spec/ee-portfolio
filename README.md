@@ -8,6 +8,7 @@ Electrical engineering projects by Shon Zinger, a York University EE graduate. E
 | 02 | [Digital synchronous buck converter](02-sync-buck/) | 12 V to 5 V / 3 A, 200 kHz synchronous buck with discrete FETs, RC snubber and a digital PI loop in C (input and reference feed-forward, DPWM hysteresis, anti-windup, over-current latch) | main.py 59/59, LTspice vs ngspice cross-check, host test 19/19 + negative gate 4/4, KiCad ERC 0 errors |
 | 03 | [Ladder-to-DXF schematic generator](03-ladder-dxf/) | NEMA/JIC motor-starter ladder drawn from a device list: automatic device tags, wire numbers and coil/contact cross-references, DXF for any CAD program, BOM and wire list in Excel | main.py self-check, pytest 22/22, ezdxf audit 0 errors |
 | 04 | [Smart BMS simulator](04-smart-bms-sim/) | 4S Li-ion pack: equivalent-circuit and thermal-runaway cell model, BMS firmware in C with OV/UV/OCD/SCD/temperature protection, coulomb-counting SoC, passive balancing and a cell-level end of charge | main.py 30/30, host test 34/34 + negative gate 6/6, ngspice 128 corners, KiCad ERC 0 errors |
+| 05 | [BLDC motor controller, hardware-in-the-loop](05-bldc-hil-sim/) | 24 V BLDC with Hall 6-step commutation: timer-interrupt PWM in C with firmware dead-time insertion, cascaded speed/current PI on a sampled DC-link shunt, over-current/Hall/stall protection, run against a switch-level inverter and motor model | main.py 26/26, host test 33/33 + negative gate 7/7, ngspice dead-time sweep and full inverter (within 1.5 % of the plant), KiCad ERC 0 errors |
 
 Highlights of project 01:
 

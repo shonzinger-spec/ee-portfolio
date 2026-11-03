@@ -1,0 +1,8 @@
+cc -std=c99 -O2 -Wall -Wextra -Werror -I../../src/bldc -I. -DBLDC_SPD_KP=0.016f -DBLDC_SPD_KI=0.24f -o build/gains2x ../../src/bldc/bldc.c plant.c test_bldc.c -lm
+== speed-loop gains x2 (KP 0.016 A/rpm, KI 0.24 A/rpm/s) ==
+FAIL S1 within +/-1 % of 2000 rpm by 0.7 s        last outside band 0.750 s
+PASS S1 overshoot < 5 %                           peak 2086.7 rpm (4.34 %)
+PASS S1 speed ripple < 2 % peak-peak              30.95 rpm p-p
+PASS S2 speed dip < 25 %                          min 1725.3 rpm (13.74 %)
+PASS S2 back within +/-1 % in < 250 ms            0.167 s
+RESULT: 32/33 PASS

@@ -1,0 +1,94 @@
+* Project 05 BLDC - full 3-phase inverter and motor, 6-step at a fixed operating point
+* (ngspice 47, batch: ngspice -b). Six MOSFETs (same model as leg_deadtime.cir) with IR2101-class
+* drivers and 10 ohm gate resistors, star-connected motor with trapezoidal back-EMF, rotor held
+* at 2000 rpm, duty 0.75, 500 ns dead time. The gate commands follow the host test's S0 case
+* exactly: centre-aligned 20 kHz counter, compare pair 208 / 192 of 800, Hall code (with the
+* plant's placement errors) latched one PWM period before the registers take effect.
+* Printed for main.py (section [5]) to compare with test/host S0 (ideal-switch plant):
+*   SIXSTEP isrc_avg_A ia_rms_A ia_pk_A   from 20 ms to 35 ms
+*   BEMF    phase back-EMF on the flat top and line-to-line, V
+
+.param f=20k arr=800 ch=208 cl=192 wm=209.43951 pp=4 ke=0.035 tp=155n
+.param ea=2.0 eb=-1.5 ec=1.0
+
+* counter value, the update instant whose Hall code is in force, electrical angle (deg)
+.func frac(x) {x - floor(x)}
+.func cnt(t) {arr * (1 - abs(1 - 2 * frac(t * f)))}
+.func tq(t) {(floor(t * f) - 1) / f}
+.func th(t) {pp * wm * t * 57.29577951}
+.func hall(t, off, err) {u(sin((th(tq(t)) + 30 - off - err) / 57.29577951))}
+.func trap(deg) {max(-1, min(1, 3 * 0.636619772 * asin(sin(deg / 57.29577951))))}
+
+Vbus bus 0 dc 24
+RS1 sn 0 2.5m
+
+.model nfet VDMOS(Vto=2.6 Kp=80 Rd=6m Rs=2.5m Rg=1 Cgs=2.4n Cgdmax=1.2n Cgdmin=0.15n
++ A=0.35 Cjo=1.1n Is=1e-11 N=1.2 Rb=2m)
+.model dsw D(Is=1e-14 N=0.05)
+
+* Hall sensors (A, B, C) at the latched update instant, driver propagation delay tp
+Bha ha 0 V = hall(time - tp, 0, ea)
+Bhb hb 0 V = hall(time - tp, 120, eb)
+Bhc hc 0 V = hall(time - tp, 240, ec)
+* PWM compare outputs
+Bph ph 0 V = cnt(time - tp) >= ch ? 1 : 0
+Bpl pl 0 V = cnt(time - tp) < cl ? 1 : 0
+
+* Leg x: high on in its two sectors with PWM, low on when it is the low phase or in the PWM
+* off-time; high_x = Hx and not H(x-1), low_x = H(x-1) and not Hx (A-1 = C)
+.subckt leg bus sn sw hx hy ph pl
+MQH bus gh sw nfet
+MQL sw gl sn nfet
+Bch ch sw V = 12 * v(hx) * (1 - v(hy)) * v(ph)
+Bcl cl sn V = 12 * (v(hx) * (1 - v(hy)) * v(pl) + v(hy) * (1 - v(hx)))
+Duh ch uh dsw
+Ruh uh oh 46
+Ddh oh dh dsw
+Rdh dh ch 22
+Rgh oh gh 10
+Dul cl ul dsw
+Rul ul ol 46
+Ddl ol dl dsw
+Rdl dl cl 22
+Rgl ol gl 10
+.ends
+XA bus sn swa ha hc ph pl leg
+XB bus sn swb hb ha ph pl leg
+XC bus sn swc hc hb ph pl leg
+
+* Motor: R, L, trapezoidal back-EMF per phase, star point n
+Vsa swa ta dc 0
+Ra ta la 0.4
+La la ma 0.4m
+Bea ma n V = ke * wm * trap(th(time))
+Rb swb lb0 0.4
+Lb lb0 mb 0.4m
+Beb mb n V = ke * wm * trap(th(time) - 120)
+Rc swc lc0 0.4
+Lc lc0 mc 0.4m
+Bec mc n V = ke * wm * trap(th(time) - 240)
+Rn n 0 1Meg
+
+.options reltol=1e-3 abstol=1e-6 vntol=1e-4 method=gear
+
+.control
+set noaskquit
+save i(vbus) i(vsa) v(ma) v(n) v(mb)
+tran 50n 35m 0 0.5u uic
+let isrc = -i(vbus)
+let ia = i(vsa)
+let ia2 = ia * ia
+let iaabs = abs(ia)
+let ea = v(ma) - v(n)
+let eab = v(ma) - v(mb)
+meas tran iavg avg isrc from=20m to=35m
+meas tran ia2avg avg ia2 from=20m to=35m
+meas tran iapk max iaabs from=20m to=35m
+meas tran eapk max ea from=20m to=35m
+meas tran eabpk max eab from=20m to=35m
+let iarms = sqrt(ia2avg)
+echo "SIXSTEP $&iavg $&iarms $&iapk"
+echo "BEMF $&eapk $&eabpk"
+quit
+.endc
+.end

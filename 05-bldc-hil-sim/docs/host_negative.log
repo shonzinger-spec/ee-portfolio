@@ -1,0 +1,56 @@
+cc -std=c99 -O2 -Wall -Wextra -Werror -I../../src/bldc -I. -DBLDC_DT_NS=0 -o build/m1 ../../src/bldc/bldc.c plant.c test_bldc.c -lm
+cc -std=c99 -O2 -Wall -Wextra -Werror -I../../src/bldc -I. -DBLDC_COMM_ADVANCE=1 -o build/m2 ../../src/bldc/bldc.c plant.c test_bldc.c -lm
+cc -std=c99 -O2 -Wall -Wextra -Werror -I../../src/bldc -I. -DBLDC_OC_TRIP_A=1e9f -o build/m3 ../../src/bldc/bldc.c plant.c test_bldc.c -lm
+cc -std=c99 -O2 -Wall -Wextra -Werror -I../../src/bldc -I. -DBLDC_HALL_CHECK=0 -o build/m4 ../../src/bldc/bldc.c plant.c test_bldc.c -lm
+cc -std=c99 -O2 -Wall -Wextra -Werror -I../../src/bldc -I. -DBLDC_STALL_MS=100000 -o build/m5 ../../src/bldc/bldc.c plant.c test_bldc.c -lm
+cc -std=c99 -O2 -Wall -Wextra -Werror -I../../src/bldc -I. -DBLDC_I_LIMIT_A=1e9f -o build/m6 ../../src/bldc/bldc.c plant.c test_bldc.c -lm
+cc -std=c99 -O2 -Wall -Wextra -Werror -I../../src/bldc -I. -DBLDC_DUTY_MIN_SAMPLE=0.0f -o build/m7 ../../src/bldc/bldc.c plant.c test_bldc.c -lm
+== mutant m1 ==
+FAIL S0 no shoot-through                          11168 ticks
+FAIL S1 dead time in the compare pair >= 500 ns   0.0 ns (0 ticks)
+FAIL S1 no shoot-through                          319968 ticks overlap
+FAIL S1 both-off gap at the switches >= 200 ns    no gap: the switches always overlap
+FAIL S1 inverter + winding efficiency > 90 %      7.90 % (air-gap power / supply)
+FAIL S2 no shoot-through                          479968 ticks overlap
+FAIL S5 trip within 2 PWM periods                 57775.6 us after the first shoot-through
+FAIL S5 total shoot-through time < 50 us          579.28 us, peak 600 A
+RESULT: 25/33 PASS
+mutant m1: test FAILED as required
+== mutant m2 ==
+FAIL unit: commutation table on back-EMF flat tops 6 sectors 0/6
+FAIL S1 within +/-1 % of 2000 rpm by 0.7 s        last outside band 0.755 s
+FAIL S1 inverter + winding efficiency > 90 %      45.85 % (air-gap power / supply)
+FAIL S2 back within +/-1 % in < 250 ms            0.294 s
+RESULT: 29/33 PASS
+mutant m2: test FAILED as required
+== mutant m3 ==
+FAIL S5 over-current fault latched                faults 0
+FAIL S5 trip within 2 PWM periods                 no trip (0)
+FAIL S5 total shoot-through time < 50 us          6196.12 us, peak 600 A
+FAIL S5 gates off                                 moe 1
+RESULT: 29/33 PASS
+mutant m3: test FAILED as required
+== mutant m4 ==
+FAIL S4 Hall fault latched                        faults 0
+FAIL S4 fault within 10 ms of the break           no trip (0)
+FAIL S4 gates off, phase currents zero            moe 1, sum |i| 7.8 A
+RESULT: 30/33 PASS
+mutant m4: test FAILED as required
+== mutant m5 ==
+FAIL S3 stall fault (not over-current)            faults 0
+FAIL S3 stall trip after 0.5 s of torque          no trip (0)
+FAIL S3 gates off, phase currents zero            moe 1
+RESULT: 30/33 PASS
+mutant m5: test FAILED as required
+== mutant m6 ==
+FAIL S3 current held at the limit                 0.000 A in the phases (limit 1000000000.0 A)
+FAIL S3 stall fault (not over-current)            faults 1
+FAIL S3 stall trip after 0.5 s of torque          at 0.230 s
+RESULT: 30/33 PASS
+mutant m6: test FAILED as required
+== mutant m7 ==
+FAIL S3 current held at the limit                 13.832 A in the phases (limit 8.0 A)
+FAIL S3 phase current <= 1.1 x limit              14.56 A
+RESULT: 31/33 PASS
+mutant m7: test FAILED as required
+NEGATIVE GATE: 7/7 mutants caught

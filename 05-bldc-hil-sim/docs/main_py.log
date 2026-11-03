@@ -1,0 +1,45 @@
+BLDC 05 - main.py (simulated design; no hardware built)
+Firmware src/bldc/bldc_config.h: PWM 20000 Hz, dead time 16 ticks = 500 ns, current limit 8.0 A, OC trip 20 A
+
+[1] Constants
+  C01 headers parsed                             25 firmware + 17 plant constants               PASS
+  C02 PWM 20 kHz, dead time 500 ns in ticks      20000 Hz, 16 x 31.25 ns                        PASS
+  C03 firmware Ke and poles = plant              Ke_LL 0.070 = 2 x 0.0350, 4 pole pairs         PASS
+  C04 current-sense scale = shunt x INA181A1 gain 0.0025 ohm x 20 = 50 mV/A, range +/-33 A       PASS
+
+[2] Averaged model (Python) against closed forms
+  C05 no-load speed at max duty vs closed form   model 3071, flat-top formula 3075 rpm          PASS
+  C06 locked rotor, duty 0.2: final current, tau 5.659 A (formula 5.698), at tau 3.500 A        PASS
+  C07 dead-time voltage loss (pair, i > 0)       0.120 V of 24 V = (DT + ton - toff) / 2 ARR    PASS
+
+[3] Closed loop: Python averaged model vs C firmware on the switch-level plant
+  C08 S1 settling time to +/-1 %                 Python 0.514, C 0.514 s (tol 0.050)            PASS
+  C09 S1 peak speed                              Python 2030.5, C 2030.0 rpm (tol 15.0)         PASS
+  C10 S1 supply current at 2000 rpm, 0.05 N m    Python 0.545, C 0.544 A (tol 0.030)            PASS
+  C11 S2 lowest speed after 0.20 N m step        Python 1631, C 1634 rpm (tol 40)               PASS
+  C12 S2 recovery to +/-1 %                      Python 0.181, C 0.184 s (tol 0.030)            PASS
+  C13 S2 supply current at 0.20 N m              Python 2.151, C 2.143 A (tol 0.050)            PASS
+
+[4] Dead time (ngspice: sim/ngspice/leg_deadtime.cir)
+  C14 DT = 0: shoot-through                      228 A peak, 1102 uJ vs 20.3 uJ at 500 ns       PASS
+  C15 shortest safe dead time < firmware DT      200 ns (loss within 25 % of DT = 1 us), firmware 500 ns PASS
+  C16 plant switch delays bound SPICE (pessimistic) on 187.5 <= 195.9 ns, off 437.5 >= 437.2 ns    PASS
+  C17 both-off gap: SPICE gates >= plant switches SPICE 277 ns, host test 250.0 ns               PASS
+
+[5] Fixed operating point, 2000 rpm, duty 0.75: ngspice inverter vs host-test plant
+  C18 supply current: SPICE vs plant             SPICE 1.882, plant 1.909 A (-1.39 %)           PASS
+  C19 phase A rms current: SPICE vs plant        SPICE 2.224, plant 2.257 A (-1.46 %)           PASS
+  C20 phase A peak current: SPICE vs plant       SPICE 3.551, plant 3.597 A (-1.26 %)           PASS
+  C21 averaged model at the same point           Isrc 1.915, Ia rms 2.262 A                     PASS
+  C22 SPICE back-EMF flat top = Ke x w           phase 7.330 V, line 14.661 V (Ke w = 7.330 V)  PASS
+
+[6] Host test, negative gate, KiCad
+  C23 host test log RESULT all PASS              33/33                                          PASS
+  C24 negative gate log: every mutant caught     7 mutants                                      PASS
+  C25 schematic values = firmware and SPICE      65 parts; shunt 2.5m, divider 1/11, Rg 10 ohm  PASS
+  C26 ERC 0 errors 0 warnings, netlist check PASS 42 nets checked                                PASS
+
+  S1/S2 (Python): settle 0.514 s, peak 2030.5 rpm, dip to 1631 rpm, Isrc 0.545 / 2.151 A
+
+RESULT: 26/26 PASS
+  wrote docs/img/main_py_bldc.png

@@ -1,0 +1,91 @@
+* Project 05 BLDC - one inverter leg (phase A), dead-time sweep (ngspice 47, batch: ngspice -b)
+* Q1 high side, Q2 low side, IR2101-class driver per gate, 10 ohm gate resistors, 8 A load
+* current out of the switch node (motor phase), 24 V bus with 10 uF local decoupling.
+* Same parts as hw/kicad leg A: Q1/Q2 (MQ1/MQ2 here: SPICE MOSFET names start with M), R11/R12
+* gate resistors, RS1 shunt, C1 decoupling.
+*
+* Command sequence (driver inputs), DT = dead time written by the firmware:
+*   t = 0: low side on.  T1 = 2 us: low off.  T1 + DT: high on.  T2 = 4 us: high off.
+*   T2 + DT: low on. Run to 6 us.
+* Printed for main.py (section [4]) to parse:
+*   DELAY  at DT = 500 ns: gate command -> Vgs through Vth for each edge, and the both-off gap
+*          at the gates for both transitions (driver propagation delay included)
+*   SWEEP  per DT: energy lost in the leg over each transition window (switching loss plus any
+*          shoot-through), and the peak low-side drain current
+
+.param dt=500n vth=2.6 t1=2u t2=4u tpon=160n tpoff=150n
+.param ka=12
+
+* Bus: ideal 24 V, 1 mOhm source, 10 uF decoupling (5 mOhm ESR), 5 nH loop to the leg
+Vbus vin 0 dc 24
+Rsrc vin bus 1m
+C1 bus c1e 10u
+Rc1 c1e 0 5m
+Lp bus dhi 5n
+Vih dhi d1 dc 0                 ; Q1 drain current
+Vil sw d2 dc 0                  ; Q2 drain current
+RS1 s2 0 2.5m
+
+* MOSFET: generic 40 V VDMOS, about 10 mOhm hot (matches the plant), IRFR4104-class capacitances,
+* body diode about 0.8 V at 5 A. Not a vendor model.
+.model nfet VDMOS(Vto=2.6 Kp=80 Rd=6m Rs=2.5m Rg=1 Cgs=2.4n Cgdmax=1.2n Cgdmin=0.15n
++ A=0.35 Cjo=1.1n Is=1e-11 N=1.2 Rb=2m)
+MQ1 d1 g1 sw nfet
+MQ2 d2 g2 s2 nfet
+
+* Load: motor phase current, constant over these 6 us
+Iload sw 0 dc 8
+
+* Driver output stage: 12 V command (with IR2101 propagation delays), 46 ohm up / 22 ohm down
+* (0.13 A / 0.27 A typical output current), through the 10 ohm gate resistor
+.model dsw D(Is=1e-14 N=0.05)
+* high side: command referred to the switch node (bootstrap supply)
+Vch ch sw pwl(0 0 {t1+dt+tpon} 0 {t1+dt+tpon+5n} 12 {t2+tpoff} 12 {t2+tpoff+5n} 0)
+Duh ch uh dsw
+Ruh uh o1 46
+Ddh o1 dh dsw
+Rdh dh ch 22
+R11 o1 g1 10
+* low side: command referred to the low-side source
+Vcl cl s2 pwl(0 12 {t1+tpoff} 12 {t1+tpoff+5n} 0 {t2+dt+tpon} 0 {t2+dt+tpon+5n} 12)
+Dul cl ul dsw
+Rul ul o2 46
+Ddl o2 dl dsw
+Rdl dl cl 22
+R12 o2 g2 10
+
+.options reltol=1e-4 abstol=1e-6 vntol=1e-5
+.ic v(g2)=12 v(g1)=0
+
+.control
+set noaskquit
+foreach d 0 50n 100n 150n 200n 300n 500n 1u
+  alterparam dt = $d
+  reset
+  tran 0.5n 6u 0 0.5n uic
+  let vgs1 = v(g1) - v(sw)
+  let vgs2 = v(g2) - v(s2)
+  let ploss = v(dhi) * i(vih) - v(sw) * 8
+  meas tran e_lh integ ploss from=2u to=3.8u
+  meas tran e_hl integ ploss from=4u to=5.8u
+  meas tran i2pk max i(vil) from=2u to=5.8u
+  echo "SWEEP $d $&e_lh $&e_hl $&i2pk"
+  if $d = 500n
+    meas tran toff2 when vgs2=2.6 fall=1 td=2u
+    meas tran ton1 when vgs1=2.6 rise=1 td=2u
+    meas tran toff1 when vgs1=2.6 fall=1 td=4u
+    meas tran ton2 when vgs2=2.6 rise=1 td=4u
+    let d_off_l = toff2 - 2u
+    let d_on_h = ton1 - 2u - 500n
+    let d_off_h = toff1 - 4u
+    let d_on_l = ton2 - 4u - 500n
+    let gap_lh = ton1 - toff2
+    let gap_hl = ton2 - toff1
+    echo "DELAY td_on_h $&d_on_h td_off_h $&d_off_h td_on_l $&d_on_l td_off_l $&d_off_l"
+    echo "DELAY gap_lh $&gap_lh gap_hl $&gap_hl"
+  end
+  destroy
+end
+quit
+.endc
+.end

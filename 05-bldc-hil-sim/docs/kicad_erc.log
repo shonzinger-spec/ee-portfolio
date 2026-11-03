@@ -1,0 +1,54 @@
+# cmd: cd hw/kicad && python3 gen_schematic.py --export
+# cmd: kicad-cli sch erc --severity-all -o erc.rpt bldc.kicad_sch
+# cmd: python3 check_netlist.py
+ ** ERC messages: 0  Errors 0  Warnings 0
+
+ ** Ignored checks:
+    - Global label only appears once in the schematic
+    - Four connection points are joined together
+    - SPICE model issue
+    - Assigned footprint doesn't match footprint filters
+PASS VBUS_IN   F1.1 J1.1
+PASS VBUS      C1.1 C2.1 F1.2 Q1.2 Q3.2 Q5.2 R51.1
+PASS +12V      C12.1 C22.1 C3.1 C32.1 D1.2 D2.2 D3.2 J2.1 J4.1 U1.1 U2.1 U3.1
+PASS +3V3      C42.1 J5.1 R41.1 R61.1 R62.1 R63.1 U4.6
+PASS GND       C1.2 C12.2 C2.2 C22.2 C3.2 C32.2 C41.2 C42.2 C43.2 C51.2 C61.2 C62.2 C63.2 J1.2 J2.2 J4.2 J5.2 R42.2 R52.2 R71.2 R72.2 R73.2 R74.2 R75.2 R76.2 RS1.4 U1.4 U2.4 U3.4 U4.2
+PASS LS_SRC    Q2.3 Q4.3 Q6.3 R14.2 R24.2 R34.2 RS1.1
+PASS ISNS_P    RS1.2 U4.3
+PASS ISNS_N    RS1.3 U4.4
+PASS IREF      C41.1 R41.2 R42.1 U4.5
+PASS IAMP      R43.1 U4.1
+PASS ISENSE    C43.1 J5.12 R43.2
+PASS VBUS_SNS  C51.1 J5.13 R51.2 R52.1
+PASS PWM_AH    J5.3 R71.1 U1.2
+PASS PWM_AL    J5.4 R72.1 U1.3
+PASS HO_A      R11.1 U1.7
+PASS LO_A      R12.1 U1.5
+PASS GH_A      Q1.1 R11.2 R13.1
+PASS GL_A      Q2.1 R12.2 R14.1
+PASS VB_A      C11.1 D1.1 U1.8
+PASS SW_A      C11.2 J3.1 Q1.3 Q2.2 R13.2 U1.6
+PASS HRAW_A    J4.3 R61.2 R64.1
+PASS HALL_A    C61.1 J5.9 R64.2
+PASS PWM_BH    J5.5 R73.1 U2.2
+PASS PWM_BL    J5.6 R74.1 U2.3
+PASS HO_B      R21.1 U2.7
+PASS LO_B      R22.1 U2.5
+PASS GH_B      Q3.1 R21.2 R23.1
+PASS GL_B      Q4.1 R22.2 R24.1
+PASS VB_B      C21.1 D2.1 U2.8
+PASS SW_B      C21.2 J3.2 Q3.3 Q4.2 R23.2 U2.6
+PASS HRAW_B    J4.4 R62.2 R65.1
+PASS HALL_B    C62.1 J5.10 R65.2
+PASS PWM_CH    J5.7 R75.1 U3.2
+PASS PWM_CL    J5.8 R76.1 U3.3
+PASS HO_C      R31.1 U3.7
+PASS LO_C      R32.1 U3.5
+PASS GH_C      Q5.1 R31.2 R33.1
+PASS GL_C      Q6.1 R32.2 R34.1
+PASS VB_C      C31.1 D3.1 U3.8
+PASS SW_C      C31.2 J3.3 Q5.3 Q6.2 R33.2 U3.6
+PASS HRAW_C    J4.5 R63.2 R66.1
+PASS HALL_C    C63.1 J5.11 R66.2
+info: 0 single-pin nets (expected 0)
+RESULT: PASS (42 nets checked)
