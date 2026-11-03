@@ -179,8 +179,9 @@ def load_footprint(lib_id):
         raise SystemExit("footprint %s not found in %s" % (lib_id, lib))
     fp.SetFPID(pcbnew.LIB_ID(nick, name))
     # KiCad ships no STEP for the WSK2512 shunt; the generic 2512 body has the same outline.
-    for m in fp.Models():
-        m.m_Filename = m.m_Filename.replace("R_Shunt_Vishay_WSK2512_6332Metric_T1.19mm.step", "R_2512_6332Metric.step")
+    models = fp.Models()    # iterating yields copies; indexing edits in place
+    for i in range(len(models)):
+        models[i].m_Filename = models[i].m_Filename.replace("R_Shunt_Vishay_WSK2512_6332Metric_T1.19mm.step", "R_2512_6332Metric.step")
     return fp
 
 

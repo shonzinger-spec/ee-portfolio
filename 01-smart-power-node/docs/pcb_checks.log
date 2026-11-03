@@ -1,8 +1,8 @@
-# check_pcb.py, Tue Nov  3 14:52:54 UTC 2026, run in hw/kicad
-# KiCad 10.0.6 (Ubuntu 26.10 packages), Freerouting 2.5.0 on OpenJDK 25.0.4.1
-# cmd: python3 check_pcb.py
-# (wxWidgets debug lines omitted)
-KiCad 10.0.6, board hw/kicad/power_node.kicad_pcb
+# check_pcb.py, Tue Nov  3 21:39:48 UTC 2026, run in hw/kicad
+# KiCad 10.0.7 (macOS arm64, KiCad.app), Freerouting 2.5.0 on Temurin OpenJDK 25.0.5
+# cmd: <KiCad python3> check_pcb.py
+# (wxWidgets 'create wxApp' debug asserts omitted)
+KiCad 10.0.7, board hw/kicad/power_node.kicad_pcb
 PASS  ERC                                                  ERC messages: 0  Errors 0  Warnings 0 (exit 0)
 PASS  check_netlist.py                                     RESULT: PASS
 PASS  DRC, board as committed                              0 violations, 0 unconnected, 0 parity errors (exit 0)
@@ -17,4 +17,3 @@ PASS  DRC rejects: GND return redrawn, new 0.5 mm tracks (3) 3 violations, 0 unc
 PASS  trace_width.py rejects: GND return redrawn, new 0.5 mm tracks (3) RESULT: FAIL (exit 1)
 PASS  trace_width.py rejects: GND return removed (3 tracks) RESULT: FAIL (exit 1)
 RESULT: PASS (13/13)
-EXIT=0

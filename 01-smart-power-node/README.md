@@ -21,7 +21,7 @@ A 50 mOhm shunt trades resolution for burden: at 2 A it drops 100 mV (2 % of the
 
 ## Verification
 
-Each block below is copied from a log or from the command shown above it (run 2026-10-27 on macOS; the PCB checks 2026-11-03 on Linux). Everything is simulation, host tests and design checks; no hardware was built.
+Each block below is copied from a log or from the command shown above it (run 2026-10-27 on macOS; the PCB build and checks 2026-11-03 on macOS with KiCad 10.0.7). Everything is simulation, host tests and design checks; no hardware was built.
 
 ### Standalone model (main.py)
 
@@ -246,7 +246,7 @@ RESULT: PASS
 
 ### KiCad PCB: DRC, schematic parity, trace widths
 
-Run 2026-11-03 on Linux with KiCad 10.0.6 (Ubuntu 26.10 packages) and Freerouting 2.5.0 on OpenJDK 25. ERC and check_netlist.py above give the same result with this KiCad version and the new U1 footprint.
+Run 2026-11-03 on macOS (arm64) with KiCad 10.0.7 and Freerouting 2.5.0 on Temurin OpenJDK 25.0.5. ERC and check_netlist.py above give the same result with this KiCad version and the new U1 footprint.
 
 ```
 FREEROUTING_JAR=/path/to/freerouting-2.5.0-executable.jar <KiCad python3> hw/kicad/gen_pcb.py --export
@@ -274,12 +274,10 @@ The ignored checks are KiCad 10's defaults and no violation is excluded; `--seve
 From docs/pcb_gen.log: Freerouting finished with `final score: 1000.00 (0 unrouted and 0 violations)` (its tracks are all on +3V3, SDA and SCL; the script draws everything else), the script then reports `unrouted connections: 0`. Two more runs, and one in a copy of hw/kicad whose board, rule and project files were deleted first (gen_schematic.py then writes its minimal project file), write the same board file:
 
 ```
-4eab712c1964655d48e78169821613bf5e02df53c8f4b459fc4438d211aaf0cb  power_node.kicad_pcb
-4eab712c1964655d48e78169821613bf5e02df53c8f4b459fc4438d211aaf0cb  power_node.kicad_pcb
-4eab712c1964655d48e78169821613bf5e02df53c8f4b459fc4438d211aaf0cb  power_node.kicad_pcb
+6c2dc7e56408d6da4189685e5ab02febf6eb0372e1aa41818a2bcdb148418f67  power_node.kicad_pcb
+6c2dc7e56408d6da4189685e5ab02febf6eb0372e1aa41818a2bcdb148418f67  power_node.kicad_pcb
+6c2dc7e56408d6da4189685e5ab02febf6eb0372e1aa41818a2bcdb148418f67  power_node.kicad_pcb
 ```
-
-Those hashes predate one later change: R1's 3D model path now points at KiCad's generic `R_2512_6332Metric.step` (gen_pcb.py makes the same substitution). Only that model line changed; the board is now `d93e7986ecd380ee087abbe454cfddbd18c5f23f715ce0ab8522ed1626e092b4`, check_pcb.py still passes 13/13, and the generator has not been rerun since.
 
 check_pcb.py repeats ERC, the netlist check and DRC with this KiCad version (DRC also with `--refill-zones`, which shows that the committed zone fills are current), runs trace_width.py, then makes sabotaged copies of the board in temporary directories and requires the checks to reject each one. From docs/pcb_checks.log:
 
@@ -288,7 +286,7 @@ check_pcb.py repeats ERC, the netlist check and DRC with this KiCad version (DRC
 ```
 
 ```
-KiCad 10.0.6, board hw/kicad/power_node.kicad_pcb
+KiCad 10.0.7, board hw/kicad/power_node.kicad_pcb
 PASS  ERC                                                  ERC messages: 0  Errors 0  Warnings 0 (exit 0)
 PASS  check_netlist.py                                     RESULT: PASS
 PASS  DRC, board as committed                              0 violations, 0 unconnected, 0 parity errors (exit 0)
@@ -331,7 +329,7 @@ RESULT: PASS
 
 ![PCB bottom](hw/pcb_bottom.png)
 
-*kicad-cli pcb render, top and bottom (the bottom view is mirrored). The 3D models come from KiCad's kicad-packages3D repository at tag 10.0.5 (docs/pcb_3d_models.log lists each one with its HTTP status). That repository has no model file for R1's WSK2512 footprint (HTTP 404 at 10.0.5 and on master), so R1 uses the generic R_2512_6332Metric.step body, which has the same 6.3 x 3.2 mm outline.*
+*kicad-cli pcb render, top and bottom (the bottom view is mirrored). The 3D models are the ones that ship with KiCad 10.0.7 (docs/pcb_3d_models.log lists each one). KiCad has no model file for R1's WSK2512 footprint (HTTP 404 in kicad-packages3D at tag 10.0.5 and on master), so R1 uses the generic R_2512_6332Metric.step body, which has the same 6.3 x 3.2 mm outline.*
 
 ### Wokwi live run
 
@@ -519,8 +517,8 @@ Not done:
 - arduino-cli 1.2.0 + esp32 core 3.2.0
 - LTspice
 - ngspice 47 (built from source)
-- KiCad 10.0.7 (schematic, macOS) and 10.0.6 (PCB, DRC, ERC re-run; Linux, Ubuntu 26.10 packages)
-- Freerouting 2.5.0 on OpenJDK 25
+- KiCad 10.0.7 (schematic, PCB build, DRC, ERC; macOS)
+- Freerouting 2.5.0 on Temurin OpenJDK 25.0.5
 - wokwi-cli 0.29.1 (Wokwi CI, free token)
 - Python 3 + numpy + matplotlib
 - clang

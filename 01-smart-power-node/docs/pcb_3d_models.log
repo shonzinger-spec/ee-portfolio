@@ -1,15 +1,12 @@
-# 3D models for the renders, Tue Nov  3 14:53:04 UTC 2026
-# Every model the board's footprints name, fetched from KiCad's kicad-packages3D repository at
-# tag 10.0.5 (the version of Ubuntu 26.10's kicad-packages3d) into KiCad's 3D model directory:
-# curl -o <3D model dir>/<path> https://gitlab.com/kicad/libraries/kicad-packages3D/-/raw/10.0.5/<path>
-# HTTP status per file; a 404 file is not installed, so that footprint renders without a body.
-200 Capacitor_SMD.3dshapes/C_0603_1608Metric.step
-200 Connector_PinHeader_2.54mm.3dshapes/PinHeader_1x02_P2.54mm_Vertical.step
-200 Connector_PinHeader_2.54mm.3dshapes/PinHeader_1x04_P2.54mm_Vertical.step
-200 Connector_PinSocket_2.54mm.3dshapes/PinSocket_1x19_P2.54mm_Vertical.step
-200 Package_SO.3dshapes/SOIC-8_3.9x4.9mm_P1.27mm.step
-200 Resistor_SMD.3dshapes/R_0603_1608Metric.step
-404 Resistor_SMD.3dshapes/R_Shunt_Vishay_WSK2512_6332Metric_T1.19mm.step
-# the missing one on master, and a control file next to it:
-404 master/Resistor_SMD.3dshapes/R_Shunt_Vishay_WSK2512_6332Metric_T1.19mm.step
-200 Resistor_SMD.3dshapes/R_2512_6332Metric.step
+# 3D models for the renders, Tue Nov  3 21:40:19 UTC 2026
+# Every model the board's footprints name, checked in the 3D model directory of KiCad 10.0.7 for macOS
+# (/Applications/KiCad/KiCad.app/Contents/SharedSupport/3dmodels). FOUND = file present, so the footprint renders with a body.
+FOUND   Capacitor_SMD.3dshapes/C_0603_1608Metric.step
+FOUND   Connector_PinHeader_2.54mm.3dshapes/PinHeader_1x02_P2.54mm_Vertical.step
+FOUND   Connector_PinHeader_2.54mm.3dshapes/PinHeader_1x04_P2.54mm_Vertical.step
+FOUND   Connector_PinSocket_2.54mm.3dshapes/PinSocket_1x19_P2.54mm_Vertical.step
+FOUND   Package_SO.3dshapes/SOIC-8_3.9x4.9mm_P1.27mm.step
+FOUND   Resistor_SMD.3dshapes/R_0603_1608Metric.step
+FOUND   Resistor_SMD.3dshapes/R_2512_6332Metric.step
+# R1 (WSK2512 shunt): KiCad ships no model for it (404 at kicad-packages3D tag 10.0.5 and on master),
+# so gen_pcb.py points it at the generic R_2512_6332Metric.step body, which has the same 6.3 x 3.2 mm outline.
