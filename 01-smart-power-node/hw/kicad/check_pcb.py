@@ -14,6 +14,10 @@ Run it with KiCad 10's Python, like gen_pcb.py:  <KiCad python3> hw/kicad/check_
      the VSUPPLY trace narrowed to 1.0 mm     -> DRC fires the Power net class width rule
      the ground return narrowed to 0.5 mm     -> DRC fires the GND_RETURN width rule,
                                                  and trace_width.py fails
+     the ground return replaced by new        -> the same two (the rule goes by the rule area,
+       0.5 mm tracks on the same path            not by which tracks the script drew)
+     the ground return removed                -> trace_width.py fails (DRC stays clean: the
+                                                 pours still join J1 pin 2 and J2 pin 2)
 Prints PASS/FAIL per check; exit 0 only if every check passes.
 """
 import os
@@ -84,6 +88,31 @@ def change_r4(board):
     return "R4 value 2.2k -> 4.7k"
 
 
+def ground_return(board):
+    return [t for t in tracks(board) if t.GetNetname() == "GND" and t.GetWidth() >= pcbnew.FromMM(1.9)]
+
+
+def redraw_return(board):
+    old = ground_return(board)
+    for t in old:
+        new = pcbnew.PCB_TRACK(board)
+        new.SetStart(t.GetStart())
+        new.SetEnd(t.GetEnd())
+        new.SetLayer(t.GetLayer())
+        new.SetNet(t.GetNet())
+        new.SetWidth(pcbnew.FromMM(0.5))
+        board.Add(new)
+        board.Delete(t)
+    return "GND return redrawn, new 0.5 mm tracks (%d)" % len(old)
+
+
+def remove_return(board):
+    old = ground_return(board)
+    for t in old:
+        board.Delete(t)
+    return "GND return removed (%d tracks)" % len(old)
+
+
 def narrow(net, width):
     def change(board):
         hits = [t for t in tracks(board) if t.GetNetname() == net and t.GetWidth() >= pcbnew.FromMM(1.9)]
@@ -119,18 +148,23 @@ def main():
     r = subprocess.run([sys.executable, os.path.join(HERE, "trace_width.py")], stdout=subprocess.PIPE, text=True)
     check("trace_width.py", r.returncode == 0, r.stdout.strip().splitlines()[-1])
 
-    cases = [  # sabotage, what DRC must report, its label, run trace_width.py on the copy too
-        ("sda", lambda c, t: c[1] >= 1, "unconnected pad", False),
-        ("r4", lambda c, t: c[2] >= 1, "parity error", False),
-        ("vsupply", lambda c, t: "rule 'Power traces" in t, "Power width rule", False),
-        ("gnd", lambda c, t: "rule 'The ground return" in t, "GND_RETURN width rule", True)]
-    for case, expected, label, width_check in cases:
+    ground_rule = (lambda c, t: "rule 'The ground return" in t, "GND_RETURN width rule")
+    cases = [  # sabotage, what DRC must report (None: DRC not expected to object), run trace_width.py
+        ("sda", (lambda c, t: c[1] >= 1, "unconnected pad"), False),
+        ("r4", (lambda c, t: c[2] >= 1, "parity error"), False),
+        ("vsupply", (lambda c, t: "rule 'Power traces" in t, "Power width rule"), False),
+        ("gnd", ground_rule, True),
+        ("redraw", ground_rule, True),
+        ("noreturn", None, True)]
+    for case, drc_expect, width_check in cases:
         with tempfile.TemporaryDirectory() as tmp:
             path, what = sabotaged(tmp, case)
-            code, counts, text = drc(path)
-            seen = expected(counts, text)
-            check("DRC rejects: " + what, code != 0 and seen,
-                  "%s; %s%s reported" % (summary(code, counts), "" if seen else "no ", label))
+            if drc_expect:
+                expected, label = drc_expect
+                code, counts, text = drc(path)
+                seen = expected(counts, text)
+                check("DRC rejects: " + what, code != 0 and seen,
+                      "%s; %s%s reported" % (summary(code, counts), "" if seen else "no ", label))
             if width_check:
                 r = subprocess.run([sys.executable, os.path.join(HERE, "trace_width.py"), path],
                                    stdout=subprocess.PIPE, text=True)
@@ -140,7 +174,8 @@ def main():
     return 0 if all(results) else 1
 
 
-CASES = {"sda": delete_sda, "r4": change_r4, "vsupply": narrow("/VSUPPLY", 1.0), "gnd": narrow("GND", 0.5)}
+CASES = {"sda": delete_sda, "r4": change_r4, "vsupply": narrow("/VSUPPLY", 1.0), "gnd": narrow("GND", 0.5),
+         "redraw": redraw_return, "noreturn": remove_return}
 
 if __name__ == "__main__":
     if sys.argv[1:2] == ["--sabotage"]:              # child process of sabotaged()

@@ -2,6 +2,6 @@
 (rule "Power traces stay at least 1.9 mm wide (2.0 mm drawn, sized by trace_width.py)"
 	(condition "A.NetClass == 'Power'")
 	(constraint track_width (min 1.9mm)))
-(rule "The ground return (group GND_RETURN) stays at least 1.9 mm wide"
-	(condition "A.Type == 'Track' && A.memberOfGroup('GND_RETURN')")
+(rule "The ground return (GND tracks in rule area GND_RETURN) stays at least 1.9 mm wide"
+	(condition "A.NetName == 'GND' && A.Type == 'Track' && A.intersectsArea('GND_RETURN')")
 	(constraint track_width (min 1.9mm)))

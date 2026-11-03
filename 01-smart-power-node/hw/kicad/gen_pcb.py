@@ -4,8 +4,8 @@
 Writes, next to this script:
   power_node.kicad_pcb   the board
   power_node.kicad_pro   KiCad adds the board's design rules and net classes to the project file
-  power_node.kicad_dru   custom DRC rules: the power traces and the ground return (group GND_RETURN)
-                         must stay at least 1.9 mm wide
+  power_node.kicad_dru   custom DRC rules: the power traces, and every GND track in the ground-return
+                         rule area GND_RETURN, must stay at least 1.9 mm wide
 
 Needs KiCad 10's Python (it imports pcbnew), kicad-cli, Java 25 and the Freerouting 2.5.0 jar
 (Maven Central, app.freerouting:freerouting:2.5.0, file freerouting-2.5.0-executable.jar):
@@ -48,7 +48,8 @@ ORIGIN = (100.0, 60.0)          # board top-left corner on the A4 sheet
 W, H, CORNER_R = 75.0, 50.0, 2.0
 
 POWER_W = 2.0                   # VSUPPLY, VLOAD and the ground return; see trace_width.py
-RETURN_GROUP = "GND_RETURN"     # group holding the ground-return trace (J2.2 -> J1.2)
+RETURN_AREA = ("GND_RETURN", (65.0, 10.5, 68.5, 39.5))   # rule area around the J2.2 -> J1.2 return;
+                                # any GND track drawn in it is held to the power width by DRC
 SUPPLY_W = 0.4                  # +3V3 and GND signal connections
 SIG_W = 0.25
 NETCLASSES = [                  # name, track, clearance, via diameter, via drill, nets
@@ -271,6 +272,23 @@ def keepout(board):
     board.Add(z)
 
 
+def return_area(board):
+    """Rule area that restricts nothing by itself; power_node.kicad_dru holds every GND track in it
+    to the power width, so a ground return that is redrawn there, not just one narrowed in place,
+    still has to be wide. Added after routing, so Freerouting never sees it."""
+    name, (x0, y0, x1, y1) = RETURN_AREA
+    z = polygon_zone(board, [(x0, y0), (x1, y0), (x1, y1), (x0, y1)])
+    z.SetIsRuleArea(True)
+    z.SetZoneName(name)
+    z.SetLayerSet(pcbnew.LSET.AllCuMask(2))
+    z.SetDoNotAllowTracks(False)
+    z.SetDoNotAllowVias(False)
+    z.SetDoNotAllowZoneFills(False)
+    z.SetDoNotAllowPads(False)
+    z.SetDoNotAllowFootprints(False)
+    board.Add(z)
+
+
 def pours(board, gnd):
     for layer in (pcbnew.F_Cu, pcbnew.B_Cu):
         z = polygon_zone(board, [(0, 0), (W, 0), (W, H), (0, H)])
@@ -340,11 +358,7 @@ def route(board, net, pad):
     j22, j12 = pad("J2", "2"), pad("J1", "2")          # load current return, beside the power path
     dx = j22[0] - j12[0]
     yk = j12[1] - dx - 1.2
-    group = pcbnew.PCB_GROUP(board)                    # GND is not in the Power class: the DRC rule
-    group.SetName(RETURN_GROUP)                        # for the return finds it by this group
-    board.Add(group)
-    for t in track(board, net("GND"), F, POWER_W, [j22, (j22[0], yk), (j12[0], yk + dx), j12]):
-        group.AddItem(t)
+    track(board, net("GND"), F, POWER_W, [j22, (j22[0], yk), (j12[0], yk + dx), j12])
     # Kelvin sense: SENSE_N leaves R1 pad 3 on U2's side. Pad 2 (SENSE_P) lies on the far side of the
     # current path, so SENSE_P drops to B.Cu at the pad and comes back up beside R2.
     track(board, net("/SENSE_N"), F, SIG_W, [pad("R1", "3"), pad("R3", "1")])
@@ -450,8 +464,8 @@ DRU = """(version 1)
 (rule "Power traces stay at least 1.9 mm wide (2.0 mm drawn, sized by trace_width.py)"
 	(condition "A.NetClass == 'Power'")
 	(constraint track_width (min 1.9mm)))
-(rule "The ground return (group GND_RETURN) stays at least 1.9 mm wide"
-	(condition "A.Type == 'Track' && A.memberOfGroup('GND_RETURN')")
+(rule "The ground return (GND tracks in rule area GND_RETURN) stays at least 1.9 mm wide"
+	(condition "A.NetName == 'GND' && A.Type == 'Track' && A.intersectsArea('GND_RETURN')")
 	(constraint track_width (min 1.9mm)))
 """
 
@@ -463,8 +477,13 @@ def save(board):
 
 
 def run(cmd):
-    print("$", " ".join(os.path.relpath(c, HERE) if c.startswith(HERE) else c for c in cmd))
-    subprocess.run(cmd, check=True)
+    """Run from this directory with project paths relative to it, so the commands and kicad-cli's
+    own messages print short paths."""
+    top = os.path.dirname(os.path.dirname(HERE))
+    cmd = [os.path.relpath(c, HERE) + (os.sep if c.endswith(os.sep) else "") if c.startswith(top) else c
+           for c in cmd]
+    print("$", " ".join(cmd))
+    subprocess.run(cmd, cwd=HERE, check=True)
 
 
 def export():
@@ -491,6 +510,7 @@ def export():
 
 
 def main():
+    sys.stdout.reconfigure(line_buffering=True)    # keep this script's lines in order with kicad-cli's
     comps, nets = read_netlist()
     missing = sorted(set(comps) - set(PLACE))
     if missing:
@@ -519,6 +539,7 @@ def main():
           % (len(copper(board, True)), len(copper(board, False))))
     if len(copper(board, True)) != locked:
         raise SystemExit("the SES import changed the locked copper")
+    return_area(board)
     pcbnew.SaveBoard(PCB, board)
     stitched = 0
     while True:                          # fill on the board as saved, not on this session's caches
@@ -534,7 +555,7 @@ def main():
     board.BuildConnectivity()
     print("unrouted connections:", board.GetConnectivity().GetUnconnectedCount(False))
     save(board)
-    print("wrote", PCB)
+    print("wrote", os.path.relpath(PCB, os.path.join(HERE, "..", "..")))
     if "--export" in sys.argv[1:]:
         export()
 

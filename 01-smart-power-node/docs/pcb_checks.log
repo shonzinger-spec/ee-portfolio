@@ -1,6 +1,7 @@
-# check_pcb.py, Tue Nov  3 14:40:42 UTC 2026
+# check_pcb.py, Tue Nov  3 14:52:54 UTC 2026, run in hw/kicad
 # KiCad 10.0.6 (Ubuntu 26.10 packages), Freerouting 2.5.0 on OpenJDK 25.0.4.1
-# cmd: python3 hw/kicad/check_pcb.py
+# cmd: python3 check_pcb.py
+# (wxWidgets debug lines omitted)
 KiCad 10.0.6, board hw/kicad/power_node.kicad_pcb
 PASS  ERC                                                  ERC messages: 0  Errors 0  Warnings 0 (exit 0)
 PASS  check_netlist.py                                     RESULT: PASS
@@ -12,5 +13,8 @@ PASS  DRC rejects: R4 value 2.2k -> 4.7k                   0 violations, 0 uncon
 PASS  DRC rejects: VSUPPLY 2.0 -> 1.0 mm (1 segment)       1 violations, 0 unconnected, 0 parity errors (exit 5); Power width rule reported
 PASS  DRC rejects: GND 2.0 -> 0.5 mm (3 segments)          3 violations, 0 unconnected, 0 parity errors (exit 5); GND_RETURN width rule reported
 PASS  trace_width.py rejects: GND 2.0 -> 0.5 mm (3 segments) RESULT: FAIL (exit 1)
-RESULT: PASS (10/10)
+PASS  DRC rejects: GND return redrawn, new 0.5 mm tracks (3) 3 violations, 0 unconnected, 0 parity errors (exit 5); GND_RETURN width rule reported
+PASS  trace_width.py rejects: GND return redrawn, new 0.5 mm tracks (3) RESULT: FAIL (exit 1)
+PASS  trace_width.py rejects: GND return removed (3 tracks) RESULT: FAIL (exit 1)
+RESULT: PASS (13/13)
 EXIT=0
