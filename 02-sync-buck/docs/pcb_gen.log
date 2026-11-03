@@ -1,0 +1,35 @@
+# gen_pcb.py --export, Tue Nov  3 14:17:13 EST 2026, run in hw/kicad
+# KiCad 10.0.7 (macOS app bundle), its bundled Python 3.9.13; no autorouter (every track is drawn by gen_pcb.py)
+# cmd: /Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/3.9/bin/python3 gen_pcb.py --export
+# (wxWidgets debug/assert lines, kicad-cli 3D-render progress lines and Fontconfig warnings omitted)
+reference text on F.Fab only (no clear silkscreen spot): C10, C12, C3, C9, R11, R12, R7, U2, Q1, Q2
+GND stitching vias added: 77
+unrouted connections: 0
+wrote hw/kicad/sync_buck.kicad_pcb
+$ /Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli pcb drc --schematic-parity --severity-all --exit-code-violations -o ../../docs/pcb_drc.rpt sync_buck.kicad_pcb
+Found 0 violations
+Found 0 unconnected items
+Found 0 schematic parity issues
+Saved DRC Report to ../../docs/pcb_drc.rpt
+$ /Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli pcb export gerbers --layers F.Cu,B.Cu,F.Paste,B.Paste,F.Silkscreen,B.Silkscreen,F.Mask,B.Mask,Edge.Cuts --subtract-soldermask --use-drill-file-origin -o ../fab/ sync_buck.kicad_pcb
+Plotted to '../fab/sync_buck-F_Cu.gtl'.
+Plotted to '../fab/sync_buck-B_Cu.gbl'.
+Plotted to '../fab/sync_buck-F_Paste.gtp'.
+Plotted to '../fab/sync_buck-B_Paste.gbp'.
+Plotted to '../fab/sync_buck-F_Silkscreen.gto'.
+Plotted to '../fab/sync_buck-B_Silkscreen.gbo'.
+Plotted to '../fab/sync_buck-F_Mask.gts'.
+Plotted to '../fab/sync_buck-B_Mask.gbs'.
+Plotted to '../fab/sync_buck-Edge_Cuts.gm1'.
+$ /Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli pcb export drill --format excellon --drill-origin plot --excellon-units mm --excellon-separate-th --generate-map --map-format gerberx2 -o ../fab/ sync_buck.kicad_pcb
+Created file '../fab/sync_buck-PTH.drl'
+Created file '../fab/sync_buck-NPTH.drl'
+Created file '../fab/sync_buck-PTH-drl_map.gbr'.
+Created file '../fab/sync_buck-NPTH-drl_map.gbr'.
+Done.
+$ /Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli pcb render --side top --width 1600 --height 1200 --zoom 1.1 --quality basic --background opaque -o ../pcb_top.png sync_buck.kicad_pcb
+Successfully created 3D render image
+$ /Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli pcb render --side bottom --width 1600 --height 1200 --zoom 1.1 --quality basic --background opaque -o ../pcb_bottom.png sync_buck.kicad_pcb
+Successfully created 3D render image
+# exit status: 0
+# reproducibility: cmp of this run's sync_buck.kicad_pcb against the previous run's (same script, saved before this run): exit 0 (0 = byte-identical)

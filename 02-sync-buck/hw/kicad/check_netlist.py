@@ -12,7 +12,7 @@ import tempfile
 import xml.etree.ElementTree as ET
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-SCH = os.path.join(HERE, "sync_buck.kicad_sch")
+SCH = os.environ.get("SCH_FILE") or os.path.join(HERE, "sync_buck.kicad_sch")   # SCH_FILE: check_pcb.py's sabotaged copy
 KICAD_CLI = os.environ.get("KICAD_CLI",
                            "/Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli")
 

@@ -3,7 +3,8 @@
 
 Writes, next to this script:
   sync_buck.kicad_sch   schematic (stock symbols copied verbatim from the KiCad libraries)
-  sync_buck.kicad_pro   minimal project file (ERC severities as in project 01)
+  sync_buck.kicad_pro   minimal project file (ERC severities as in project 01), only if there is
+                        none yet (gen_pcb.py adds the board's design rules to it)
   sync_buck.kicad_sym   project library: UCC27211, INA181A3, generic 30 V NMOS (G=1 D=2 S=3)
   sym-lib-table         project symbol library table
   fp-lib-table          project footprint library table
@@ -691,7 +692,7 @@ def library_text():
 
 STOCK_SYMBOL_LIBS = ("Connector_Generic", "Device", "power")
 STOCK_FOOTPRINT_LIBS = ("Capacitor_SMD", "Capacitor_THT", "Connector_PinHeader_2.54mm",
-                        "Inductor_SMD", "Package_SO", "Package_TO_SOT_SMD", "Resistor_SMD")
+                        "Inductor_SMD", "MountingHole", "Package_SO", "Package_TO_SOT_SMD", "Resistor_SMD")
 
 
 def lib_table(kind, entries):
@@ -735,7 +736,9 @@ def export():
 
 def main():
     write(os.path.join(HERE, PROJECT + ".kicad_sch"), build())
-    write(os.path.join(HERE, PROJECT + ".kicad_pro"), project_json())
+    pro = os.path.join(HERE, PROJECT + ".kicad_pro")
+    if not os.path.exists(pro):          # kept once gen_pcb.py has stored the board's rules in it
+        write(pro, project_json())
     write(os.path.join(HERE, PROJECT + ".kicad_sym"), library_text())
     write(os.path.join(HERE, "sym-lib-table"), SYM_LIB_TABLE)
     write(os.path.join(HERE, "fp-lib-table"), FP_LIB_TABLE)

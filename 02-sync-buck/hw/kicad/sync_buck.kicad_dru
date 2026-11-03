@@ -1,0 +1,16 @@
+(version 1)
+(rule "VIN power copper in PWR_VIN at least 1.4 mm (2.0 mm drawn, sized by trace_width.py)"
+	(condition "A.Type == 'Track' && A.NetName == '/VIN' && A.intersectsArea('PWR_VIN')")
+	(constraint track_width (min 1.4mm)))
+(rule "Switch-node F.Cu in PWR_SW at least 1.4 mm"
+	(condition "A.Type == 'Track' && A.NetName == '/SW' && A.Layer == 'F.Cu' && A.intersectsArea('PWR_SW')")
+	(constraint track_width (min 1.4mm)))
+(rule "Every VOUT track at least 1.4 mm"
+	(condition "A.Type == 'Track' && A.NetName == '/VOUT'")
+	(constraint track_width (min 1.4mm)))
+(rule "VLOAD copper in PWR_VLOAD at least 1.4 mm"
+	(condition "A.Type == 'Track' && A.NetName == '/VLOAD' && A.intersectsArea('PWR_VLOAD')")
+	(constraint track_width (min 1.4mm)))
+(rule "Hot-loop ground (GND tracks in GND_HOT) at least 1.4 mm"
+	(condition "A.Type == 'Track' && A.NetName == 'GND' && A.intersectsArea('GND_HOT')")
+	(constraint track_width (min 1.4mm)))

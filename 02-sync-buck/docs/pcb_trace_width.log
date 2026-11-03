@@ -1,0 +1,26 @@
+# trace_width.py, Tue Nov  3 14:15:49 EST 2026, run in hw/kicad
+# KiCad 10.0.7 (macOS app bundle), its bundled Python 3.9.13 (trace_width.py itself is stdlib-only)
+# cmd: /Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/3.9/bin/python3 trace_width.py
+IPC-2221 outer layer, k = 0.048, 1 oz copper (35 um), allowed rise 10 degC
+  rated output       3.0 A -> minimum width 1.37 mm
+  OCP trip (60 us)   4.5 A -> minimum width 2.39 mm
+F.Cu tracks of at least 1.37 mm joining the pads, in sync_buck.kicad_pcb:
+net     pads           length   width   rise 3 A rise 4.5 A         R  drop @ 3 A
+/VIN    J1.1-C3.1       6.2 mm  2.00 mm    5.3 degC   13.4 degC  1.52 mOhm     4.6 mV
+/VIN    C3.1-Q1.2T      6.6 mm  2.00 mm    5.3 degC   13.4 degC  1.62 mOhm     4.9 mV
+/VIN    Q1.2T-C1.1      2.5 mm  2.00 mm    5.3 degC   13.4 degC  0.61 mOhm     1.8 mV
+/VIN    C1.1-C2.1       3.4 mm  2.00 mm    5.3 degC   13.4 degC  0.84 mOhm     2.5 mV
+/SW     Q1.3-Q2.2T      2.7 mm  2.00 mm    5.3 degC   13.4 degC  0.67 mOhm     2.0 mV
+/SW     Q1.3-L1.1       4.4 mm  2.40 mm    4.0 degC    9.9 degC  0.89 mOhm     2.7 mV
+/VOUT   L1.2-C7.1      21.6 mm  2.00 mm    5.3 degC   13.4 degC  5.30 mOhm    15.9 mV
+/VOUT   L1.2-C8.1      18.2 mm  2.00 mm    5.3 degC   13.4 degC  4.46 mOhm    13.4 mV
+/VOUT   L1.2-R6.1      18.2 mm  2.00 mm    5.3 degC   13.4 degC  4.46 mOhm    13.4 mV
+/VLOAD  R6.4-J2.1       6.7 mm  2.00 mm    5.3 degC   13.4 degC  1.65 mOhm     4.9 mV
+GND     C2.2-C1.2       3.4 mm  2.00 mm    5.3 degC   13.4 degC  0.84 mOhm     2.5 mV
+GND     C1.2-Q2.3       6.2 mm  2.00 mm    5.3 degC   13.4 degC  1.51 mOhm     4.5 mV
+GND     C7.2-J2.2       7.0 mm  2.00 mm    5.3 degC   13.4 degC  1.72 mOhm     5.2 mV
+GND     C8.2-J2.2       5.0 mm  2.00 mm    5.3 degC   13.4 degC  1.22 mOhm     3.7 mV
+Length and R: the shortest chain of wide tracks between the pads, pad centre to pad centre at most.
+GND rows are the drawn return alone; both GND pours run in parallel with them.
+RESULT: PASS
+# exit status: 0

@@ -1,3 +1,4 @@
+# KiCad 10.0.7 kicad-cli, Tue Nov  3 13:28:25 EST 2026
 # cmd: cd hw/kicad && python3 gen_schematic.py --export
 # cmd: kicad-cli sch erc --severity-all -o erc.rpt sync_buck.kicad_sch
 # cmd: python3 check_netlist.py

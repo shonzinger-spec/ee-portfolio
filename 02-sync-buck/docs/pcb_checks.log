@@ -1,0 +1,47 @@
+# check_pcb.py, Tue Nov  3 14:17:22 EST 2026, run in hw/kicad
+# KiCad 10.0.7 (macOS app bundle), its bundled Python 3.9.13
+# cmd: /Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/3.9/bin/python3 check_pcb.py
+# (wxWidgets debug lines and Fontconfig warnings omitted)
+KiCad 10.0.7, board hw/kicad/sync_buck.kicad_pcb
+PASS  ERC                                            ERC messages: 0  Errors 0  Warnings 0 (exit 0)
+PASS  check_netlist.py                               RESULT: PASS
+PASS  DRC, board as committed                        0 violations, 0 unconnected, 0 parity errors (exit 0)
+PASS  DRC with --refill-zones                        0 violations, 0 unconnected, 0 parity errors (exit 0)
+PASS  trace_width.py                                 RESULT: PASS
+PASS  hot loop area                                  61.5 mm^2 through C1 (limit 63), 71.5 mm^2 through C2, FET floor 42.1 mm^2; perimeter 33.6 mm, about 34 nH at the 1 nH/mm rule of thumb (a 2 mm strip 1.6 mm over a plane gives the same 1 nH/mm): an upper-end order-of-magnitude estimate, not an extraction; polygon (21.48,11.05) (19.00,11.05) (17.00,11.24) (19.28,17.54) (19.28,17.54) (22.00,17.54) (24.34,16.50) (30.64,14.22) (29.90,13.10) (27.20,11.05) (24.42,11.05)
+PASS  B.Cu GND pour under the hot loop               100.0 % of the loop polygon (limit 95 %)
+PASS  GND vias at the hot-loop ground pads           vias within 1.5 mm: C1.2 3, C2.2 3, Q2.3 1
+PASS  U1 next to the FETs                            LO pin -> Q2 gate 5.3 mm (limit 6), HO pin -> Q1 gate 16.6 mm (limit 18)
+PASS  LO gate path length                            U1 pin 8 -> R2 -> Q2 gate 7.0 mm of drawn track (limit 10)
+PASS  HO gate loop area                              25.0 mm^2 (limit 30) = lobes 1.6 + 23.4 (one crossing, on different layers); path GH+R1+HO 23.1 mm, HS 12.9 mm, 6 vias; HS via 1.6 mm from Q1's source pad; polygon (14.72,17.54) (14.72,19.10) (18.99,19.81) (25.84,26.71) (26.40,28.62) (27.50,28.62) (27.50,26.98) (28.45,26.90) (28.45,24.73) (29.73,24.73) (29.72,26.00) (29.73,26.00) (27.50,26.00) (26.55,26.00) (19.70,19.10) (19.28,17.54)
+PASS  GH/HS lane                                     GH 16.0 mm and HS 9.7 mm side by side on B.Cu, largest gap 1.00 mm (limit 1.5); 4.4 of the 16.0 mm of GH lies under F.Cu SW copper (sampled on the copper); HS via on SW copper: yes
+PASS  bootstrap loop at the pins                     5.5 mm^2 (limit 10); C5.1 -> U1 pin 2 2.3 mm, C5.2 -> pin 4 2.3 mm (limit 3.0); drawn HB 2.4 mm, HS 2.7 mm
+PASS  Kelvin sense on pads 2/3 only                  SH_P on R6 pad 2, SH_N on pad 3; SH_P 8.3 mm, SH_N 2.3 mm; sense loop with the shunt element (drawn path, through every bend and via; SH_P crosses the element once, so the two lobes are added) 16.8 mm^2; the same lines all on F.Cu would enclose 24.2 mm^2
+PASS  analog tracks clear of SW and L1               closest: /ISENSE 11.2 mm (limit 5.0)
+PASS  power copper at least POWER_MIN                none narrower (POWER_MIN 1.4 mm)
+Sabotaged copies (each check must reject its case):
+PASS  hot loop area rejects: hot-loop GND track C1 -> Q2 source detoured 1.5 mm north (1 segment) 65.7 mm^2 through C1 (limit 63), 75.7 mm^2 through C2, FET floor 42.1 mm^2; perimeter 36.6 mm, about 37 nH at the 1 nH/mm rule of thumb (a 2 mm strip 1.6 mm over a plane gives the same 1 nH/mm): an upper-end order-of-magnitude estimate, not an extraction; polygon (21.48,11.05) (19.00,11.05) (17.00,11.24) (19.28,17.54) (19.28,17.54) (22.00,17.54) (24.34,16.50) (30.64,14.22) (29.90,13.10) (27.20,11.05) (27.20,9.55) (24.42,9.55) (24.42,11.05)
+PASS  GND vias at the hot-loop ground pads rejects: GND vias at C1, C2 and Q2 source removed (5) vias within 1.5 mm: C1.2 0, C2.2 0, Q2.3 0
+PASS  U1 next to the FETs rejects: U1 moved 1.5 mm east, 1.0 mm south LO pin -> Q2 gate 7.1 mm (limit 6), HO pin -> Q1 gate 18.4 mm (limit 18)
+PASS  Kelvin sense on pads 2/3 only rejects: SH_N track moved from R6 sense pad 3 to force pad 4 SH_P on R6 pad 2, SH_N on pad 4; SH_P 8.3 mm, SH_N 3.8 mm; sense loop with the shunt element (drawn path, through every bend and via; SH_P crosses the element once, so the two lobes are added) nan mm^2; the same lines all on F.Cu would enclose nan mm^2; /SH_N touches /VLOAD copper; /SH_N touches R6 pad 4
+PASS  analog tracks clear of SW and L1 rejects: a VSENSE track added 1.2 mm from L1 pad 1 (SW) closest: /VSENSE 0.0 mm (limit 5.0)
+PASS  DRC rejects: SW power tracks in PWR_SW -> 1.0 mm (2) 3 violations, 1 unconnected, 0 parity errors (exit 5); SW width rule reported
+PASS  trace_width.py rejects: SW power tracks in PWR_SW -> 1.0 mm (2) RESULT: FAIL (exit 1)
+PASS  DRC rejects: VIN power tracks in PWR_VIN -> 1.0 mm (4) 4 violations, 0 unconnected, 0 parity errors (exit 5); VIN width rule reported
+PASS  trace_width.py rejects: VIN power tracks in PWR_VIN -> 1.0 mm (4) RESULT: FAIL (exit 1)
+PASS  DRC rejects: VOUT power tracks -> 1.0 mm (3)   3 violations, 0 unconnected, 0 parity errors (exit 5); VOUT width rule reported
+PASS  trace_width.py rejects: VOUT power tracks -> 1.0 mm (3) RESULT: FAIL (exit 1)
+PASS  power copper at least POWER_MIN rejects: hot-loop GND redrawn as new 0.5 mm tracks (5) GND 0.50 mm in GND_HOT; GND 0.50 mm in GND_HOT; GND 0.50 mm in GND_HOT; GND 0.50 mm in GND_HOT; GND 0.50 mm in GND_HOT (POWER_MIN 1.4 mm)
+PASS  DRC rejects: hot-loop GND redrawn as new 0.5 mm tracks (5) 5 violations, 0 unconnected, 0 parity errors (exit 5); GND_HOT width rule reported
+PASS  trace_width.py rejects: hot-loop GND redrawn as new 0.5 mm tracks (5) RESULT: FAIL (exit 1)
+PASS  DRC rejects: HB tracks removed (2)             0 violations, 1 unconnected, 0 parity errors (exit 5); unconnected pad reported
+PASS  DRC rejects: R5 value 1.8R -> 3.3R             0 violations, 0 unconnected, 1 parity errors (exit 5); parity error reported
+PASS  B.Cu GND pour under the hot loop rejects: 1.0 mm B.Cu track across the hot loop at y = 14.3, pour refilled 69.4 % of the loop polygon (limit 95 %)
+PASS  HO gate loop area rejects: GH lane corner (18.99,19.81) moved 2.1 mm south-west (2 track ends) 39.1 mm^2 (limit 30) = lobes 1.6 + 37.5 (one crossing, on different layers); path GH+R1+HO 22.5 mm, HS 12.9 mm, 6 vias; HS via 1.6 mm from Q1's source pad; polygon (14.72,17.54) (14.72,19.10) (18.20,21.80) (25.84,26.71) (26.40,28.62) (27.50,28.62) (27.50,26.98) (28.45,26.90) (28.45,24.73) (29.73,24.73) (29.72,26.00) (29.73,26.00) (27.50,26.00) (26.55,26.00) (19.70,19.10) (19.28,17.54)
+PASS  GH/HS lane rejects: GH lane corner (25.84,26.71) moved 1.2 mm south-west, GH 2.1 mm from HS (2 track ends) GH 15.9 mm and HS 9.7 mm side by side on B.Cu, largest gap 2.14 mm (limit 1.5); 3.9 of the 15.9 mm of GH lies under F.Cu SW copper (sampled on the copper); HS via on SW copper: yes
+PASS  bootstrap loop at the pins rejects: C5 moved 2 mm west of its pads (pin-to-cap 2.3 -> 4.3 mm) C5 is not joined to U1 pins 2 and 4 by drawn copper (C5.1 -> pin 2 4.3 mm, C5.2 -> pin 4 4.3 mm, limit 3.0)
+PASS  DRC rejects: GH lane corner (25.84,26.71) moved 1.5 mm west, zones not refilled (2 track ends) 6 violations, 0 unconnected, 0 parity errors (exit 5); clearance to the stale pour reported
+PASS  ERC rejects: net label VSENSE renamed VSENSX on one pin ERC messages: 1  Errors 0  Warnings 1 (exit 5)
+PASS  check_netlist.py rejects: net label VSENSE renamed VSENSX on one pin FAIL VSENSE   missing=['J3.5'] extra=[] (exit 1)
+RESULT: PASS (39/39)
+# exit status: 0
