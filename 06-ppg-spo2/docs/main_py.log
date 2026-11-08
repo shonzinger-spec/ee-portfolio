@@ -1,0 +1,154 @@
+$ python3 main.py   # 2026-11-07, Python 3.13.2, numpy 2.2.6, scipy 1.17.1, matplotlib 3.10.8
+PPG SpO2 06 - main.py (simulated signals; not a medical device, no clinical data)
+Configuration
+  optics: red 660 nm, IR 940 nm, Prahl haemoglobin extinction coefficients, nominal DPF_red / DPF_ir 1.5
+  sample rate 100 Hz per channel (red, ambient, IR, ambient per frame); ADC full scale 2097151 counts (22-bit)
+  DC low-pass 0.3 Hz order 2; AC band-pass 0.5-5.0 Hz order 4 (Butterworth, SOS)
+  beat checks: rate 30-220 bpm, perfusion >= 0.05 %, red/IR correlation >= 0.95, amplitude 0.5-2.0x, interval +/-30 %, R +/-(0.1 + 10 %)
+  seeding: 3 agreeing beats (R within 15 %), 5 s quiet; relearn after 6 rejections or 4 s without a beat
+  output every 1 s: median of last 8 accepted beats within 10 s, at least 4 beats, R scatter <= 4 %; min DC 0.5 % of full scale
+  study: plateaus 98, 94, 90, 86, 82, 78, 74, 70 % SaO2, hold 40 s, transition 15 s, pairs from the last 25 s of each hold; DPF ratio spread 5 % (1 sigma)
+  motion seeds 500-505; the beat-check thresholds were chosen on seeds 100-111 and 300-305
+  limits: A_rms <= 4.0 % (ISO 80601-2-61); design targets: coverage >= 95 %, pulse rate A_rms <= 3.0 bpm, any shown value within 3.0 %, recovery <= 20 s
+
+[1] Optics model and generator
+  C01 eq. (3) R(S) and its inverse round trip              max error 3.3e-16 (limit 1e-9)               PASS
+  C02 engine R on a clean 97 % recording vs eq. (3)        0.5101 vs 0.5092 (0.17 %)                    PASS
+METRIC clean_r_error_pct 0.168276
+
+[2] Filters
+  C03 DC low-pass rejects the pulse (1 Hz)                 -21.0 dB (limit -20 dB)                      PASS
+  C04 AC band-pass flat over 0.8-3.5 Hz (48-210 bpm)       max deviation 0.09 dB (limit 0.5 dB)         PASS
+  C05 AC band-pass rejects breathing and flicker alias     0.25 Hz -26.9 dB, 20 Hz -56.4 dB (-20/-40)   PASS
+
+[3] Calibration and accuracy (ISO 80601-2-61 style desaturation study)
+  C06 linear calibration describes its own cohort          SpO2 = 107.97 - 22.25 R, residual 1.23 %, R^2 0.982 PASS
+      info: 1664 calibration pairs, 0 blanked outputs excluded
+METRIC cal_intercept_pct 107.968
+METRIC cal_slope_pct_per_r 22.2529
+METRIC cal_r_squared 0.981989
+METRIC cal_fit_residual_arms_pct 1.22999
+  C07 validation cohort (10 other subjects) A_rms 70-100 % 1.34 % (limit 4.0), shown 100.0 % of 2080    PASS
+      info: bias +0.27 %, precision 1.31 %, blanked 0 of 2080 paired outputs
+METRIC val_arms_pct 1.34199
+METRIC val_bias_pct 0.272769
+METRIC val_precision_pct 1.31429
+METRIC val_pairs 2080
+METRIC val_blanked 0
+METRIC val_coverage_pct 100
+  C08 A_rms in each band 70-80, 80-90, 90-100 %            1.73 / 1.31 / 0.81 %                         PASS
+METRIC val_arms_70_80_pct 1.7333
+METRIC val_arms_80_90_pct 1.31085
+METRIC val_arms_90_100_pct 0.807841
+      info: same readings through the textbook line 110 - 25 R: A_rms 1.78 % (the fitted line: 1.34 %)
+METRIC textbook_arms_pct 1.78164
+  C09 pulse rate A_rms vs 8-beat reference                 0.45 bpm (target 3.0 bpm), n 2080            PASS
+METRIC val_pulse_rate_arms_bpm 0.450088
+
+[4] Ambient light and motion
+  C10 120 Hz flicker + room-light step: SpO2 change        rms 0.07 % (limit 0.5 %), 0 blanked          PASS
+      info: ambient 2.0e5 counts + 3.0e5 counts 120 Hz flicker, +4.0e5 step at 40 s; LED DC red ~5.5e5, IR ~9.0e5 counts
+METRIC ambient_spo2_rms_change_pct 0.0740013
+      info: not handled: the same light on 50 Hz mains (100 Hz flicker, phase-locked to the 100 Hz frame) shifts SpO2 by -10.2 %
+METRIC ambient_50hz_mains_spo2_shift_pct -10.2303
+      info: motion 0.002/0.001  worst shown error 1.85 %, runs with a value > 3 % off 0/6, shown  46 % of 30-80 s, back 7 s after
+METRIC motion_0p002_0p001_worst_err_pct 1.84875
+METRIC motion_0p002_0p001_wrong_runs 0
+METRIC motion_0p002_0p001_shown_pct 46.0784
+METRIC motion_0p002_0p001_recovery_s 7
+      info: motion 0.005/0.003  worst shown error 0.16 %, runs with a value > 3 % off 0/6, shown  29 % of 30-80 s, back 11 s after
+METRIC motion_0p005_0p003_worst_err_pct 0.158148
+METRIC motion_0p005_0p003_wrong_runs 0
+METRIC motion_0p005_0p003_shown_pct 29.085
+METRIC motion_0p005_0p003_recovery_s 11
+      info: motion 0.01/0.005   worst shown error 0.16 %, runs with a value > 3 % off 0/6, shown  27 % of 30-80 s, back 11 s after
+METRIC motion_0p01_0p005_worst_err_pct 0.158677
+METRIC motion_0p01_0p005_wrong_runs 0
+METRIC motion_0p01_0p005_shown_pct 27.451
+METRIC motion_0p01_0p005_recovery_s 11
+      info: motion 0.02/0.01    worst shown error 0.16 %, runs with a value > 3 % off 0/6, shown  28 % of 30-80 s, back 12 s after
+METRIC motion_0p02_0p01_worst_err_pct 0.158552
+METRIC motion_0p02_0p01_wrong_runs 0
+METRIC motion_0p02_0p01_shown_pct 27.7778
+METRIC motion_0p02_0p01_recovery_s 12
+      info: motion 0.05/0.03    worst shown error 0.15 %, runs with a value > 3 % off 0/6, shown  25 % of 30-80 s, back 13 s after
+METRIC motion_0p05_0p03_worst_err_pct 0.145655
+METRIC motion_0p05_0p03_wrong_runs 0
+METRIC motion_0p05_0p03_shown_pct 24.8366
+METRIC motion_0p05_0p03_recovery_s 13
+      info: motion 0.2/0.1      worst shown error 0.15 %, runs with a value > 3 % off 0/6, shown  25 % of 30-80 s, back 13 s after
+METRIC motion_0p2_0p1_worst_err_pct 0.147661
+METRIC motion_0p2_0p1_wrong_runs 0
+METRIC motion_0p2_0p1_shown_pct 24.5098
+METRIC motion_0p2_0p1_recovery_s 13
+      info: motion 0/0.005      worst shown error 0.18 %, runs with a value > 3 % off 0/6, shown  29 % of 30-80 s, back 11 s after
+METRIC motion_0_0p005_worst_err_pct 0.18282
+METRIC motion_0_0p005_wrong_runs 0
+METRIC motion_0_0p005_shown_pct 28.7582
+METRIC motion_0_0p005_recovery_s 11
+      info: motion 0/0.02       worst shown error 0.15 %, runs with a value > 3 % off 0/6, shown  25 % of 30-80 s, back 13 s after
+METRIC motion_0_0p02_worst_err_pct 0.147686
+METRIC motion_0_0p02_wrong_runs 0
+METRIC motion_0_0p02_shown_pct 24.8366
+METRIC motion_0_0p02_recovery_s 13
+  C11 motion (48 runs): shown values, MOTION flag          A_rms 0.17 %, 0 runs with a value > 3 % off (limit 5 %) PASS
+      info: worst single value shown 1.85 %; values shown in 29 % of the 30-80 s windows; MOTION flagged in every run
+METRIC motion_runs 48
+METRIC motion_arms_shown_pct 0.173439
+METRIC motion_wrong_runs 0
+METRIC motion_worst_err_pct 1.84875
+METRIC motion_shown_pct 29.1667
+  C12 motion: SpO2 shown again after motion stops          worst 13 s (limit 20 s)                      PASS
+METRIC motion_worst_recovery_s 13
+  C13 motion scenarios are a real test (accept-all)        accepting every beat shows a value > 3 % off in 42/48 runs PASS
+METRIC motion_naive_wrong_runs 42
+METRIC fast_desat_1pct_s_shown_pct 100
+METRIC fast_desat_1pct_s_max_err_pct 5.23707
+  C14 fast desaturation 97 -> 70 % at 1 %/s: still shown   shown 100 % of the time (limit 95 %); lag error up to 5.2 % (not limited) PASS
+METRIC fast_desat_2pct_s_shown_pct 55.8824
+METRIC fast_desat_2pct_s_max_err_pct 12.4539
+      info: trade-off: at 2 %/s the artifact checks also reject real beats; shown 56 % of the time, max lag error 12.5 %
+
+[5] Pulse rate and perfusion range
+METRIC pulse_rate_40_arms_bpm 0.384778
+METRIC pulse_rate_120_arms_bpm 0.608144
+METRIC pulse_rate_200_arms_bpm 1.12533
+  C15 pulse rate A_rms at 40, 120 and 200 bpm              worst 1.13 bpm (target 3.0)                  PASS
+  C16 pulse rate step 60 -> 130 bpm settles within 3 bpm   10 s after the step (limit 15 s)             PASS
+METRIC pulse_rate_step_settle_s 10
+METRIC perfusion_0.2pct_arms_pct 0.486583
+METRIC perfusion_0.2pct_shown_pct 100
+METRIC perfusion_0.5pct_arms_pct 0.449005
+METRIC perfusion_0.5pct_shown_pct 100
+METRIC perfusion_1pct_arms_pct 0.436364
+METRIC perfusion_1pct_shown_pct 100
+METRIC perfusion_2pct_arms_pct 0.427365
+METRIC perfusion_2pct_shown_pct 100
+METRIC perfusion_5pct_arms_pct 0.405512
+METRIC perfusion_5pct_shown_pct 100
+METRIC perfusion_10pct_arms_pct 0.375795
+METRIC perfusion_10pct_shown_pct 100
+  C17 SpO2 A_rms for perfusion index 0.2-10 % (at 90 %)    0.49 0.45 0.44 0.43 0.41 0.38 %, shown >= 100 % PASS
+  C18 perfusion index 0.02 %: no value shown, flagged      0 values shown, LOW_PERFUSION set            PASS
+  C19 perfusion drop 3 % -> 0.3 % (cold finger): resumes   shown and within 3 % for all of 50-90 s      PASS
+METRIC perfusion_drop_max_err_pct 0.407666
+
+[6] Edge cases
+  C20 probe off: zero light, and 0.5 % light in a lit room NO_SIGNAL at the next output (1 / 1 s), 0 shown after 30 s PASS
+  C21 probe moved to another patient (97 -> 80 %)          first reading 5 s after re-attach, max |error| 0.92 % PASS
+METRIC reattach_first_reading_s 5
+METRIC reattach_max_err_pct 0.91985
+  C22 ADC saturation (sunlight): SATURATED, no beats used  flag after 1 s, 0 beats accepted, 0 shown    PASS
+  C23 pulse tops clipped 20-40 s: clipped beats never used 0 clipped beats used, max |error| 0.42 %, back 16 s after PASS
+      info: 29 % of red samples clipped in 20-40 s; 15 readings before, every second with a clipped sample blank and SATURATED
+METRIC clipping_max_err_pct 0.415569
+METRIC clipping_recovery_s 16
+  C24 flat line (ADC stuck mid-scale): NO_SIGNAL, blank    0 values shown after 31 s (1 s detection window) PASS
+  C25 zero and near-zero DC (0 / 30 counts): never divided AC/DC never computed, no beats, blank, NO_SIGNAL PASS
+  C26 R outside any SpO2 (wrong LED): blank, flagged       R 2.70, 0 values shown                       PASS
+  C27 SpO2 never above 100 %, clipping flagged             max shown 100.0 %, CLIPPED_HIGH set          PASS
+  C28 sample-rate mismatch and too-low rate rejected       ValueError for 100 Hz data into a 250 Hz engine and for fs 10 Hz PASS
+
+28/28 checks passed
+figures written to docs/img/
+exit code 0

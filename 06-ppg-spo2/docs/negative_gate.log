@@ -1,0 +1,21 @@
+$ python3 tools/negative_gate.py   # 2026-11-07, Python 3.13.2
+PPG SpO2 06 - negative gate (each mutant removes one safeguard)
+baseline: all checks pass
+  M1   ambient sample not subtracted                  caught      failing: C10, C20
+  M2   saturated frames not detected                  caught      failing: C22, C23
+  M3   AC not divided by its own DC                   caught      failing: C02, C06, C07, C08, C11, C19, C23, C26, C27
+  M4   no minimum-DC (probe-off) threshold            caught      failing: C25
+  M5   band-pass without its 5 Hz upper edge          caught      failing: C10, C28
+  M6   calibration output limits removed              caught      failing: C26, C27
+  M7   beat amplitude/interval/shape checks off       NOT CAUGHT  failing: -
+  M8   red/IR proportionality check off               NOT CAUGHT  failing: -
+  M9   seeding without quiet period or R agreement    caught      failing: C11
+  M10  no un-seed timeout                             caught      failing: C19
+  M11  no flat-line detection                         caught      failing: C24
+  M12  no R-continuity check                          NOT CAUGHT  failing: -
+  M13  no minimum beat count per output               NOT CAUGHT  failing: -
+  M14  no R-scatter quality limit                     NOT CAUGHT  failing: -
+  M15  whole motion layer off (M7 + M8 + M12 + M14)   caught      failing: C11
+
+10/15 mutants caught
+exit code 1

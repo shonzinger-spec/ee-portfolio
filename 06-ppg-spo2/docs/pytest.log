@@ -1,0 +1,16 @@
+$ python3 -m pytest -v   # 2026-11-07, Python 3.13.2, numpy 2.2.6, scipy 1.17.1, pytest 9.0.2
+============================= test session starts ==============================
+platform darwin -- Python 3.13.2, pytest-9.0.2, pluggy-1.6.0
+rootdir: /Users/shonzinger/Career/ee-portfolio-projects/06-ppg-spo2
+configfile: pytest.ini
+testpaths: tests
+plugins: asyncio-1.4.0, anyio-4.13.0
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 47 items
+
+tests/test_engine.py .....................                               [ 44%]
+tests/test_filters_synth.py ..............                               [ 74%]
+tests/test_optics_calibration_metrics.py ............                    [100%]
+
+============================== 47 passed in 2.24s ==============================
+exit code 0

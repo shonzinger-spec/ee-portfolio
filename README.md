@@ -1,6 +1,6 @@
 # EE Portfolio - Shon Zinger
 
-Electrical engineering projects by Shon Zinger, a York University EE graduate. Each project is fully virtual and reproducible with free tools: a standalone Python model runs with numpy and matplotlib only, and the simulation, schematic and firmware checks are documented with real output pasted into the project README. No hardware was built.
+Electrical engineering projects by Shon Zinger, a York University EE graduate. Each project is fully virtual and reproducible with free tools: a standalone Python model runs with numpy and matplotlib (project 06 also uses scipy), and the simulation, schematic and firmware checks are documented with real output pasted into the project README. No hardware was built.
 
 | # | Project | What it shows | Verification |
 |---|---|---|---|
@@ -9,6 +9,7 @@ Electrical engineering projects by Shon Zinger, a York University EE graduate. E
 | 03 | [Ladder-to-DXF schematic generator](03-ladder-dxf/) | NEMA/JIC motor-starter ladder drawn from a device list: automatic device tags, wire numbers and coil/contact cross-references, DXF for any CAD program, BOM and wire list in Excel | main.py self-check, pytest 22/22, ezdxf audit 0 errors |
 | 04 | [Smart BMS simulator](04-smart-bms-sim/) | 4S Li-ion pack: equivalent-circuit and thermal-runaway cell model, BMS firmware in C with OV/UV/OCD/SCD/temperature protection, coulomb-counting SoC, passive balancing and a cell-level end of charge | main.py 30/30, host test 34/34 + negative gate 6/6, ngspice 128 corners, KiCad ERC 0 errors |
 | 05 | [BLDC motor controller, hardware-in-the-loop](05-bldc-hil-sim/) | 24 V BLDC with Hall 6-step commutation: timer-interrupt PWM in C with firmware dead-time insertion, cascaded speed/current PI on a sampled DC-link shunt, over-current/Hall/stall protection, run against a switch-level inverter and motor model | main.py 26/26, host test 33/33 + negative gate 7/7, ngspice dead-time sweep and full inverter (within 1.5 % of the plant), KiCad ERC 0 errors |
+| 06 | [PPG pulse-oximetry engine](06-ppg-spo2/) | Red/IR photoplethysmography DSP in Python: synthetic signals with room-light flicker and motion, ambient subtraction, AC/DC filters, beat tracking with quality checks, ratio-of-ratios calibration fitted on one synthetic desaturation cohort and tested on another, SpO2 and pulse rate with status flags | main.py 28/28, pytest 47/47, negative gate 10/15 (the five overlapping motion checks are caught together), A_rms 1.34 % on 10 held-out synthetic subjects (ISO 80601-2-61 limit 4.0 %) |
 
 Highlights of project 01:
 
