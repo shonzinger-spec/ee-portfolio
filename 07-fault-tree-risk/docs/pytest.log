@@ -1,0 +1,16 @@
+$ python3 -m pytest -v   # 2026-11-08, Python 3.13.2, numpy 2.2.6, scipy 1.17.1, matplotlib 3.10.8
+============================= test session starts ==============================
+platform darwin -- Python 3.13.2, pytest-9.0.2, pluggy-1.6.0
+rootdir: /Users/shonzinger/Career/ee-portfolio-projects/07-fault-tree-risk
+configfile: pytest.ini
+testpaths: tests
+plugins: asyncio-1.4.0, anyio-4.13.0
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 68 items
+
+tests/test_components.py ...................                             [ 27%]
+tests/test_montecarlo_markov_risk.py ...........                         [ 44%]
+tests/test_tree_bdd.py ......................................            [100%]
+
+============================= 68 passed in 31.32s ==============================
+exit code 0

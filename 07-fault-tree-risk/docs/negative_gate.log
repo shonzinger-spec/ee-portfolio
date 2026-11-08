@@ -1,0 +1,21 @@
+$ python3 tools/negative_gate.py   # 2026-11-08, Python 3.13.2
+Fault tree risk simulator 07 - negative gate (each mutant breaks one part of the method)
+baseline: all checks pass
+  M1   BDD replaced by gate-by-gate multiplication  caught      failing: C02, C05, C11, C20, C21
+  M2   MOCUS without absorption                     caught      failing: C21
+  M3   2-of-3 vote gate built as OR                 caught      failing: C02, C03, C04, C15, C18
+  M4   drift CDF without the reflection term        caught      failing: C06, C07, C08, C15, C16, C18, C22
+  M5   latent fault restored one test late (MC)     caught      failing: C08, C15, C18, C19
+  M6   Birnbaum = Q(q_i = 1), not the difference    caught      failing: C05, C11
+  M7   CTMC generator without its diagonal          caught      failing: C11, C12, C13, C14
+  M8   Weibull renewals ignored (w = f)             caught      failing: C07, C09, C16
+  M9   common-cause failure not simulated           caught      failing: C07, C08, C16
+  M10  failed components never restored (MC)        caught      failing: C07, C08, C12, C13, C14, C15, C16, C18, C19, C23
+  M11  fault tree input validation removed          caught      failing: C20
+  M12  every risk judged acceptable                 caught      failing: C17
+  M13  risk control not applied                     caught      failing: C19
+  M14  drift away from limit always crosses         caught      failing: C22
+  M15  latent q as constant lambda tau / 2          caught      failing: C08, C10
+
+15/15 mutants caught
+exit code 0

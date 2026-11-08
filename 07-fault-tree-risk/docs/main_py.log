@@ -1,0 +1,177 @@
+$ python3 main.py   # 2026-11-08, Python 3.13.2, numpy 2.2.6, scipy 1.17.1, matplotlib 3.10.8
+Fault tree risk simulator 07 - main.py (hypothetical insulin pump; simulation only, not a regulatory or clinical claim)
+Configuration
+  service life 4 years = 35064 h (1 year = 8766 h); self-test every 72 h; yearly service check every 8766 h
+  DRV_LATCH   exponential lambda 1e-05/h, revealed, mean repair 24 h
+  CUTOFF_FAIL exponential, lambda 1e-05 /h, latent, tested every 72 h
+  HALL_A      exponential, lambda 4.75e-06 /h, latent, tested every 72 h
+  HALL_B      exponential, lambda 4.75e-06 /h, latent, tested every 72 h
+  HALL_C      exponential, lambda 4.75e-06 /h, latent, tested every 72 h
+  HALL_CCF    exponential, lambda 2.5e-07 /h, latent, tested every 72 h
+  ENC_FAIL    exponential, lambda 5e-06 /h, latent, tested every 72 h
+  OCCL        exponential lambda 0.00025/h, revealed, mean repair 24 h (use-related, not hardware)
+  FORCE_FAIL  exponential, lambda 5e-06 /h, latent, tested every 72 h
+  VREF_DRIFT  drift first passage, v 0.02/kh, sigma 0.2/sqrt(kh), tolerance 3, latent, tested every 8766 h
+  GEAR_WEAR   Weibull, beta 3, eta 6e+04 h, revealed, mean repair 24 h
+  ALARM_FAIL  exponential, lambda 3e-06 /h, latent, tested every 72 h
+  Hall sensors: total rate 5e-06/h each, beta factor 0.05 (common cause)
+  VREF_DRIFT: e(t) = v t + sigma W(t), v 0.02 %/kh, sigma 0.2 %/sqrt(kh), tolerance 3 %; restored only when a check finds it out of tolerance
+  designs: initial = reference checked at the yearly service only (8766 h); with risk control = reference compared with a second reference at every power-up self-test (72 h)
+  H1: insulin over-delivery (runaway or wrong plunger position not caught) -> severe hypoglycaemia; severity 4 (Critical), P2 0.1
+  H2: insulin under-delivery not annunciated (occlusion or stall) -> hyperglycaemia / ketoacidosis; severity 3 (Serious), P2 0.05
+  probability of harm per device-year (illustrative plan): Frequent >= 0.01, Probable >= 0.001, Occasional >= 0.0001, Remote >= 1e-05, Improbable below
+  acceptability (illustrative plan): Negligible up to Frequent, Minor up to Probable, Serious up to Remote, Critical up to Improbable, Catastrophic up to Improbable
+  P1 for the risk evaluation = expected hazardous situations in the worst year of the life (analytic), with the Monte Carlo 97.5 % upper bound for that year as a second test
+  Monte Carlo: 1000000 devices per design, seeds 7001 (initial) and 7002 (control); sample times 4000.5, 17000.5, 30000.5 h
+  Markov twin of H2 (two-state exponential, rate / mean repair): OCCL 0.002/h 24 h, FORCE_FAIL 0.0002/h 36 h, VREF_DRIFT 0.0001/h 200 h, ALARM_FAIL 0.0001/h 36 h, GEAR_WEAR 0.0002/h 24 h, ENC_FAIL 0.0001/h 36 h; 4000 devices over 300000 h (MTBF counted after a 10000 h burn-in), seed 7003
+  drift paths: 200000 Brownian paths, 48 h steps, seed 7004
+  statistics: Monte Carlo vs analytic agrees when |z| < Bonferroni limit for the family at 1 % family-wise error (e.g. 2.58 for 1, 3.34 for 12 comparisons)
+
+[1] Fault tree logic (IEC 61025 gates, minimal cut sets, exact probability)
+  C01 MOCUS minimal cut sets = brute-force enumeration     10 cut sets (7 of order 2, 3 of order 3), 2^12 states PASS
+METRIC cut_sets_total 10
+METRIC cut_sets_h1 5
+METRIC cut_sets_h2 5
+      info: cut set {ALARM_FAIL, GEAR_WEAR}
+      info: cut set {ALARM_FAIL, OCCL}
+      info: cut set {CUTOFF_FAIL, DRV_LATCH}
+      info: cut set {ENC_FAIL, GEAR_WEAR}
+      info: cut set {ENC_FAIL, HALL_CCF}
+      info: cut set {FORCE_FAIL, OCCL}
+      info: cut set {OCCL, VREF_DRIFT}
+      info: cut set {ENC_FAIL, HALL_A, HALL_B}
+      info: cut set {ENC_FAIL, HALL_A, HALL_C}
+      info: cut set {ENC_FAIL, HALL_B, HALL_C}
+  C02 BDD P(top) = sum over all 4096 states (at q-bar)     max relative difference 2.3e-16 (limit 1e-12) PASS
+METRIC bdd_vs_bruteforce_rel 2.2733e-16
+      info: BDD nodes: H1 23, H2 17, any 49; P(top) at life-average q (q-bar): H1 8.794e-08, H2 2.972e-05, any 2.981e-05
+      info: time-average of P(top) over the life (BDD at every hour): H1 8.852e-08, H2 2.974e-05, any 2.983e-05 (latent faults on one test grid add up in phase, so the time average exceeds P at q-bar)
+      info: multiplying gate probabilities instead (ignores repeated ALARM_FAIL, ENC_FAIL): any 2.980809e-05 vs exact 2.980801e-05 (+0.000 %)
+  C03 exact <= min-cut upper bound <= rare-event sum       rare-event above exact by 0.000 / 0.028 / 0.028 % (H1/H2/any) PASS
+  C04 2-of-3 vote + common cause = 1-(1-qc)(1-3q^2+2q^3)   relative difference 2.7e-12; common cause 99.0 % of it PASS
+METRIC hall_ccf_share_pct 99.035
+  C05 Birnbaum importance = dQ/dq_i (finite difference)    max relative difference 4.9e-11 (limit 1e-9) PASS
+
+[2] Component models: Monte Carlo (1000000 devices, 4 years) vs analytic
+  C06 drift first passage eq. (1) vs Brownian paths        worst |z| 0.99 of 4 times (limit 3.02); F(4 y) 0.0439 PASS
+METRIC drift_paths_worst_z 0.988496
+METRIC vref_crossing_prob_life 0.0438627
+      info: without the Brownian-bridge correction, checking the level only every 48 h misses crossings: F(4 y) -4.5 %
+METRIC drift_no_bridge_bias_pct -4.46315
+  C07 failures per life, 12 components (eqs. 3-5)          worst |z| 2.49 (ENC_FAIL, limit 3.34)        PASS
+METRIC component_failures_worst_z 2.49241
+      info: DRV_LATCH   analytic 0.35056  Monte Carlo 0.35020 +/- 0.00059 per life
+      info: CUTOFF_FAIL analytic 0.35051  Monte Carlo 0.35104 +/- 0.00059 per life
+      info: HALL_A      analytic 0.16653  Monte Carlo 0.16640 +/- 0.00041 per life
+      info: HALL_B      analytic 0.16653  Monte Carlo 0.16676 +/- 0.00041 per life
+      info: HALL_C      analytic 0.16653  Monte Carlo 0.16692 +/- 0.00041 per life
+      info: HALL_CCF    analytic 0.00877  Monte Carlo 0.00861 +/- 0.00009 per life
+      info: ENC_FAIL    analytic 0.17529  Monte Carlo 0.17633 +/- 0.00042 per life
+      info: OCCL        analytic 8.71375  Monte Carlo 8.71262 +/- 0.00293 per life
+      info: FORCE_FAIL  analytic 0.17529  Monte Carlo 0.17565 +/- 0.00042 per life
+      info: VREF_DRIFT  analytic 0.04397  Monte Carlo 0.04402 +/- 0.00021 per life
+      info: GEAR_WEAR   analytic 0.18283  Monte Carlo 0.18263 +/- 0.00039 per life
+      info: ALARM_FAIL  analytic 0.10518  Monte Carlo 0.10522 +/- 0.00032 per life
+  C08 unavailability q(t) at 3 times, 12 components        min exact binomial p 0.0005 of 36 (limit 2.8e-04) PASS
+METRIC unavailability_min_p 0.000498539
+  C09 renewal solver (eq. 5), shape 1 vs closed form (3)   max error q 1.4e-04, w 1.2e-04 (limit 1e-3), 1 h grid PASS
+METRIC renewal_solver_max_err 0.00013852
+  C10 test-grid renewal (eq. 4) = 1-exp(-lambda u) for exp. max difference 5.1e-16 (limit 1e-12)         PASS
+
+[3] Markov state-transition model: exponential twin of H2 (6 components, 64 states)
+  C11 CTMC hazard frequency (eq. 2) = Vesely sum I_B w     7.751093e-05 /h, relative difference 3.5e-16 PASS
+METRIC markov_mttf_h 15230.4
+METRIC markov_mtbf_h 12901.4
+  C12 Monte Carlo MTTF from all-up vs CTMC (eq. 3)         15391 vs 15230 h, z +0.66, 0 censored        PASS
+METRIC mc_mttf_h 15391.2
+  C13 Monte Carlo MTBF (steady state) vs CTMC 1 / w        12878 vs 12901 h, z -0.45, 90074 onsets      PASS
+METRIC mc_mtbf_h 12878.3
+  C14 time to first hazard: MC vs CTMC exp(Q t) (eq. 4)    KS distance 0.0095 (limit 0.0258, 1 %)       PASS
+METRIC markov_ks_distance 0.00950204
+
+[4] Hypothetical insulin pump over a 4-year life: Monte Carlo vs analytic (initial design)
+      info: initial H1  expected per pump life: analytic 2.1343e-04, Monte Carlo 2.3200e-04 +/- 1.5e-05 (232 onsets); P(>= 1 in the life) 2.3100e-04; fleet average 1 per 1.87e+04 device-years
+METRIC initial_h1_per_life 0.000213432
+METRIC initial_h1_per_life_mc 0.000232
+METRIC initial_h1_onsets_mc 232
+METRIC initial_h1_device_years_per_situation 18741.3
+      info: initial H2  expected per pump life: analytic 4.5411e-02, Monte Carlo 4.5776e-02 +/- 3.2e-04 (45776 onsets); P(>= 1 in the life) 2.7819e-02; fleet average 1 per 88.1 device-years
+METRIC initial_h2_per_life 0.0454112
+METRIC initial_h2_per_life_mc 0.045776
+METRIC initial_h2_onsets_mc 45776
+METRIC initial_h2_device_years_per_situation 88.084
+      info: initial any expected per pump life: analytic 4.5625e-02, Monte Carlo 4.6008e-02 +/- 3.2e-04 (46008 onsets); P(>= 1 in the life) 2.8044e-02; fleet average 1 per 87.7 device-years
+METRIC initial_any_per_life 0.0456246
+METRIC initial_any_per_life_mc 0.046008
+METRIC initial_any_onsets_mc 46008
+METRIC initial_any_device_years_per_situation 87.672
+  C15 hazardous situations per life, H1/H2/any (Vesely)    z +1.21 / +1.16 / +1.21 (limit 3.14)         PASS
+  C16 device MTBF, 4-year average (hardware failures)      18515 h MC vs 18533 h, z +1.32               PASS
+METRIC device_mtbf_h 18533.1
+METRIC device_mtbf_mc_h 18515.4
+METRIC device_failures_per_life 1.89197
+      info: 1.892 hardware failures per pump life (repair or replacement); 4-year average MTBF 18533 h = 2.11 years (analytic; wear-out and drift make the failure rate rise with age)
+
+[5] ISO 14971 style risk estimation, evaluation and one risk control (illustrative acceptability plan)
+      info: initial H1 situations per device-year, years 1-4: 5.33e-05, 5.34e-05, 5.34e-05, 5.34e-05 (life average 5.34e-05)
+      info: initial H1 worst year 4: P1 5.342e-05 x P2 0.1 = harm 5.34e-06/device-year: Improbable, severity Critical -> acceptable under the illustrative plan
+METRIC initial_h1_situations_per_year_worst 5.34222e-05
+METRIC initial_h1_worst_year 4
+METRIC initial_h1_situations_per_year_life_avg 5.3358e-05
+METRIC initial_h1_harm_per_year 5.34222e-06
+      info: initial H2 situations per device-year, years 1-4: 1.05e-03, 1.78e-03, 1.16e-02, 3.10e-02 (life average 1.14e-02)
+      info: initial H2 worst year 4: P1 3.096e-02 x P2 0.05 = harm 1.55e-03/device-year: Probable, severity Serious -> NOT acceptable under the illustrative plan
+METRIC initial_h2_situations_per_year_worst 0.0309615
+METRIC initial_h2_worst_year 4
+METRIC initial_h2_situations_per_year_life_avg 0.0113528
+METRIC initial_h2_harm_per_year 0.00154807
+      info: control H1 situations per device-year, years 1-4: 5.33e-05, 5.34e-05, 5.34e-05, 5.34e-05 (life average 5.34e-05)
+      info: control H1 worst year 4: P1 5.342e-05 x P2 0.1 = harm 5.34e-06/device-year: Improbable, severity Critical -> acceptable under the illustrative plan
+METRIC control_h1_situations_per_year_worst 5.34222e-05
+METRIC control_h1_worst_year 4
+METRIC control_h1_situations_per_year_life_avg 5.3358e-05
+METRIC control_h1_harm_per_year 5.34222e-06
+      info: control H2 situations per device-year, years 1-4: 1.04e-03, 1.08e-03, 1.26e-03, 1.54e-03 (life average 1.23e-03)
+      info: control H2 worst year 4: P1 1.545e-03 x P2 0.05 = harm 7.72e-05/device-year: Remote, severity Serious -> acceptable under the illustrative plan
+METRIC control_h2_situations_per_year_worst 0.00154458
+METRIC control_h2_worst_year 4
+METRIC control_h2_situations_per_year_life_avg 0.0012307
+METRIC control_h2_harm_per_year 7.72292e-05
+  C17 design target: plan flags initial H2, not H1         not acceptable (illustrative plan): H2       PASS
+      info: H2 Fussell-Vesely importance (initial, at q-bar): OCCL 0.999, VREF_DRIFT 0.941, FORCE_FAIL 0.036, ALARM_FAIL 0.022 -> risk control on VREF_DRIFT
+METRIC initial_h2_fv_vref 0.941046
+      info: control H1  expected per pump life: analytic 2.1343e-04, Monte Carlo 2.5200e-04 +/- 1.6e-05 (252 onsets); P(>= 1 in the life) 2.5200e-04; fleet average 1 per 1.87e+04 device-years
+METRIC control_h1_per_life 0.000213432
+METRIC control_h1_per_life_mc 0.000252
+METRIC control_h1_onsets_mc 252
+METRIC control_h1_device_years_per_situation 18741.3
+      info: control H2  expected per pump life: analytic 4.9228e-03, Monte Carlo 4.9920e-03 +/- 7.1e-05 (4992 onsets); P(>= 1 in the life) 4.9570e-03; fleet average 1 per 813 device-years
+METRIC control_h2_per_life 0.00492281
+METRIC control_h2_per_life_mc 0.004992
+METRIC control_h2_onsets_mc 4992
+METRIC control_h2_device_years_per_situation 812.545
+      info: control any expected per pump life: analytic 5.1362e-03, Monte Carlo 5.2440e-03 +/- 7.3e-05 (5244 onsets); P(>= 1 in the life) 5.2080e-03; fleet average 1 per 779 device-years
+METRIC control_any_per_life 0.00513624
+METRIC control_any_per_life_mc 0.005244
+METRIC control_any_onsets_mc 5244
+METRIC control_any_device_years_per_situation 778.78
+  C18 with risk control: MC vs analytic, H1/H2/any         z +2.43 / +0.97 / +1.48 (limit 3.14)         PASS
+      info: control H1 year 4 Monte Carlo 5.800e-05 +/- 7.6e-06 situations per device-year (analytic 5.342e-05); 97.5 % bound -> harm 7.29e-06/device-year, Improbable
+METRIC control_h1_harm_upper_per_year 7.29265e-06
+      info: control H2 year 4 Monte Carlo 1.598e-03 +/- 4.0e-05 situations per device-year (analytic 1.545e-03); 97.5 % bound -> harm 8.38e-05/device-year, Remote
+METRIC control_h2_harm_upper_per_year 8.38438e-05
+  C19 design target: control meets plan (analytic + MC bound) H1 Improbable, H2 Remote; H2 down 9.2x over the life PASS
+METRIC h2_risk_reduction_factor 9.22465
+METRIC h2_worst_year_reduction_factor 20.0452
+
+[6] Edge cases and input handling
+  C20 invalid trees, rates, probabilities rejected         14/14 raised ValueError                      PASS
+  C21 repeated event (absorption), single event, q = 0/1   A AND (A OR B): P 0.30 (naive 0.22), cut set {A}; q 0/1 exact PASS
+  C22 drift away from limit (v < 0) and no drift (v = 0)   P(ever) 0.0498 vs 0.0503; v=0 F(4 y) 0.0113 vs 0.0112 PASS
+METRIC drift_away_z 1.58599
+METRIC levy_z -0.444659
+  C23 same seed reproduces, a new seed differs             onsets 3068 / 3068 (same seed), 2985 (seed + 1) PASS
+
+23/23 checks passed
+figures written to docs/img/
+exit code 0

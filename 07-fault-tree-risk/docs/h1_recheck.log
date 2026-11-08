@@ -1,0 +1,12 @@
+$ python3 tools/recheck_h1.py   # 2026-11-08, Python 3.13.2, numpy 2.2.6, scipy 1.17.1, matplotlib 3.10.8
+seed 9101: 227 H1 onsets in 1,000,000 pumps (expected 213.4)
+seed 9102: 220 H1 onsets in 1,000,000 pumps (expected 213.4)
+seed 9103: 197 H1 onsets in 1,000,000 pumps (expected 213.4)
+seed 9104: 226 H1 onsets in 1,000,000 pumps (expected 213.4)
+seed 9105: 221 H1 onsets in 1,000,000 pumps (expected 213.4)
+seed 9106: 210 H1 onsets in 1,000,000 pumps (expected 213.4)
+pooled new runs: 1301 vs 1280.6 expected, z +0.57 (Poisson)
+main.py seed 7001 (initial): 232 H1 onsets
+main.py seed 7002 (with risk control): 252 H1 onsets
+pooled all 8 runs: 1785 vs 1707.5 expected, z +1.88 (Poisson)
+exit code 0
