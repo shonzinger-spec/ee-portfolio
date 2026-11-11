@@ -1,4 +1,4 @@
-# check_pcb.py, Tue Nov  3 21:39:48 UTC 2026, run in hw/kicad
+# check_pcb.py, Wed Nov 11 19:51:46 UTC 2026, run in hw/kicad
 # KiCad 10.0.7 (macOS arm64, KiCad.app), Freerouting 2.5.0 on Temurin OpenJDK 25.0.5
 # cmd: <KiCad python3> check_pcb.py
 # (wxWidgets 'create wxApp' debug asserts omitted)

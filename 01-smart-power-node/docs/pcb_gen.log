@@ -1,25 +1,24 @@
-# gen_pcb.py --export, Tue Nov  3 21:39:48 UTC 2026, run in hw/kicad
+# gen_pcb.py --export, Wed Nov 11 19:51:46 UTC 2026, run in hw/kicad
 # KiCad 10.0.7 (macOS arm64, KiCad.app), Freerouting 2.5.0 on Temurin OpenJDK 25.0.5
 # cmd: JAVA=<Temurin 25>/bin/java FREEROUTING_JAR=<dir>/freerouting-2.5.0-executable.jar <KiCad python3> gen_pcb.py --export
 # (kicad-cli's 3D-render progress lines, Fontconfig and wxWidgets debug lines omitted)
-./src/common/stdpbase.cpp(59): assert ""traits"" failed in Get(): create wxApp before calling this
-freerouting: [427310\80AEFA] Pipeline thread limits: autorouter pass is single-threaded, optimizer.max_threads=1.
-freerouting: [427310\80AEFA] Fanout pass #1 on board '3bc56e15eb220327daf665b9694c617f' completed in 0.61 seconds with 5 SMD pins fanouted, 0 not routed, 0 insert errors, +2 extra vias (0 SMD pins still to check in pass, ripup costs=100).
-freerouting: [427310\80AEFA] Fanout pass #2 on board '9e27593ea86107d813814073fd81f937' completed in 0.24 seconds with 1 SMD pin fanouted, 0 not routed, 0 insert errors, +1 extra via (0 SMD pins still to check in pass, ripup costs=200).
-freerouting: [427310\80AEFA] Fanout pass #3 on board '9e27593ea86107d813814073fd81f937' completed in 0.09 seconds with 0 SMD pins fanouted, 0 not routed, 0 insert errors, +0 extra vias (0 SMD pins still to check in pass, ripup costs=300).
-freerouting: [427310\80AEFA] Fanout stage completed: started with 26 total SMD pins, completed in 1.01 seconds, escaped pins: 26/26 (100.0%), using 0.72 total CPU seconds, 0.11 GB total allocated, and 96.6 MB peak heap usage.
-freerouting: [427310\80AEFA] Auto-routing stage started on board '9e27593ea86107d813814073fd81f937' with baseline score 750.00 for 6 unrouted items.
-freerouting: [427310\80AEFA] Auto-routing pass #1 on board '9e27593ea86107d813814073fd81f937' was completed in 0.92 seconds with score 1000.00 (0 unrouted and 0 violations), using 1.22 CPU seconds and the job allocated 0.21 GB of memory so far.
-freerouting: [427310\80AEFA] Auto-routing pass #2 on board '40fc32ec98806bc1c207914b6814d4ac' was completed in 0.05 seconds with score 1000.00 (0 unrouted and 0 violations), using 1.22 CPU seconds and the job allocated 0.21 GB of memory so far.
-freerouting: [427310\80AEFA] Auto-routing stage completed: started with 8 unrouted nets, completed in 2.58 seconds, final score: 1000.00 (0 unrouted and 0 violations), using 1.22 total CPU seconds, 0.21 GB total allocated, and 72.6 MB peak heap usage.
-freerouting: [427310\80AEFA] Optimization stage started on board '40fc32ec98806bc1c207914b6814d4ac'. Baseline router score: 1000.00, optimizer score: 427.08, incomplete connections: 0, clearance violations: 0.
-freerouting: [427310\80AEFA] Optimizer pass #1 on board 'e0162e8cc4965681dda953c12e79cf4d' was completed in 1.81 seconds with the score of 461.81 (0 unrouted and 0 violations).
-freerouting: [427310\80AEFA] Optimizer pass #1: optimizer score 427.08 -> 461.81 (IMPROVED, 8.1301%), router score: 1000.00, incomplete connections: 0, clearance violations: 0.
-freerouting: [427310\80AEFA] Optimizer pass #2 on board '70dbcd381360933587836442eae8f2e9' was completed in 2.61 seconds with the score of 472.22 (0 unrouted and 0 violations).
-freerouting: [427310\80AEFA] Optimizer pass #2: optimizer score 461.81 -> 472.22 (IMPROVED, 2.2556%), router score: 1000.00, incomplete connections: 0, clearance violations: 0.
-freerouting: [427310\80AEFA] Stopping optimizer because the improvement in this pass (2.2556%) is below the threshold (2.50%).
-freerouting: [427310\80AEFA] Optimization stage completed:. Baseline router score: 1000.00, baseline optimizer score: 427.08, final router score: 1000.00, final optimizer score: 472.22, completed in 4.98 seconds, using 3.91 total CPU seconds, 1.39 GB total allocated, and 176.0 MB peak heap usage.
-freerouting: [427310\80AEFA] Job '427310\80AEFA' finished with state: COMPLETED (elapsed: 8.10 seconds, finished at UTC: 2026-11-03T21:39:00.099226Z).
+freerouting: [F5A156\D115C5] Pipeline thread limits: autorouter pass is single-threaded, optimizer.max_threads=1.
+freerouting: [F5A156\D115C5] Fanout pass #1 on board '3bc56e15eb220327daf665b9694c617f' completed in 0.29 seconds with 5 SMD pins fanouted, 0 not routed, 0 insert errors, +2 extra vias (0 SMD pins still to check in pass, ripup costs=100).
+freerouting: [F5A156\D115C5] Fanout pass #2 on board '9e27593ea86107d813814073fd81f937' completed in 0.13 seconds with 1 SMD pin fanouted, 0 not routed, 0 insert errors, +1 extra via (0 SMD pins still to check in pass, ripup costs=200).
+freerouting: [F5A156\D115C5] Fanout pass #3 on board '9e27593ea86107d813814073fd81f937' completed in 0.06 seconds with 0 SMD pins fanouted, 0 not routed, 0 insert errors, +0 extra vias (0 SMD pins still to check in pass, ripup costs=300).
+freerouting: [F5A156\D115C5] Fanout stage completed: started with 26 total SMD pins, completed in 0.52 seconds, escaped pins: 26/26 (100.0%), using 0.48 total CPU seconds, 0.11 GB total allocated, and 92.5 MB peak heap usage.
+freerouting: [F5A156\D115C5] Auto-routing stage started on board '9e27593ea86107d813814073fd81f937' with baseline score 750.00 for 6 unrouted items.
+freerouting: [F5A156\D115C5] Auto-routing pass #1 on board '9e27593ea86107d813814073fd81f937' was completed in 0.98 seconds with score 1000.00 (0 unrouted and 0 violations), using 0.80 CPU seconds and the job allocated 0.20 GB of memory so far.
+freerouting: [F5A156\D115C5] Auto-routing pass #2 on board '40fc32ec98806bc1c207914b6814d4ac' was completed in 0.03 seconds with score 1000.00 (0 unrouted and 0 violations), using 0.80 CPU seconds and the job allocated 0.20 GB of memory so far.
+freerouting: [F5A156\D115C5] Auto-routing stage completed: started with 8 unrouted nets, completed in 1.87 seconds, final score: 1000.00 (0 unrouted and 0 violations), using 1.43 total CPU seconds, 0.43 GB total allocated, and 72.6 MB peak heap usage.
+freerouting: [F5A156\D115C5] Optimization stage started on board '40fc32ec98806bc1c207914b6814d4ac'. Baseline router score: 1000.00, optimizer score: 427.08, incomplete connections: 0, clearance violations: 0.
+freerouting: [F5A156\D115C5] Optimizer pass #1 on board 'e0162e8cc4965681dda953c12e79cf4d' was completed in 1.53 seconds with the score of 461.81 (0 unrouted and 0 violations).
+freerouting: [F5A156\D115C5] Optimizer pass #1: optimizer score 427.08 -> 461.81 (IMPROVED, 8.1301%), router score: 1000.00, incomplete connections: 0, clearance violations: 0.
+freerouting: [F5A156\D115C5] Optimizer pass #2 on board '70dbcd381360933587836442eae8f2e9' was completed in 2.18 seconds with the score of 472.22 (0 unrouted and 0 violations).
+freerouting: [F5A156\D115C5] Optimizer pass #2: optimizer score 461.81 -> 472.22 (IMPROVED, 2.2556%), router score: 1000.00, incomplete connections: 0, clearance violations: 0.
+freerouting: [F5A156\D115C5] Stopping optimizer because the improvement in this pass (2.2556%) is below the threshold (2.50%).
+freerouting: [F5A156\D115C5] Optimization stage completed:. Baseline router score: 1000.00, baseline optimizer score: 427.08, final router score: 1000.00, final optimizer score: 472.22, completed in 4.38 seconds, using 3.34 total CPU seconds, 1.43 GB total allocated, and 124.8 MB peak heap usage.
+freerouting: [F5A156\D115C5] Job 'F5A156\D115C5' finished with state: COMPLETED (elapsed: 6.53 seconds, finished at UTC: 2026-11-11T19:51:02.431708Z).
 tracks and vias: 63 drawn here (locked), 39 from Freerouting
 GND vias added in pour gaps: 16
 unrouted connections: 0
@@ -48,6 +47,7 @@ Done.
 $ /Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli pcb render --side top --width 1600 --height 1100 --zoom 1.15 --quality basic --background opaque -o ../pcb_top.png power_node.kicad_pcb
 Loading…
 Build board outline
+
 Create layers
 Create tracks and vias
 Create zones
@@ -109,10 +109,19 @@ Build Tech layer 121
 Build Tech layer 123
 Build Tech layer 125
 Build Tech layer 127
+Simplifying copper layer polygons
+Calculating plated copper
+Simplify holes contours
+Build BVH for holes and vias
+Load Raytracing: board
+Load Raytracing: layers
+Loading 3D models...
+Reload time 0.103 s
 Successfully created 3D render image
 $ /Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli pcb render --side bottom --width 1600 --height 1100 --zoom 1.15 --quality basic --background opaque -o ../pcb_bottom.png power_node.kicad_pcb
 Loading…
 Build board outline
+
 Create layers
 Create tracks and vias
 Create zones
@@ -174,6 +183,96 @@ Build Tech layer 121
 Build Tech layer 123
 Build Tech layer 125
 Build Tech layer 127
+Simplifying copper layer polygons
+Calculating plated copper
+Simplify holes contours
+Build BVH for holes and vias
+Load Raytracing: board
+Load Raytracing: layers
+Loading 3D models...
+Reload time 0.105 s
+Successfully created 3D render image
+$ /Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli pcb export step --subst-models -f -o ../3d/power_node.step power_node.kicad_pcb
+STEP file '../3d/power_node.step' created.
+
+Export time 0.908 s
+$ /Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli pcb export glb --subst-models --include-tracks --include-pads --include-zones --include-silkscreen --include-soldermask -f -o ../3d/power_node.glb power_node.kicad_pcb
+Binary GLTF file '../3d/power_node.glb' created.
+
+Export time 3.822 s
+$ /Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli pcb render --side top --rotate -45,0,30 --perspective --zoom 0.8 --quality high --background opaque -w 1600 -h 1000 -o ../../docs/img/power_node_3d_iso.png power_node.kicad_pcb
+Loading…
+Build board outline
+
+Create layers
+Create tracks and vias
+Create zones
+Build Tech layers
+Build Tech layer 11
+Build Tech layer 9
+Build Tech layer 15
+Build Tech layer 13
+Build Tech layer 7
+Build Tech layer 5
+Build Tech layer 3
+Build Tech layer 1
+Build Tech layer 17
+Build Tech layer 19
+Build Tech layer 21
+Build Tech layer 23
+Build Tech layer 39
+Build Tech layer 41
+Build Tech layer 43
+Build Tech layer 45
+Build Tech layer 47
+Build Tech layer 49
+Build Tech layer 51
+Build Tech layer 53
+Build Tech layer 55
+Build Tech layer 57
+Build Tech layer 59
+Build Tech layer 61
+Build Tech layer 63
+Build Tech layer 65
+Build Tech layer 67
+Build Tech layer 69
+Build Tech layer 71
+Build Tech layer 73
+Build Tech layer 75
+Build Tech layer 77
+Build Tech layer 79
+Build Tech layer 81
+Build Tech layer 83
+Build Tech layer 85
+Build Tech layer 87
+Build Tech layer 89
+Build Tech layer 91
+Build Tech layer 93
+Build Tech layer 95
+Build Tech layer 97
+Build Tech layer 99
+Build Tech layer 101
+Build Tech layer 103
+Build Tech layer 105
+Build Tech layer 107
+Build Tech layer 109
+Build Tech layer 111
+Build Tech layer 113
+Build Tech layer 115
+Build Tech layer 117
+Build Tech layer 119
+Build Tech layer 121
+Build Tech layer 123
+Build Tech layer 125
+Build Tech layer 127
+Simplifying copper layer polygons
+Calculating plated copper
+Simplify holes contours
+Build BVH for holes and vias
+Load Raytracing: board
+Load Raytracing: layers
+Loading 3D models...
+Reload time 0.082 s
 Successfully created 3D render image
 # three runs:
 6c2dc7e56408d6da4189685e5ab02febf6eb0372e1aa41818a2bcdb148418f67  power_node.kicad_pcb

@@ -12,7 +12,9 @@ Needs KiCad 10's Python (it imports pcbnew), kicad-cli, Java 25 and the Freerout
 
   FREEROUTING_JAR=/path/to/freerouting-2.5.0-executable.jar <KiCad python3> gen_pcb.py
   <KiCad python3> gen_pcb.py --export   also write ../fab/ (Gerbers, drill), ../pcb_top.png,
-                                        ../pcb_bottom.png and ../../docs/pcb_drc.rpt
+                                        ../pcb_bottom.png, ../../docs/pcb_drc.rpt, the 3D models
+                                        ../3d/power_node.step and .glb, and the angled view
+                                        ../../docs/img/power_node_3d_iso.png
 
 Flow: netlist from the schematic (kicad-cli) -> footprints at the coordinates in PLACE -> outline,
 mounting holes and the antenna keep-out -> power, ground-return and Kelvin-sense traces drawn
@@ -511,6 +513,17 @@ def export():
     for side in ("top", "bottom"):
         run([KICAD_CLI, "pcb", "render", "--side", side, "--width", "1600", "--height", "1100", "--zoom", "1.15",
              "--quality", "basic", "--background", "opaque", "-o", os.path.join(hw, "pcb_%s.png" % side), PCB])
+    # 3D models of the assembled board (STEP for mechanical CAD, GLB for web viewers) and an angled view
+    d3 = os.path.join(hw, "3d")
+    os.makedirs(d3, exist_ok=True)
+    run([KICAD_CLI, "pcb", "export", "step", "--subst-models", "-f",
+         "-o", os.path.join(d3, PROJECT + ".step"), PCB])
+    run([KICAD_CLI, "pcb", "export", "glb", "--subst-models", "--include-tracks", "--include-pads",
+         "--include-zones", "--include-silkscreen", "--include-soldermask", "-f",
+         "-o", os.path.join(d3, PROJECT + ".glb"), PCB])
+    run([KICAD_CLI, "pcb", "render", "--side", "top", "--rotate", "-45,0,30", "--perspective", "--zoom", "0.8",
+         "--quality", "high", "--background", "opaque", "-w", "1600", "-h", "1000",
+         "-o", os.path.join(docs, "img", PROJECT + "_3d_iso.png"), PCB])
 
 
 def main():

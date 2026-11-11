@@ -333,7 +333,7 @@ RESULT: PASS
 
 ![PCB 3D view](docs/img/power_node_3d_iso.png)
 
-*Angled 3D view (kicad-cli pcb render --perspective). The ESP32-DevKitC is not modelled; only its two sockets are shown. 3D models of the assembled board, exported with kicad-cli 10.0.7: [STEP](hw/3d/power_node.step) for mechanical CAD, [GLB](hw/3d/power_node.glb) for web viewers.*
+*Angled 3D view (kicad-cli pcb render --perspective). The ESP32-DevKitC is not modelled; only its two sockets are shown. 3D models of the assembled board, exported with kicad-cli 10.0.7: [STEP](hw/3d/power_node.step) for mechanical CAD, [GLB](hw/3d/power_node.glb) for web viewers. `gen_pcb.py --export` regenerates these files.*
 
 ### Wokwi live run
 
