@@ -592,6 +592,10 @@ RESULT: PASS
 
 *Top and bottom renders (kicad-cli pcb render). KiCad 10 ships no 3D models for L1 (Bourns SRP1245A) or R6 (Vishay WSK2512), and none were downloaded, so both show as bare pads and outlines (docs/pcb_3d_models.log).*
 
+![PCB 3D view](docs/img/sync_buck_3d_iso.png)
+
+*Angled 3D view (kicad-cli pcb render --perspective). 3D models of the assembled board, exported with kicad-cli 10.0.7: [STEP](hw/3d/sync_buck.step) for mechanical CAD, [GLB](hw/3d/sync_buck.glb) for web viewers. L1 and R6 are missing from both, as above.*
+
 ## Design notes
 
 - Duty and ripple: D = 5/12 = 0.417; with 15 uH at 200 kHz the inductor ripple is 0.97 A p-p (32 % of 3 A), peak 3.49 A against Isat 6 A (C04: limit Isat/1.2).

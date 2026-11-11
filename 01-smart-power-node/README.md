@@ -331,6 +331,10 @@ RESULT: PASS
 
 *kicad-cli pcb render, top and bottom (the bottom view is mirrored). The 3D models are the ones that ship with KiCad 10.0.7 (docs/pcb_3d_models.log lists each one). KiCad has no model file for R1's WSK2512 footprint (HTTP 404 in kicad-packages3D at tag 10.0.5 and on master), so R1 uses the generic R_2512_6332Metric.step body, which has the same 6.3 x 3.2 mm outline.*
 
+![PCB 3D view](docs/img/power_node_3d_iso.png)
+
+*Angled 3D view (kicad-cli pcb render --perspective). The ESP32-DevKitC is not modelled; only its two sockets are shown. 3D models of the assembled board, exported with kicad-cli 10.0.7: [STEP](hw/3d/power_node.step) for mechanical CAD, [GLB](hw/3d/power_node.glb) for web viewers.*
+
 ### Wokwi live run
 
 Serial CSV from the unmodified firmware (wokwi-cli 0.29.1, every 500 ms), copied from docs/wokwi_serial_steps.log. The scenario steps the load slider through 1 A, 2 A and 3.2 A; the 1 A and 2 A steps give the rows below, and the 3.2 A step prints no row because the sample is invalid:
