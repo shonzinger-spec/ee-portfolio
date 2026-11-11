@@ -1,4 +1,4 @@
-# 3D models for the renders, Tue Nov  3 13:28:06 EST 2026
+# 3D models for the renders and the STEP/GLB export, Wed Nov 11 14:47:52 EST 2026
 # KiCad 10.0.7: every model the board's footprints name, looked up in the 3D model
 # directory installed with KiCad (/Applications/KiCad/KiCad.app/Contents/SharedSupport/3dmodels). Nothing was downloaded; a missing file renders as a bare footprint.
 # cmd: grep -o 'KICAD10_3DMODEL_DIR}/[^"]*' hw/kicad/sync_buck.kicad_pcb | sort -u, then test -f <3D model dir>/<path>
@@ -9,10 +9,16 @@ present Capacitor_SMD.3dshapes/C_1210_3225Metric.step
 present Capacitor_THT.3dshapes/CP_Radial_D8.0mm_P3.50mm.step
 present Connector_PinHeader_2.54mm.3dshapes/PinHeader_1x02_P2.54mm_Vertical.step
 present Connector_PinHeader_2.54mm.3dshapes/PinHeader_1x07_P2.54mm_Vertical.step
-MISSING Inductor_SMD.3dshapes/L_Bourns_SRP1245A.step
+present Inductor_SMD.3dshapes/L_TDK_SLF12555.step
 present Package_SO.3dshapes/SOIC-8_3.9x4.9mm_P1.27mm.step
 present Package_TO_SOT_SMD.3dshapes/SOT-23-6.step
 present Package_TO_SOT_SMD.3dshapes/TO-252-3_TabPin2.step
 present Resistor_SMD.3dshapes/R_0603_1608Metric.step
-MISSING Resistor_SMD.3dshapes/R_Shunt_Vishay_WSK2512_6332Metric_T1.19mm.step
-# L1 and R6 render without a body; the other footprints render with their stock models.
+present Resistor_SMD.3dshapes/R_2512_6332Metric.step
+# KiCad 10.0.7 ships no model for two footprints; gen_pcb.py's load_footprint points them at stock models:
+#   L1 (Bourns SRP1245A) -> Inductor_SMD.3dshapes/L_TDK_SLF12555.step: body 12.5 x 12.5 x 5.5 mm against the
+#      footprint's 12.6 x 12.5 mm body outline (0.1 mm shorter along the pad axis), pads at the same +-5.55 mm
+#   R6 (Vishay WSK2512)  -> Resistor_SMD.3dshapes/R_2512_6332Metric.step: same 6.3 x 3.2 mm outline (as R1 in project 01)
+# model of each, read from the board with pcbnew (KiCad python3):
+L1  Inductor_SMD.3dshapes/L_TDK_SLF12555.step
+R6  Resistor_SMD.3dshapes/R_2512_6332Metric.step

@@ -981,7 +981,7 @@
 			(uuid "e2945adc-c5cd-48b9-99b7-dbd3692b271c")
 		)
 		(embedded_fonts no)
-		(model "${KICAD10_3DMODEL_DIR}/Inductor_SMD.3dshapes/L_Bourns_SRP1245A.step"
+		(model "${KICAD10_3DMODEL_DIR}/Inductor_SMD.3dshapes/L_TDK_SLF12555.step"
 			(offset
 				(xyz 0 0 0)
 			)
@@ -6913,7 +6913,7 @@
 			(uuid "8b7c31e8-3389-42ff-ae5d-3b928424b30c")
 		)
 		(embedded_fonts no)
-		(model "${KICAD10_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_Shunt_Vishay_WSK2512_6332Metric_T1.19mm.step"
+		(model "${KICAD10_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_2512_6332Metric.step"
 			(offset
 				(xyz 0 0 0)
 			)

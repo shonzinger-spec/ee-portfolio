@@ -12,7 +12,9 @@ drawn here, so a re-run writes the same board file byte for byte.
 
   <KiCad python3> gen_pcb.py            write the board
   <KiCad python3> gen_pcb.py --export   also write ../fab/ (Gerbers, drill), ../pcb_top.png,
-                                        ../pcb_bottom.png and ../../docs/pcb_drc.rpt
+                                        ../pcb_bottom.png, ../../docs/pcb_drc.rpt, the 3D models
+                                        ../3d/sync_buck.step and .glb, and the angled view
+                                        ../../docs/img/sync_buck_3d_iso.png
 
 Flow: netlist from the schematic (kicad-cli) -> footprints at PLACE -> outline and M3 holes ->
 every connection drawn by route() -> rule areas for the power-width rules -> GND pours on both
@@ -186,6 +188,14 @@ def load_footprint(lib_id):
     if fp is None:
         raise SystemExit("footprint %s not found" % lib_id)
     fp.SetFPID(pcbnew.LIB_ID(nick, name))
+    # KiCad 10.0.7 ships no STEP for these two footprints. The WSK2512 shunt gets the generic 2512 body
+    # (same 6.3 x 3.2 mm outline, as in project 01); the SRP1245A gets TDK SLF12555 (12.5 x 12.5 mm body
+    # against the footprint's 12.6 x 12.5 mm, pads at the same +-5.55 mm).
+    models = fp.Models()    # iterating yields copies; indexing edits in place
+    for i in range(len(models)):
+        models[i].m_Filename = (models[i].m_Filename
+                                .replace("R_Shunt_Vishay_WSK2512_6332Metric_T1.19mm.step", "R_2512_6332Metric.step")
+                                .replace("L_Bourns_SRP1245A.step", "L_TDK_SLF12555.step"))
     return fp
 
 
@@ -613,6 +623,17 @@ def export():
     for side in ("top", "bottom"):
         run([KICAD_CLI, "pcb", "render", "--side", side, "--width", "1600", "--height", "1200", "--zoom", "1.1",
              "--quality", "basic", "--background", "opaque", "-o", os.path.join(hw, "pcb_%s.png" % side), PCB])
+    # 3D models of the assembled board (STEP for mechanical CAD, GLB for web viewers) and an angled view
+    d3 = os.path.join(hw, "3d")
+    os.makedirs(d3, exist_ok=True)
+    run([KICAD_CLI, "pcb", "export", "step", "--subst-models", "-f",
+         "-o", os.path.join(d3, PROJECT + ".step"), PCB])
+    run([KICAD_CLI, "pcb", "export", "glb", "--subst-models", "--include-tracks", "--include-pads",
+         "--include-zones", "--include-silkscreen", "--include-soldermask", "-f",
+         "-o", os.path.join(d3, PROJECT + ".glb"), PCB])
+    run([KICAD_CLI, "pcb", "render", "--side", "top", "--rotate", "-45,0,30", "--perspective", "--zoom", "0.8",
+         "--quality", "high", "--background", "opaque", "-w", "1600", "-h", "1000",
+         "-o", os.path.join(docs, "img", PROJECT + "_3d_iso.png"), PCB])
 
 
 def main():

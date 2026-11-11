@@ -1,4 +1,4 @@
-# gen_pcb.py --export, Tue Nov  3 14:17:13 EST 2026, run in hw/kicad
+# gen_pcb.py --export, Wed Nov 11 14:47:51 EST 2026, run in hw/kicad
 # KiCad 10.0.7 (macOS app bundle), its bundled Python 3.9.13; no autorouter (every track is drawn by gen_pcb.py)
 # cmd: /Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/3.9/bin/python3 gen_pcb.py --export
 # (wxWidgets debug/assert lines, kicad-cli 3D-render progress lines and Fontconfig warnings omitted)
@@ -31,5 +31,18 @@ $ /Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli pcb render --side top -
 Successfully created 3D render image
 $ /Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli pcb render --side bottom --width 1600 --height 1200 --zoom 1.1 --quality basic --background opaque -o ../pcb_bottom.png sync_buck.kicad_pcb
 Successfully created 3D render image
+$ /Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli pcb export step --subst-models -f -o ../3d/sync_buck.step sync_buck.kicad_pcb
+2026-11-11 14:47:35.776 kicad-cli[77777:12470107] Error retrieving source file attributes: Error Domain=NSCocoaErrorDomain Code=260 "The file “sync_buck.step” couldn’t be opened because there is no such file." UserInfo={NSFilePath=../3d/sync_buck.step, NSURL=../3d/sync_buck.step -- file:///Users/shonzinger/Career/ee-portfolio-projects/.claude/worktrees/agent-a376ff9bfb65f601b/02-sync-buck/hw/3d/, NSUnderlyingError=0xa13004390 {Error Domain=NSPOSIXErrorDomain Code=2 "No such file or directory"}}
+STEP file '../3d/sync_buck.step' created.
+
+Export time 1.132 s
+$ /Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli pcb export glb --subst-models --include-tracks --include-pads --include-zones --include-silkscreen --include-soldermask -f -o ../3d/sync_buck.glb sync_buck.kicad_pcb
+2026-11-11 14:47:39.117 kicad-cli[77784:12470171] Error retrieving source file attributes: Error Domain=NSCocoaErrorDomain Code=260 "The file “sync_buck.glb” couldn’t be opened because there is no such file." UserInfo={NSFilePath=../3d/sync_buck.glb, NSURL=../3d/sync_buck.glb -- file:///Users/shonzinger/Career/ee-portfolio-projects/.claude/worktrees/agent-a376ff9bfb65f601b/02-sync-buck/hw/3d/, NSUnderlyingError=0x7e3010390 {Error Domain=NSPOSIXErrorDomain Code=2 "No such file or directory"}}
+Binary GLTF file '../3d/sync_buck.glb' created.
+
+Export time 2.818 s
+$ /Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli pcb render --side top --rotate -45,0,30 --perspective --zoom 0.8 --quality high --background opaque -w 1600 -h 1000 -o ../../docs/img/sync_buck_3d_iso.png sync_buck.kicad_pcb
+Successfully created 3D render image
 # exit status: 0
-# reproducibility: cmp of this run's sync_buck.kicad_pcb against the previous run's (same script, saved before this run): exit 0 (0 = byte-identical)
+# reproducibility: cmp of this run's sync_buck.kicad_pcb against a second run's (gen_pcb.py, same script): exit 0 (0 = byte-identical)
+# SHA-256 of both: e98170a1dffdcb9f6cfc16914d347802f2653cf521add1e1174c630f07c16361
