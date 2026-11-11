@@ -1,5 +1,13 @@
 # 01 - Smart Power-Monitoring IoT Node (ESP32 + INA219 + SSD1306)
 
+## In plain words
+
+- **What it is:** a small meter that shows how much power a USB-powered gadget draws, built around an ESP32 (a low-cost Wi-Fi microcontroller) and an INA219 (a chip that measures current and voltage) with a small screen.
+- **Why it matters:** products from power supplies to smart plugs need to know their own power draw to log it, limit it or warn about faults.
+- **What was done:** I designed the measuring circuit, wrote the firmware (the code that runs on the chip) and laid out a PCB (the green circuit board), then checked it all in simulators and software tests. It is simulated only: no hardware was built.
+- **Headline result:** at 2 A the 50 mOhm sensing resistor drops 100 mV, and the project's own self-check ends with RESULT: ALL PASS.
+- **Try it:** `python3 main.py`
+
 Monitors a 5 V rail at up to 2 A. A high-side 50 mOhm shunt feeds an INA219 set to PGA /4 (+/-160 mV full scale, 3.2 A range, 100 mV at 2 A), with Current_LSB 100 uA/bit, CAL = 8192 and Power_LSB 2 mW. Firmware runs FreeRTOS on the ESP32 Arduino core: sensorTask (priority 3) every 100 ms using vTaskDelayUntil, displayTask (priority 2) every 500 ms, both pinned to core 1. A length-1 queue with xQueueOverwrite/xQueuePeek acts as a latest-value mailbox. A mutex (priority inheritance) serialises the shared 400 kHz I2C bus. The INA219 driver is register-level; no INA219 library is used.
 
 The carrier PCB is a 75 x 50 mm, 2-layer board (KiCad 10): the DevKitC plugs into sockets with its antenna past the board edge, and the 2 A path runs in 2.0 mm traces through the Kelvin-sensed shunt (see [PCB layout](#pcb-layout)).

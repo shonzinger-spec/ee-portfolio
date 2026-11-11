@@ -1,5 +1,13 @@
 # 02 - Digital Synchronous Buck Converter (12 V to 5 V / 3 A)
 
+## In plain words
+
+- **What it is:** a power converter that steps 12 V down to 5 V, like the adapter that turns a car's supply into a phone charge, but with the control loop done in software on a microcontroller (a small programmable chip).
+- **Why it matters:** converters like this sit inside nearly every electronic product, and wasting less power as heat means smaller, cooler devices.
+- **What was done:** I designed the circuit, wrote the control code in C and laid out the PCB (the green circuit board), then tested them in circuit simulators and software tests. It is simulated only: no hardware was built.
+- **Headline result:** in simulation the output ripple is 9 mV p-p and the efficiency is 97.3 % at 3 A (power stage only, gate drive excluded).
+- **Try it:** `python3 main.py`
+
 A simulated design of a digitally controlled synchronous buck: 12 V in, 5 V out at up to 3 A, 200 kHz, two discrete 40 V N-MOSFETs driven by a UCC27211 half-bridge driver, 15 uH / 470 uF output filter, RC snubber on the switch node, and an ESP32-class controller closing the loop in C. The controller samples the output (10k / 6.8k divider), the load current (5 mOhm shunt + INA181A3) and the input voltage (47k / 10k divider) at 50 kHz and runs a PI loop on volts with input-voltage and reference feed-forward, an integrator dead band, DPWM hysteresis, anti-windup, a pre-bias-safe soft start and a latching over-current trip. The ESP32 firmware around that controller compiles. A simulator build of it ran on a simulated ESP32 in Wokwi against the host test's power-stage model: soft start, load steps and an over-current trip. The board is laid out in KiCad: 2 layers, DRC clean, Gerbers and drill files exported. Everything is simulation, host tests and design files; no hardware was built.
 
 | Item | Value |
