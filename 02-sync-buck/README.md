@@ -599,7 +599,7 @@ RESULT: PASS
 
 ![PCB bottom](hw/pcb_bottom.png)
 
-*Top and bottom renders (kicad-cli pcb render). KiCad 10.0.7 ships no 3D models for L1 (Bourns SRP1245A) or R6 (Vishay WSK2512), and none were downloaded. gen_pcb.py points them at stock KiCad models instead: L1 shows the TDK SLF12555 body (12.5 x 12.5 x 5.5 mm, against the footprint's 12.6 x 12.5 mm body outline; pads at the same +-5.55 mm), R6 the generic R_2512_6332Metric body (same 6.3 x 3.2 mm outline). docs/pcb_3d_models.log lists every model.*
+*Top and bottom renders (kicad-cli pcb render). KiCad 10.0.7 ships no 3D models for L1 (Bourns SRP1245A) or R6 (Vishay WSK2512), and none were downloaded. gen_pcb.py points them at stock KiCad models instead: L1 shows the TDK SLF12555 body (12.5 x 12.5 x 5.5 mm; its height is not matched to the SRP1245A, against the footprint's 12.6 x 12.5 mm body outline; pads at the same +-5.55 mm), R6 the generic two-terminal R_2512_6332Metric body on its four-terminal Kelvin footprint (same 6.3 x 3.2 mm outline). docs/pcb_3d_models.log lists every model.*
 
 ![PCB 3D view](docs/img/sync_buck_3d_iso.png)
 

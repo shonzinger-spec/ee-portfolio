@@ -2,7 +2,7 @@
 
 ## In plain words
 
-- **What it is:** a small meter that shows how much power a USB-powered gadget draws, built around an ESP32 (a low-cost Wi-Fi microcontroller) and an INA219 (a chip that measures current and voltage) with a small screen.
+- **What it is:** a small meter that shows how much power a gadget on a 5 V supply draws, built around an ESP32 (a low-cost Wi-Fi microcontroller) and an INA219 (a chip that measures current and voltage) with a small screen.
 - **Why it matters:** products from power supplies to smart plugs need to know their own power draw to log it, limit it or warn about faults.
 - **What was done:** I designed the measuring circuit, wrote the firmware (the code that runs on the chip) and laid out a PCB (the green circuit board), then checked it all in simulators and software tests. It is simulated only: no hardware was built.
 - **Headline result:** at 2 A the 50 mOhm sensing resistor drops 100 mV, and the project's own self-check ends with RESULT: ALL PASS.
