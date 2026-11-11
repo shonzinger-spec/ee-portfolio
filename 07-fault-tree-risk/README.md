@@ -1,5 +1,13 @@
 # 07 - Fault Tree and Monte Carlo Risk Simulator (ISO 14971 style, hypothetical insulin pump)
 
+## In plain words
+
+- **What it is:** a tool that estimates how likely a medical device is to fail dangerously, using a hypothetical insulin pump as the worked example, much like asking which combinations of small faults could lead to a serious one.
+- **Why it matters:** medical device makers must show that risks are understood and reduced (the ISO 14971 standard), and doing the probability arithmetic correctly is the hard part.
+- **What was done:** I wrote the analysis in Python: a fault tree (a diagram of fault combinations) solved exactly, plus a Monte Carlo (many random simulated pump lifetimes) cross-checked against other methods. All numbers are assumptions for a made-up pump: no hardware was built and it is not a claim about any real device.
+- **Headline result:** one added risk control gives 9.2x fewer under-delivery situations over the pump's life.
+- **Try it:** `python3 main.py`
+
 A Python tool for quantitative safety analysis of a medical device, worked through on a hypothetical automated insulin pump. It builds a fault tree from component-level faults (motor driver latch-on, infusion-set micro-occlusions, ADC reference drift, drive-train wear, latent faults in the safety mechanisms) up to two hazardous situations, computes minimal cut sets and exact probabilities, runs a Monte Carlo of component state transitions over a 4-year service life to get hazard rates and MTBF, cross-checks the Monte Carlo (component failures and unavailability, hazard counts, MTBF) against independent analytic and Markov solutions, and evaluates each hazardous situation the way ISO 14971 describes, before and after one risk control measure.
 
 Everything is simulation. The pump, its architecture, every failure rate, the severity and P2 values and the acceptability plan are assumptions made for this project, chosen so the example has something to show: the initial design's under-delivery hazard lands in the not-acceptable region and one risk control moves it into the acceptable region. Nothing here is a regulatory, compliance or clinical claim about any real device.

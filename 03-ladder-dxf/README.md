@@ -1,5 +1,13 @@
 # 03 - ladder-dxf: motor-starter ladder schematics from a device list
 
+## In plain words
+
+- **What it is:** a small program that draws an electrical control diagram for you, the way a spreadsheet of parts can be turned into a finished drawing for a motor start/stop circuit.
+- **Why it matters:** factories and machines are wired from drawings like this, and drawing them by hand in CAD (computer-aided drawing) software is slow and error-prone.
+- **What was done:** I wrote the program in Python. It takes a list of devices, tags and numbers them automatically, and writes a DXF file (a drawing file that CAD programs open) plus parts and wire lists in Excel. It is software only: no hardware was involved or built.
+- **Headline result:** the program re-checks the file it wrote, and the check reads "ezdxf audit of the DXF: 0 errors".
+- **Try it:** `python main.py` (after the setup under Quick start)
+
 A small Python tool that turns a device list (CSV or Excel) into an AutoCAD-compatible DXF control schematic: a NEMA/JIC 120 VAC motor-starter ladder with a title block, automatic device tags, wire numbers, line references and coil/contact cross-references, plus a BOM and a from-to wire list as XLSX. It runs on a Mac with plain Python (no AutoCAD, no Windows), as practice for the drawing conventions used in AutoCAD Electrical.
 
 ![Sheet generated from the sample list](docs/sample_sheet.png)

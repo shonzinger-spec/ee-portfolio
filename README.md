@@ -2,6 +2,18 @@
 
 Electrical engineering projects by Shon Zinger, a York University EE graduate. Each project is fully virtual and reproducible with free tools: a standalone Python model runs with numpy and matplotlib (project 06 also uses scipy), and the simulation, schematic and firmware checks are documented with real output pasted into the project README. No hardware was built.
 
+## Start here
+
+- 01 - [A small meter that shows how much power a gadget draws](01-smart-power-node/)
+- 02 - [A power converter that steps 12 V down to 5 V, controlled by software](02-sync-buck/)
+- 03 - [A program that draws a motor start/stop wiring diagram from a parts list](03-ladder-dxf/)
+- 04 - [The protection circuit and firmware for a four-cell lithium-ion battery pack](04-smart-bms-sim/)
+- 05 - [A brushless motor controller, tested against a software model of the motor](05-bldc-hil-sim/)
+- 06 - [The signal processing of a fingertip blood-oxygen sensor, tested on synthetic signals](06-ppg-spo2/)
+- 07 - [A risk calculator for a hypothetical insulin pump, using fault trees and Monte Carlo](07-fault-tree-risk/)
+
+Each project folder has a plain-words summary at the top and the full evidence below.
+
 | # | Project | What it shows | Verification |
 |---|---|---|---|
 | 01 | [Smart power-monitoring IoT node](01-smart-power-node/) | ESP32 + INA219 power monitor on a 5 V / 2 A rail with an SSD1306 display: 50 mOhm Kelvin shunt, register-level driver, two-task FreeRTOS firmware | main.py self-check, LTspice and ngspice 6/6, host test 33/33, KiCad ERC 0 errors, PCB DRC + schematic parity 0 violations (check_pcb.py 13/13), Wokwi live run |
